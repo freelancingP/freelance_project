@@ -7,8 +7,6 @@ class SendOtpSerializer(serializers.Serializer):
     user_type = serializers.CharField(max_length=15)
 
 class VerifyOtpSerializer(serializers.Serializer):
-    user_type = serializers.CharField(max_length=15)
-    token = serializers.CharField(max_length=500)
     otp = serializers.CharField(max_length=6)
     
 
