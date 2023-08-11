@@ -26,8 +26,8 @@ class SendOtpViews(GenericAPIView):
         if user_type == "login":
             try:
                 customer = Customer.objects.get(contact_number=serializer.validated_data["number"])
-                request.session["phone_number"] = customer.contact_number
-                request.session["c_otp"] = otp
+                user_data = UserOTP(user = customer, otp = otp)
+                user_data.save()
                 response_data = {
                     "data": {
                         "number": customer.contact_number,
@@ -59,10 +59,11 @@ class SendOtpViews(GenericAPIView):
                 }
                 return Response(response_data)
             else:
-                request.session["phone_number"] = serializer.validated_data["number"]
-                request.session["c_otp"] = otp
                 data = Customer(image = None, first_name = None, last_name = None ,gender = None,location = None, address = None, contact_number = serializer.validated_data["number"],email = None, date_of_birth = None, age = None , height = None, weight = None, health_issue = None, other_issue = None, any_medication = None, veg_nonveg = None, profession = None , help=None)
                 data.save()
+                customer = Customer.objects.get(contact_number=serializer.validated_data["number"])
+                user_data = UserOTP(user = customer, otp = otp)
+                user_data.save()
                 response_data = {
                     "data": {
                         "number": serializer.validated_data["number"],
@@ -80,12 +81,13 @@ class VerifyOtpViews(GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
  
-        otp = request.session.get("c_otp")  # Retrieve and remove the OTP from the session
-        if  str(otp) == serializer.validated_data["otp"]:
-            del request.session["c_otp"]
-            
-            session_user = request.session.get("phone_number")
-            customer = Customer.objects.get(contact_number=session_user)
+        try:
+            otp = UserOTP.objects.get(otp= serializer.validated_data["otp"])
+        except:
+            otp = None
+        if otp:
+            otp.delete()           
+            customer = Customer.objects.get(contact_number=otp.user.contact_number)
             print(customer)
             access_token_expiry = datetime.utcnow() + timedelta(minutes=30)
             refresh_token_expiry = datetime.utcnow() + timedelta(minutes=30)

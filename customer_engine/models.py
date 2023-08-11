@@ -28,6 +28,11 @@ class Customer(models.Model):
 
     def __str__(self):
         return str(self.id)
+
+class UserOTP(models.Model):
+    user = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    otp = models.IntegerField()
+
     
 class CustomerStatus(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
