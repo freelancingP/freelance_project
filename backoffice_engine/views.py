@@ -161,13 +161,15 @@ def add_customer(request):
         age = request.POST["age"]
         height = request.POST["height"]
         weight = request.POST["weight"]
+        height_unit = request.POST["height_unit"]
+        weight_unit = request.POST["weight_unit"]
         health_issue = request.POST["hissue"]
         other_issue = request.POST["oissue"]
         any_medication = request.POST["any-medication"]
         veg_nonveg = request.POST["veg-nonveg"]
         profession = request.POST["profession"]
         help = request.POST["help"]
-        data = Customer(image = picture, first_name = firstname, last_name = lastname ,gender = gender,location = location, address = address, contact_number = contact,email = email, date_of_birth = dob, age = age , height = height, weight = weight, health_issue = health_issue, other_issue = other_issue, any_medication = any_medication, veg_nonveg = veg_nonveg, profession = profession , help=help)
+        data = Customer(image = picture, first_name = firstname, last_name = lastname ,gender = gender,location = location, address = address, contact_number = contact,email = email, date_of_birth = dob, age = age , height = height,height_unit=height_unit, weight = weight,weight_unit=weight_unit, health_issue = health_issue, other_issue = other_issue, any_medication = any_medication, veg_nonveg = veg_nonveg, profession = profession , help=help)
         print(data)
         customer_exists = Customer.objects.filter(Q(contact_number=contact) | Q(email=email)).exists()
         if customer_exists:

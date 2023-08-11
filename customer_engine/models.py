@@ -5,7 +5,6 @@ from django.utils import timezone
 
 
 class Customer(models.Model):
-    customer_type = models.CharField(max_length=100,null=True,blank=True)
     image = models.ImageField(upload_to='images/', blank=True, null=True)
     first_name = models.CharField(max_length=100,blank=True, null=True)
     last_name = models.CharField(max_length=100,blank=True, null=True)
@@ -17,7 +16,9 @@ class Customer(models.Model):
     date_of_birth = models.CharField(max_length=100,blank=True, null=True)
     age = models.IntegerField(blank=True, null=True)
     height = models.DecimalField(max_digits=3, decimal_places=1,blank=True, null=True)
+    height_unit = models.CharField(max_length=10,blank=True, null=True)
     weight = models.DecimalField(max_digits=5, decimal_places=1,blank=True, null=True)
+    weight_unit = models.CharField(max_length=10,blank=True, null=True)
     health_issue = models.CharField(max_length=500,blank=True, null=True)
     other_issue = models.CharField(max_length=500,blank=True, null=True)
     any_medication = models.CharField(max_length=500,blank=True, null=True)
