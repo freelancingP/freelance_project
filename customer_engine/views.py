@@ -59,7 +59,7 @@ class SendOtpViews(GenericAPIView):
                 }
                 return Response(response_data)
             else:
-                data = Customer(image = None, first_name = None, last_name = None ,gender = None,location = None, address = None, contact_number = serializer.validated_data["number"],email = None, date_of_birth = None, age = None , height = None,height_unit=height_unit, weight_unit=weight_unit, weight = None, health_issue = None, other_issue = None, any_medication = None, veg_nonveg = None, profession = None , help=None)
+                data = Customer(image = None, first_name = None, last_name = None ,gender = None,location = None, address = None, contact_number = serializer.validated_data["number"],email = None, date_of_birth = None, age = None , height = None,height_unit=None, weight_unit=None, weight = None, health_issue = None, other_issue = None, any_medication = None, veg_nonveg = None, profession = None , help=None)
                 data.save()
                 customer = Customer.objects.get(contact_number=serializer.validated_data["number"])
                 user_data = UserOTP(user = customer, otp = otp)
