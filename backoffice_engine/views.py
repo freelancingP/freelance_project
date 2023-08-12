@@ -45,7 +45,6 @@ def signup(request):
             user = AdminUser.objects.get(email=email)
         except:
             user = None
-        print(user)
         if user:
             return render(request,"signup.html",{
                 'tag':"danger",
@@ -72,7 +71,6 @@ def reset_password(request):
         if user:
             otp = random.randrange(100000, 999999)
             request.session["user"]= user.id
-            print(otp)
             request.session["otp"] = otp
             return redirect("verify_otp")
         else:

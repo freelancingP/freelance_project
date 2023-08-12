@@ -1,7 +1,6 @@
 from django.db import models
 from django.utils import timezone
 
-# Create your models here.
 
 
 class Customer(models.Model):
@@ -15,9 +14,9 @@ class Customer(models.Model):
     email = models.CharField(max_length=100,blank=True, null=True)
     date_of_birth = models.CharField(max_length=100,blank=True, null=True)
     age = models.IntegerField(blank=True, null=True)
-    height = models.DecimalField(max_digits=3, decimal_places=1,blank=True, null=True)
+    height = models.DecimalField(max_digits=5, decimal_places=2,blank=True, null=True)
     height_unit = models.CharField(max_length=10,blank=True, null=True)
-    weight = models.DecimalField(max_digits=5, decimal_places=1,blank=True, null=True)
+    weight = models.DecimalField(max_digits=5, decimal_places=2,blank=True, null=True)
     weight_unit = models.CharField(max_length=10,blank=True, null=True)
     health_issue = models.CharField(max_length=500,blank=True, null=True)
     other_issue = models.CharField(max_length=500,blank=True, null=True)

@@ -148,8 +148,10 @@ class UpdateUserDetailViews(GenericAPIView):
                                 "message": f"Invalid field name: {key}",
                             }
                             return Response(response_data)
-
-                    customer.save()
+                    try:
+                        customer.save()
+                    except Exception as e:
+                        print(e)
                     serializer = CustomerSerializer(customer)
                     response_data ={
                         "data": serializer.data,
