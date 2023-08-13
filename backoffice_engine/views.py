@@ -257,3 +257,6 @@ def add_dish(request):
         "user": user
     })
 
+def new_data(request):
+    return render(request,"data.html")
+
