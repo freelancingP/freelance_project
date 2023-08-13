@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "customer_engine",
     'rest_framework',
     'drf_yasg',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -124,6 +125,17 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+AWS_STORAGE_BUCKET_NAME = 'your-s3-bucket-name'
+AWS_ACCESS_KEY_ID = 'AKIAU62W7KNUZ4DKGRU3'
+AWS_SECRET_ACCESS_KEY = 'uhRQhK26jfiWu0K85LtB1F9suiv38Us1EhGs2+DH'
+AWS_S3_REGION_NAME = 'your-s3-region'
+AWS_QUERYSTRING_AUTH=False
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
