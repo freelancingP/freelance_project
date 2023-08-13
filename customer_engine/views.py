@@ -66,6 +66,7 @@ class SendOtpViews(GenericAPIView):
                 customer = Customer.objects.get(contact_number=serializer.validated_data["number"])
                 user_data = UserOTP(user = customer, otp = otp)
                 user_data.save()
+                print("juwe")
                 response_data = {
                     "data": {
                         "number": serializer.validated_data["number"],
