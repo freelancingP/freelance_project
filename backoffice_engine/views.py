@@ -187,14 +187,14 @@ def add_customer(request):
         "user":user,
     })
 
-# @custom_login_required
-# def customers(request):
-#     user = AdminUser.objects.get(id = request.session["user"])
-#     data = Customer.objects.all()
-#     return render(request,"customers-datatable.html",{
-#         "user":user,
-#         "data":data
-#     })
+@custom_login_required
+def customers(request):
+    user = AdminUser.objects.get(id = request.session["user"])
+    data = Customer.objects.all()
+    return render(request,"customers-datatable.html",{
+        "user":user,
+        "data":data
+    })
 
 @custom_login_required
 def recipe_management(request):
