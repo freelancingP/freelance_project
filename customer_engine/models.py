@@ -2,9 +2,8 @@ from django.db import models
 from django.utils import timezone
 
 
-
 class Customer(models.Model):
-    image = models.ImageField(upload_to='images/', blank=True, null=True)
+    image = models.ImageField(upload_to='media/',blank=True, null=True)
     first_name = models.CharField(max_length=100,blank=True, null=True)
     last_name = models.CharField(max_length=100,blank=True, null=True)
     gender = models.CharField(max_length=100,blank=True, null=True)
