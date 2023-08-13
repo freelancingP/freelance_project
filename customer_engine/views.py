@@ -9,7 +9,9 @@ from django.http import Http404
 from rest_framework.generics import GenericAPIView
 from datetime import datetime, timedelta
 import jwt
-
+import boto3
+from rest_framework.parsers import MultiPartParser, FileUploadParser
+import io
 # Create your views here.
 
 
@@ -86,7 +88,7 @@ class VerifyOtpViews(GenericAPIView):
         except:
             otp = None
         if otp:
-            otp.delete()           
+            otp.delete()         
             customer = Customer.objects.get(contact_number=otp.user.contact_number)
             print(customer)
             access_token_expiry = datetime.utcnow() + timedelta(minutes=30)
@@ -127,39 +129,64 @@ class VerifyOtpViews(GenericAPIView):
             }
             return Response(response_data)
 
-class UpdateUserDetailViews(GenericAPIView):
+class UpdateUserDetailViews(APIView):
+    parser_classes = [MultiPartParser]  # Allow file uploads
+    
     def post(self, request):
-        auth_header = request.headers.get('Authorization')    
+        auth_header = request.headers.get('Authorization')
         data = request.data
-        if auth_header and auth_header.startswith('Bearer '):         
-            token = auth_header.split(' ')[1]  
-            try:       
+        print(data)
+        if auth_header and auth_header.startswith('Bearer '):
+            print("nbxvhdf")
+            token = auth_header.split(' ')[1]
+            
+            try:
                 decoded_payload = jwt.decode(token, algorithms=['HS256'], options={"verify_signature": False})
                 try:
                     customer = Customer.objects.get(contact_number=decoded_payload['client_id'])
-                    for key, value in data.items():
-                        if hasattr(customer, key):
-                            setattr(customer, key, value)
-                        else:
-                            response_data ={
-                                "data": None,
-                                "status": False,
-                                "code": 400,
-                                "message": f"Invalid field name: {key}",
-                            }
-                            return Response(response_data)
                     try:
+                        for key, value in data.items():
+                            if key == 'image':  # Handle image upload separately
+                                customer.image = value
+                            elif hasattr(customer, key):
+                                setattr(customer, key, value)
+                            else:
+                                response_data ={
+                                    "data": None,
+                                    "status": False,
+                                    "code": 400,
+                                    "message": f"Invalid field name: {key}",
+                                }
+                                return Response(response_data)
+                        
+                        # Upload image to S3 if provided
+                        if customer.image:
+                            print(customer.image.name)
+                            aws_access_key_id = 'AKIAU62W7KNUZ4DKGRU3'
+                            aws_secret_access_key = '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'
+                            aws_region = 'us-east-2'
+                            bucket_name = 'appstacklabs'
+                            s3 = boto3.client('s3', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key, region_name=aws_region)
+                            object_key = f"images/{customer.image.name.split('/')[-1]}"  # Adjust the path in the bucket as needed
+                            image_data = customer.image.read()
+
+                            # Upload the image data to S3 using put_object
+                            s3.put_object(Body=image_data, Bucket=bucket_name, Key=object_key)
+                            s3_image_url = f"https://{bucket_name}.s3.{aws_region}.amazonaws.com/{object_key}"
+                            print(s3_image_url)
                         customer.save()
+                        
+                        serializer = CustomerSerializer(customer)
+                        response_data = {
+                            "data": serializer.data,
+                            "status": True,
+                            "code": 200,
+                            "message": "User Detail Successfully updated.",
+                        }
+                        return Response(response_data)
                     except Exception as e:
                         print(e)
-                    serializer = CustomerSerializer(customer)
-                    response_data ={
-                        "data": serializer.data,
-                        "status": True,
-                        "code": 200,
-                        "message": "User Detail Successfully updated.",
-                    }
-                    return Response(response_data)
+                    
                 except Customer.DoesNotExist:
                     response_data ={
                         "data": None,
