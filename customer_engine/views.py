@@ -164,7 +164,7 @@ class UploadImageView(GenericAPIView):
                 response_data ={
                 "data": None,
                 "status": False,
-                "code": 401,
+                "code": 400,
                 "message": "Image Not Found.",
             }
         except Exception as e:
