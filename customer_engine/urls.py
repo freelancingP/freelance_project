@@ -6,4 +6,5 @@ urlpatterns = [
     path('send/otp/',views.SendOtpViews.as_view()),
     path('verify/otp/',views.VerifyOtpViews.as_view()),
     path('update/user/details/',views.UpdateUserDetailViews.as_view()),
+    path('upload/image/',views.UploadImageView.as_view()),
 ]
