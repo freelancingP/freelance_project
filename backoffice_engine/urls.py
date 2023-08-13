@@ -17,5 +17,4 @@ urlpatterns = [
     path('logout/', views.logout, name='logout'),
     path('add/customer/', views.add_customer, name='add_customer'),
     path('add/dish/', views.add_dish, name='add_dish'),
-    path('new/data/', views.new_data, name='new_data'),
 ]
