@@ -205,8 +205,6 @@ def add_customer(request):
 def customers(request):
     user = AdminUser.objects.get(id = request.session["user"])
     data = Customer.objects.all()
-    for d in data:
-        print(d.image_url)
     return render(request,"customers-datatable.html",{
         "user":user,
         "data":data

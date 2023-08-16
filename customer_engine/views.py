@@ -206,8 +206,10 @@ class UpdateUserDetailViews(APIView):
                     customer.save()
                     
                     serializer = CustomerSerializer(customer)
+                    serialized_data = serializer.data
+
                     response_data = {
-                        "data": serializer.data,
+                        "data": serialized_data,
                         "status": True,
                         "code": 200,
                         "message": "User Detail Successfully updated.",
