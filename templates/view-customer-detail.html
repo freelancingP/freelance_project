@@ -174,23 +174,26 @@
                                             <!--Product details-->
 											
                                             <div class="new-arrival-content pr">
-												<div class="row">
-													<div class="col-md-3 col-sm-3">
-														{% if customer.image_url %}
-															<img src="{{ customer.image_url }}" alt="Profile Image" width="150" height="150">
-														{% else %}
-															<p>No profile image available.</p>
-														{% endif %}
-													</div>
-													<div class="col-md-9 col-sm-9">
-														<h4>{{ customer.first_name }} {{ customer.last_name }}</h4>
-													</div>
-													<div class="col-sm-5 col-md-3 d-flex justify-content-end">
-														<button type="button" class="btn btn-toggle" data-toggle="button" aria-pressed="false" autocomplete="off">
-															<div class="handle"></div>
-														</button>
+												<div class="container">
+													<div class="row mb-2">
+														<div class="col-md-4 col-sm-4">
+															{% if customer.image_url %}
+																<img src="{{ customer.image_url }}" alt="Profile Image" width="100" height="100">
+															{% else %}
+																<p>No profile image available.</p>
+															{% endif %}
+														</div>
+														<div class="col-md-4 col-sm-4 mt-5">
+															<h4>{{ customer.first_name }} {{ customer.last_name }}</h4>
+														</div>
+														<div class="col-md-4 col-sm-4 mt-5">
+															<button type="button" class="btn btn-toggle" data-toggle="button" aria-pressed="false" autocomplete="off">
+																<div class="handle"></div>
+															</button>
+														</div>
 													</div>
 												</div>
+												
 												
 												<div class="row">
 												 <div class="col-md-4">
