@@ -193,6 +193,8 @@ class UpdateUserDetailViews(APIView):
                 try:
                     customer = Customer.objects.get(contact_number=decoded_payload['client_id'])
                     for key, value in data.items():
+                        if isinstance(value, list):
+                            value = ', '.join(value)  # Convert list to comma-separated string
                         if hasattr(customer, key):
                             setattr(customer, key, value)
                         else:
