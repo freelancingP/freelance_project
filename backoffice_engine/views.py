@@ -271,4 +271,51 @@ def add_dish(request):
         "user": user
     })
 
+@custom_login_required
+def add_recipe(request):
+    if request.method == "POST":
+        try:
+            item = request.POST["item-name"]
+            sub_item = request.POST["sub-name"]
+            quantity = request.POST["qty"]
+            quantity_help = request.POST.get("qty-help")
+            if not quantity_help:
+                quantity_help = None
+            
+            ingridient_name = request.POST.getlist("ingridient-name")
+            ingridient_qty = request.POST.getlist("ingridient-qty")
+            protein = request.POST.getlist("protein")
+            calories = request.POST.getlist("calories")
+            fat = request.POST.getlist("fat")
+            carps = request.POST.getlist("carps")
+            sugars = request.POST.getlist("sugars")
+            sodium = request.POST.getlist("sodium")
+            fiber = request.POST.getlist("fiber")
+            
+            recipe_data = AddRecipe(item_name=item, sub_name=sub_item, quantity=quantity, quantity_help=quantity_help)
+            recipe_data.save()
+            recipe = AddRecipe.objects.get(item_name=item)
+            
+            for i in range(len(ingridient_name)):
+                ingridient = AddIngridient(
+                    item=recipe,
+                    ingridient_name=ingridient_name[i],
+                    ingridient_quantity=float(ingridient_qty[i]) if ingridient_qty[i] else None,
+                    protein=float(protein[i]) if protein[i] else None,
+                    calories=float(calories[i]) if calories[i] else None,
+                    fat=float(fat[i]) if fat[i] else None,
+                    carps=float(carps[i]) if carps[i] else None,
+                    sugars=float(sugars[i]) if sugars[i] else None,
+                    sodium=float(sodium[i]) if sodium[i] else None,
+                    fiber=float(fiber[i]) if fiber[i] else None
+                )
+                ingridient.save()
+            
+            messages.success(request, "Recipe Successfully Added.")
+            return redirect("add_dish")
+        except:
+            messages.success(request, "Something Wrong,Try Again.")
+            return redirect("add_dish")
+    return redirect("add_dish")
+
 

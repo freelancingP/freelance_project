@@ -12,6 +12,7 @@ import jwt
 import boto3
 from rest_framework.parsers import MultiPartParser, FileUploadParser
 import io
+from .decorators import *
 # Create your views here.
 
 
@@ -30,6 +31,8 @@ class SendOtpViews(GenericAPIView):
                 customer = Customer.objects.get(contact_number=serializer.validated_data["number"])
                 user_data = UserOTP(user = customer, otp = otp)
                 user_data.save()
+                numbers = "91" + customer.contact_number
+                sendSMS(numbers)
                 response_data = {
                     "data": {
                         "number": customer.contact_number,
@@ -218,6 +221,85 @@ class UpdateUserDetailViews(APIView):
                     }
                     return Response(response_data)
                     
+                except Customer.DoesNotExist:
+                    response_data ={
+                        "data": None,
+                        "status": False,
+                        "code": 401,
+                        "message": "User Doesn't exist.",
+                    }
+                    return Response(response_data)
+                except Exception as e:
+                    response_data ={
+                        "data": None,
+                        "status": False,
+                        "code": 500,
+                        "message": "An error occurred.",
+                    }
+                    return Response(response_data)
+            except jwt.ExpiredSignatureError:
+                response_data ={
+                    "data": None,
+                    "status": False,
+                    "code": 401,
+                    "message": "Token has expired.",
+                }
+                return Response(response_data)
+            except jwt.DecodeError:
+                response_data ={
+                    "data": None,
+                    "status": False,
+                    "code": 498,
+                    "message": "Invalid token.",
+                }
+                return Response(response_data)
+        else:
+            response_data ={
+                "data": None,
+                "status": False,
+                "code": 400,
+                "message": "No token provided.",
+            }
+            return Response(response_data)
+
+class DishCalculatorViews(APIView):   
+    def post(self, request):
+        auth_header = request.headers.get('Authorization')
+        data = request.data
+        if auth_header and auth_header.startswith('Bearer '):
+            token = auth_header.split(' ')[1]
+            
+            try:
+                decoded_payload = jwt.decode(token, algorithms=['HS256'], options={"verify_signature": False})
+                try:
+                    customer = Customer.objects.get(contact_number=decoded_payload['client_id'])
+                    print(data)
+                    recipe = AddRecipe.objects.get(item_name=data["item_name"])
+                    ingredient = AddIngridient.objects.filter(item = recipe)
+                    remain_quantity = recipe.quantity - int(data["item_quantity"])
+                    print(remain_quantity)
+                    if recipe.quantity > float(data["item_quantity"]):
+                        response_data = {
+                            "data": remain_quantity,
+                            "status": True,
+                            "code": 200,
+                            "message": f"You need to increase diet {remain_quantity} grams.",
+                        }
+                    elif recipe.quantity < float(data["item_quantity"]):
+                        response_data = {
+                            "data": remain_quantity,
+                            "status": True,
+                            "code": 200,
+                            "message": f"You need to reduce diet {remain_quantity} grams.",
+                        }
+                    else:
+                        response_data = {
+                            "data": remain_quantity,
+                            "status": True,
+                            "code": 200,
+                            "message": "Your diet maintained.",
+                        }
+                    return Response(response_data)
                 except Customer.DoesNotExist:
                     response_data ={
                         "data": None,
