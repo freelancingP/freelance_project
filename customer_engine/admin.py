@@ -5,3 +5,5 @@ from .models import *
 admin.site.register(Customer)
 admin.site.register(Dishes)
 admin.site.register(UserOTP)
+admin.site.register(AddRecipe)
+admin.site.register(AddIngridient)

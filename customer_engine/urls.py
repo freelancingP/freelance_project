@@ -7,4 +7,5 @@ urlpatterns = [
     path('verify/otp/',views.VerifyOtpViews.as_view()),
     path('update/user/details/',views.UpdateUserDetailViews.as_view()),
     path('upload/image/',views.UploadImageView.as_view()),
+    path('api/dish/calculator/',views.DishCalculatorViews.as_view()),
 ]

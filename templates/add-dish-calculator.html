@@ -172,6 +172,11 @@
 						<li class="breadcrumb-item active"><a href="javascript:void(0)">Pickers</a></li>
 					</ol>
                 </div>
+                {% if messages %}
+                {% for message in messages %}
+                    <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}" role="alert">{{ message }}</div>
+                {% endfor %}
+                {% endif %}
                 {% if message %}
                     <div class="alert alert-{{tag}} text-center " role="alert">{{ message }}</div>
                 {% endif %}
@@ -209,74 +214,76 @@
                                 <div class="row form-material">
                                     <div class="col-xl-12 col-xxl-12 col-md-12 mb-3">
                                         <div class="form-group">
-                                          <form name="add_name" id="add_name">
+                                          <form name="add_name" action='{% url 'add_recipe' %}' method="post" id="add_name">
+                                            {% csrf_token %}
                                             <table class="table table-bordered table-hover" id="dynamic_field">
                                               <tbody><tr>
                                                <td>
 												<label>Item Name</label>
-												    <input type="text" name="name[]" placeholder="Enter Sub Name" class="form-control name_list">
+												    <input type="text" name="item-name" placeholder="Enter Sub Name" class="form-control name_list" Required>
 												</td>
                                                 <td>
 												<label>Sub Name</label>
-												    <input type="text" name="name[]" placeholder="Enter Sub Name" class="form-control name_list">
+												    <input type="text" name="sub-name" placeholder="Enter Sub Name" class="form-control name_list">
 												</td>
                                                 <td>
 												<label>Quantity (gms)</label>
-												  <input type="text" name="name[]" placeholder="Enter Quantity 120" class="form-control name_list">
+												  <input type="number" name="qty" placeholder="Enter Quantity 120" class="form-control name_list" Required>
 												</td>
 												<td>
 												<label>Quantity Help</label>
-												  <input type="text" name="name[]" placeholder="Enter Quantity 120" class="form-control name_list">
+												  <input type="number" name="qty-help" placeholder="Enter Quantity 120" class="form-control name_list" Required>
 												</td>
                                               </tr>
                                               <tr>
                                                 <td>
 												  <label>Ingridient Name</label>
-												  <input type="text" name="name[]" placeholder="Enter Ingridient Name" class="form-control name_list">
+												  <input type="text" name="ingridient-name" placeholder="Enter Ingridient Name" class="form-control name_list" Required>
 												 </td>
                                                 <td>
 												  <label>Ingridient Quantity</label>
-												  <input type="text" name="Sugars[]" placeholder="Enter Quantity" class="form-control name_list">
+												  <input type="number" name="ingridient-qty" placeholder="Enter Quantity" class="form-control name_list" Required>
 											    </td>
 												<td>
 												  <label>Protein</label>
-												  <input type="text" name="Sugars[]" placeholder="Enter Protein" class="form-control name_list">
+												  <input type="number" name="protein" placeholder="Enter Protein" class="form-control name_list">
 											    </td>
 												 <td>
 												  <label>Calories</label>
-												  <input type="text" name="name[]" placeholder="Enter Calories" class="form-control name_list">
+												  <input type="number" name="calories" placeholder="Enter Calories" class="form-control name_list">
 												 </td>
                                               </tr>
 											  <tr>
                                                
                                                 <td>
 												  <label>Fat</label>
-												  <input type="text" name="Sugars[]" placeholder="Enter Fat" class="form-control name_list">
+												  <input type="number" name="fat" placeholder="Enter Fat" class="form-control name_list">
 											    </td>
 												<td>
 												  <label>carps</label>
-												  <input type="text" name="Sugars[]" placeholder="Enter carps" class="form-control name_list">
+												  <input type="number" name="carps" placeholder="Enter carps" class="form-control name_list">
 											    </td>
 											 <td>
 												  <label>Sugars</label>
-												  <input type="text" name="name[]" placeholder="Enter Sugars" class="form-control name_list">
+												  <input type="number" name="sugars" placeholder="Enter Sugars" class="form-control name_list">
 												 </td>
                                                 <td>
 												  <label>Sodium</label>
-												  <input type="text" name="Sugars[]" placeholder="Enter Sodium" class="form-control name_list">
+												  <input type="number" name="sodium" placeholder="Enter Sodium" class="form-control name_list">
 											    </td>
                                               </tr>
 											  <tr>
                                                
 												<td>
 												  <label>Fiber</label>
-												  <input type="text" name="Sugars[]" placeholder="Enter Fiber" class="form-control name_list">
+												  <input type="number" name="fiber" placeholder="Enter Fiber" class="form-control name_list">
 											    </td>
                                               </tr>
 											  
                                             </tbody></table>
 											
-                                            <input type="submit" class="btn btn-success" name="submit" id="submit" value="Submit">
+                                            {% comment %} <input type="submit" class="btn btn-success" name="submit" id="submit" value="Submit"> {% endcomment %}
+                                            <button type="submit" class="btn btn-success">Submit</button>
 											<button type="button" name="add" id="add" class="btn btn-primary">Add New Ingridient</button>
                                           </form>
                                         </div>
@@ -380,7 +387,7 @@
         addamount += 700;
         console.log('amount: ' + addamount);
         i++;
-        $('#dynamic_field').append('<tr id="row'+i+'"><td><h4 style="margin-top:50px;">item:2</h4></td></tr>','<tr id="row'+i+'"><td><label>Ingridient Name</label><input type="text" name="name[]" placeholder="Enter Ingridient Name" class="form-control name_list" /></td><td><label>Ingridient Quantity</label><input type="text" placeholder="Enter Quantity" class="form-control name_list"/></td><td><label>Protein</label><input type="text" placeholder="Enter Protein" class="form-control name_list"/></td><td><label>Calories</label><input type="text" name="name[]" placeholder="Enter Calories" class="form-control name_list" /></td></tr>','<tr id="row'+i+'"><td><label>Fat</label><input type="text" name="Sugars[]" placeholder="Enter Fat" class="form-control name_list"/></td><td><label>carps</label><input type="text" placeholder="Enter carps" class="form-control name_list"/></td><td><label>Sugars</label><input type="text" name="name[]" placeholder="Enter Sugars" class="form-control name_list" /></td><td><label>Sodium</label><input type="text" name="Sugars[]" placeholder="Enter Sodium" class="form-control name_list"/></td></tr>','<tr id="row'+i+'"><td><label>Fiber</label><input type="text" name="Sugars[]" placeholder="Enter Fiber" class="form-control name_list"/></td><td><button type="button" name="remove" id="'+i+'" class="btn btn-danger btn_remove">X</button></td></tr>');  
+        $('#dynamic_field').append('<tr id="row'+i+'"><td><h4 style="margin-top:50px;">item:2</h4></td></tr>','<tr id="row'+i+'"><td><label>Ingridient Name</label><input type="text" name="ingridient-name" placeholder="Enter Ingridient Name" class="form-control name_list" Required/></td><td><label>Ingridient Quantity</label><input type="number" name="ingridient-qty" placeholder="Enter Quantity" class="form-control name_list" Required/></td><td><label>Protein</label><input type="number" name="protein" placeholder="Enter Protein" class="form-control name_list"/></td><td><label>Calories</label><input type="number" name="calories" placeholder="Enter Calories" class="form-control name_list" /></td></tr>','<tr id="row'+i+'"><td><label>Fat</label><input type="number" name="fat" placeholder="Enter Fat" class="form-control name_list"/></td><td><label>carps</label><input type="number" name="carps" placeholder="Enter carps" class="form-control name_list"/></td><td><label>Sugars</label><input type="number" name="sugars" placeholder="Enter Sugars" class="form-control name_list" /></td><td><label>Sodium</label><input type="number" name="sodium" placeholder="Enter Sodium" class="form-control name_list"/></td></tr>','<tr id="row'+i+'"><td><label>Fiber</label><input type="number" name="fiber" placeholder="Enter Fiber" class="form-control name_list"/></td><td><button type="button" name="remove" id="'+i+'" class="btn btn-danger btn_remove">X</button></td></tr>');  
         });
 
         $(document).on('click', '.btn_remove', function(){  

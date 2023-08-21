@@ -63,3 +63,30 @@ class Dishes(models.Model):
 
     def __str__(self):
         return self.food
+
+
+
+class AddRecipe(models.Model):
+    item_name = models.CharField(max_length=1000)
+    sub_name = models.CharField(max_length=1000,null=True,blank=True)
+    quantity = models.FloatField(null=True,blank=True)
+    quantity_help = models.FloatField(null=True,blank=True)
+
+    def __str__(self):
+        return self.item_name
+
+
+class AddIngridient(models.Model):
+    item = models.ForeignKey(AddRecipe, on_delete=models.CASCADE)
+    ingridient_name = models.CharField(max_length=1000)
+    ingridient_quantity = models.FloatField(null=True)
+    protein = models.FloatField(null=True,blank=True)
+    calories = models.FloatField(null=True,blank=True)
+    fat = models.FloatField(null=True,blank=True)
+    carps = models.FloatField(null=True,blank=True)
+    sugars = models.FloatField(null=True,blank=True)
+    sodium = models.FloatField(null=True,blank=True)
+    fiber = models.FloatField(null=True,blank=True)
+
+    def __str__(self):
+        return self.ingridient_name
