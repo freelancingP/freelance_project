@@ -227,6 +227,15 @@ def dish_calculator(request):
     })
 
 @custom_login_required
+def recipe_list(request):
+    user = AdminUser.objects.get(id = request.session["user"])
+    all_recipe = AddRecipe.objects.all()
+    return render(request,"recipe.html",{
+        "user":user,
+        "all_recipe":all_recipe
+    })
+
+@custom_login_required
 def customers_detail(request,user_id):
     user = AdminUser.objects.get(id = request.session["user"])
     customer = Customer.objects.get(id= user_id)
@@ -275,14 +284,20 @@ def add_dish(request):
 def add_recipe(request):
     if request.method == "POST":
         try:
+            print(request.POST)
             item = request.POST["item-name"]
             sub_item = request.POST["sub-name"]
+            quantity_type = request.POST["qty-type"]
             quantity = request.POST["qty"]
             quantity_help = request.POST.get("qty-help")
+            meal_type = request.POST["meal-type"]
+            food_type = request.POST["food-type"]
+            health_condition = request.POST["health-condition"]
             if not quantity_help:
                 quantity_help = None
             
             ingridient_name = request.POST.getlist("ingridient-name")
+            ingridient_qty_type = request.POST.getlist("ingridient-qty-type")
             ingridient_qty = request.POST.getlist("ingridient-qty")
             protein = request.POST.getlist("protein")
             calories = request.POST.getlist("calories")
@@ -292,14 +307,15 @@ def add_recipe(request):
             sodium = request.POST.getlist("sodium")
             fiber = request.POST.getlist("fiber")
             
-            recipe_data = AddRecipe(item_name=item, sub_name=sub_item, quantity=quantity, quantity_help=quantity_help)
+            recipe_data = AddRecipe(item_name=item, sub_name=sub_item, quantity=quantity, quantity_help=quantity_help,type_of_meal=meal_type,type_of_food=food_type,health_condition=health_condition)
             recipe_data.save()
-            recipe = AddRecipe.objects.get(item_name=item)
+            recipe = AddRecipe.objects.get(id=recipe_data.id)
             
             for i in range(len(ingridient_name)):
                 ingridient = AddIngridient(
                     item=recipe,
                     ingridient_name=ingridient_name[i],
+                    quantity_type=ingridient_qty_type[i] if ingridient_qty_type[i] else None,
                     ingridient_quantity=float(ingridient_qty[i]) if ingridient_qty[i] else None,
                     protein=float(protein[i]) if protein[i] else None,
                     calories=float(calories[i]) if calories[i] else None,
@@ -313,7 +329,8 @@ def add_recipe(request):
             
             messages.success(request, "Recipe Successfully Added.")
             return redirect("add_dish")
-        except:
+        except Exception as e:
+            print(e)
             messages.success(request, "Something Wrong,Try Again.")
             return redirect("add_dish")
     return redirect("add_dish")

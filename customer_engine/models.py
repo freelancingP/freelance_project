@@ -69,8 +69,12 @@ class Dishes(models.Model):
 class AddRecipe(models.Model):
     item_name = models.CharField(max_length=1000)
     sub_name = models.CharField(max_length=1000,null=True,blank=True)
+    quantity_type = models.CharField(max_length=100,null=True,blank=True)
     quantity = models.FloatField(null=True,blank=True)
-    quantity_help = models.FloatField(null=True,blank=True)
+    quantity_help = models.CharField(max_length=200,null=True,blank=True)
+    type_of_meal = models.CharField(max_length=100,null=True,blank=True)
+    type_of_food = models.CharField(max_length=100,null=True,blank=True)
+    health_condition = models.CharField(max_length=500,null=True,blank=True)
 
     def __str__(self):
         return self.item_name
@@ -79,6 +83,7 @@ class AddRecipe(models.Model):
 class AddIngridient(models.Model):
     item = models.ForeignKey(AddRecipe, on_delete=models.CASCADE)
     ingridient_name = models.CharField(max_length=1000)
+    quantity_type = models.CharField(max_length=100,null=True,blank=True)
     ingridient_quantity = models.FloatField(null=True)
     protein = models.FloatField(null=True,blank=True)
     calories = models.FloatField(null=True,blank=True)

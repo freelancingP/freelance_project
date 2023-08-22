@@ -19,7 +19,7 @@
                         <div class="card">
                             <div class="card-header">
                                 <h4 class="card-title">Customers</h4>
-                                <a href="{% url 'add_customer' %}"> <button type="button" class="btn btn-primary">+Add Customer</button></a>
+                                <a href="{% url 'add_recipe' %}"> <button type="button" class="btn btn-primary">+Add Customer</button></a>
                             </div>
                             <div class="card-body">
                                 <div class="table-responsive">
@@ -27,41 +27,28 @@
                                         <thead>
                                             <tr>
                                                 <th>ID</th>
-                                                <th>Date</th>
-                                                <th>Name</th>
-                                                <th>Age</th>
-                                                <th>Gender</th>
-                                                <th>Profession</th>
+                                                <th>Item Name</th>
+                                                <th>Sub Name</th>
+                                                <th>Type Of Meal</th>
+                                                <th>Type Of Food</th>
+                                                <th>Ingredients</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {% for d in data %}
+                                            {% for d in all_recipe %}
                                             <tr>
                                                
                                                 <td>{{d.id}}</td>
-                                                <td>{{d.date}}</td>
-                                                <td>{{d.first_name}}&nbsp;{{d.last_name}}</td>
-                                                <td>{{d.age}}</td>
-                                                <td>{{d.gender}}</td>
-												<td>
-                                                    {{d.profession}}
-                                                    {% comment %} {% if d.status == "new_customer" %}
-                                                        <span class="badge light badge-danger">
-                                                            <i class="fa fa-circle text-danger mr-1"></i>
-                                                            New Customer
-                                                        </span>
-                                                    {% elif d.status == "in_customer" %}
-                                                        <span class="badge light badge-warning">
-                                                            <i class="fa fa-circle text-warning mr-1"></i>
-                                                            In Customer
-                                                        </span>
-                                                    {% else %}
-                                                        <span class="badge light badge-success">
-                                                            <i class="fa fa-circle text-success mr-1"></i>
-                                                            Recovered
-                                                        </span>
-                                                    {% endif %} {% endcomment %}
+                                                <td>{{d.item_name}}</td>
+                                                <td>{{d.sub_name}}</td>
+                                                <td>{{d.type_of_meal}}</td>
+                                                <td>{{d.type_of_food}}</td>
+                                                <td>
+                                                    <!-- Loop through the related ingredients for this recipe -->
+                                                    {% for ingridient in d.addingridient_set.all %}
+                                                        {{ ingridient.ingridient_name }},
+                                                    {% endfor %}
                                                 </td>
                                                 
                                                 <td>
