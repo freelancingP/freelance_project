@@ -336,3 +336,12 @@ def add_recipe(request):
     return redirect("add_dish")
 
 
+def recipe_details(request,recipe_id):
+    user = AdminUser.objects.get(id=request.session["user"])
+    recipe = AddRecipe.objects.get(id=recipe_id)
+    ingredients = AddIngridient.objects.filter(item=recipe)
+    return render(request,"recipe_details.html",{
+        "recipe":recipe,
+        "user":user,
+        "ingredients":ingredients
+    })

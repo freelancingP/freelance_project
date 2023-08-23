@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% block css %}{% endblock %}
+
+{% block content %}
+<div class="content-body" style="min-height: 1113px;">
+    <div class="container-fluid">
+        <div class="page-titles">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="javascript:void(0)">Recipe</a></li>
+                <li class="breadcrumb-item active"><a href="javascript:void(0)">Table</a></li>
+            </ol>
+        </div>
+        <!-- row -->
+
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                <div class="row card-body">
+                           <div class="col-lg-3 text-center"> <span>Recipe Name:</span> <h4 class="card-title"><span>{{recipe.item_name}}</span> </h4></div>
+                           <div class="col-lg-3 text-center">  <span>Sub Name:</span><h4 class="card-title">{{recipe.sub_name}}</h4></div>
+                           <div class="col-lg-3 text-center"> <span>Recipe Grams :</span> <h4 class="card-title">{{recipe.quantity}}</h4></div>
+                           <div class="col-lg-3 text-center"> <span>Quantity Help :</span>  <h4 class="card-title">{{recipe.quantity_help}}</h4></div>
+                           <div class="col-lg-3 text-center"> <span>Type of Meal :</span>  <h4 class="card-title">{{recipe.type_of_meal}} </h4></div>
+                           <div class="col-lg-3 text-center"> <span>Type of Food :</span>  <h4 class="card-title">{{recipe.type_of_food}} </h4></div>
+                           <div class="col-lg-3 text-center"> <span>Health Conditions :</span>  <h4 class="card-title">{{recipe.health_condition}}</h4></div>
+                        </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-responsive-sm">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Ingridient Name</th>
+                                        <th>Ingridient Quantity</th>
+                                        <th>Protein</th>
+                                        <th>Calories</th>
+                                        <th>Fat</th>
+                                        <th>carbs</th>
+                                        <th>Sugars</th>
+                                        <th>Sodium</th>
+                                        <th>Fiber</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for ing in ingredients %}
+                                    <tr>
+                                        <th>{{ing.id}}</th>
+                                        <td>{{ing.ingridient_name}}</td>
+                                        <td>{{ing.ingridient_quantity}}</td>
+                                        <td>{{ing.protein}}</td>
+                                        <td>{{ing.calories}}</td>
+                                        <td>{{ing.fat}}</td>
+                                        <td>{{ing.carbs}}</td>
+                                        <td>{{ing.sugars}}</td>
+                                        <td>{{ing.sodium}}</td>
+                                        <td>{{ing.fiber}}</td>
+                                        <!-- <td><span class="badge badge-primary light">Bajra</span></td> -->
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- /# card -->
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock  %}
+{% block js %}     
+{% endblock  %}  
