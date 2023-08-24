@@ -341,3 +341,72 @@ class DishCalculatorViews(APIView):
             }
             return Response(response_data)
 
+
+class AllDishesViews(APIView):   
+    def post(self, request):
+        auth_header = request.headers.get('Authorization')
+        data = request.data
+        if auth_header and auth_header.startswith('Bearer '):
+            token = auth_header.split(' ')[1]
+            
+            try:
+                decoded_payload = jwt.decode(token, algorithms=['HS256'], options={"verify_signature": False})
+                try:
+                    customer = Customer.objects.get(contact_number=decoded_payload['client_id'])
+                    breakfastserializer = BreakfastSerializer(Breakfast)
+                    print("ye")
+                    launchserializer = LaunchSerializer(Launch)
+                    dinnerserializer = DinnerSerializer(Dinner)
+                    snacksserializer = SnacksSerializer(Snacks)
+                    print('hi')
+                    response_data = {
+                        "Breakfast": breakfastserializer.data,
+                        "Launch": Launchserializer.data,
+                        "Dinner": Dinnerserializer.data,
+                        "Snacks": Snacksserializer.data,
+                        "status": True,
+                        "code": 200
+                    }
+                    print(response_data)
+                    return Response(response_data)
+                except Customer.DoesNotExist:
+                    response_data ={
+                        "data": None,
+                        "status": False,
+                        "code": 401,
+                        "message": "User Doesn't exist.",
+                    }
+                    return Response(response_data)
+                except Exception as e:
+                    print
+                    response_data ={
+                        "data": None,
+                        "status": False,
+                        "code": 500,
+                        "message": "An error occurred.",
+                    }
+                    return Response(response_data)
+            except jwt.ExpiredSignatureError:
+                response_data ={
+                    "data": None,
+                    "status": False,
+                    "code": 401,
+                    "message": "Token has expired.",
+                }
+                return Response(response_data)
+            except jwt.DecodeError:
+                response_data ={
+                    "data": None,
+                    "status": False,
+                    "code": 498,
+                    "message": "Invalid token.",
+                }
+                return Response(response_data)
+        else:
+            response_data ={
+                "data": None,
+                "status": False,
+                "code": 400,
+                "message": "No token provided.",
+            }
+            return Response(response_data)

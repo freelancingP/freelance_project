@@ -254,9 +254,10 @@ def add_dish(request):
             try:
                 df = pd.read_excel(file, engine='openpyxl')  # Explicitly specify the engine
                 data = df.to_dict(orient='records')
+                print(data)
                 for d in data:
                     # Your code to save data to the database goes here
-                    dishes_data = Dishes(food=d["Food"], quantity=d["Quantity (gms)"], pral=d["PRAL"], oil=d["Oil"], glycemicload=d["Glycemic load"], calories=d["Calories\n"], aaf_adj_prot=d["AAF \nadj Prot"], carbohydtrates=d["Carbohydrates        "], total_fat=d["Total Fat"], tdf=d["TDF"], sodium=d["Sodium"], potassium=d["Pota-ssium"], phasphorous=d["Phosphorus"], calcium=d["Calcium"], magnecium=d["Magnecium"], total_eaa=d["Total EAA"], lysine=d["Lysine"], gross_protine=d["Gross Protein"], free_suger=d["Free Sugars"])
+                    dishes_data = Snacks(food=d["Food"], quantity=d["Qty"], gl=d["GL"], oil=d["Oil (gms)"], usable_cals=d["Useble Cals"], aaf_adj_prot=d["AAF \nadj Prot (gms)"], carbs=d["Carbs (gms)       "], total_fat=d["Total Fa t (gms)  "], tdf=d["TDF (gms)  "], sodium=d["Sodium"], potassium=d["Pota-ssium (mgm)"], phasphorous=d["Phosphorus"], calcium=d["Calcium"], magnecium=d["Magnecium"], total_eaa=d["Total EAA (mgms)"], lysine=d["Lysine (mgm)"], gross_protine=d["Gross Protein (gms)  "], free_suger=d["Free Sugars (gms)  "])
                     dishes_data.save()
                 print(data)
                 return render(request, "add-dish-calculator.html", {
