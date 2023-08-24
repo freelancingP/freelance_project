@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 import random
 import json
-from .serializers import CustomerSerializer, SendOtpSerializer,VerifyOtpSerializer
+from .serializers import *
 from django.http import Http404
 from rest_framework.generics import GenericAPIView
 from datetime import datetime, timedelta
@@ -305,7 +305,7 @@ class DishCalculatorViews(APIView):
                         "data": None,
                         "status": False,
                         "code": 401,
-                        "message": "User Doesn't exist.",
+                        "message": "Invalid Authentication.",
                     }
                     return Response(response_data)
                 except Exception as e:
@@ -353,17 +353,23 @@ class AllDishesViews(APIView):
                 decoded_payload = jwt.decode(token, algorithms=['HS256'], options={"verify_signature": False})
                 try:
                     customer = Customer.objects.get(contact_number=decoded_payload['client_id'])
-                    breakfastserializer = BreakfastSerializer(Breakfast)
-                    print("ye")
-                    launchserializer = LaunchSerializer(Launch)
-                    dinnerserializer = DinnerSerializer(Dinner)
-                    snacksserializer = SnacksSerializer(Snacks)
-                    print('hi')
+                    breakfast_instances = Breakfast.objects.all()  # Retrieve all Breakfast instances
+                    breakfastserializer = BreakfastSerializer(breakfast_instances, many=True)
+                    print(breakfastserializer.data)
+                    
+                    launch_instances = Launch.objects.all()  # Retrieve all Launch instances
+                    launchserializer = LaunchSerializer(launch_instances, many=True)
+                    
+                    dinner_instances = Dinner.objects.all()  # Retrieve all Dinner instances
+                    dinnerserializer = DinnerSerializer(dinner_instances, many=True)
+                    
+                    snacks_instances = Snacks.objects.all()  # Retrieve all Snacks instances
+                    snacksserializer = SnacksSerializer(snacks_instances, many=True)
                     response_data = {
                         "Breakfast": breakfastserializer.data,
-                        "Launch": Launchserializer.data,
-                        "Dinner": Dinnerserializer.data,
-                        "Snacks": Snacksserializer.data,
+                        "Launch": launchserializer.data,
+                        "Dinner": dinnerserializer.data,
+                        "Snacks": snacksserializer.data,
                         "status": True,
                         "code": 200
                     }
@@ -374,7 +380,89 @@ class AllDishesViews(APIView):
                         "data": None,
                         "status": False,
                         "code": 401,
-                        "message": "User Doesn't exist.",
+                        "message": "Invalid Authentication.",
+                    }
+                    return Response(response_data)
+                except Exception as e:
+                    print
+                    response_data ={
+                        "data": None,
+                        "status": False,
+                        "code": 500,
+                        "message": "An error occurred.",
+                    }
+                    return Response(response_data)
+            except jwt.ExpiredSignatureError:
+                response_data ={
+                    "data": None,
+                    "status": False,
+                    "code": 401,
+                    "message": "Token has expired.",
+                }
+                return Response(response_data)
+            except jwt.DecodeError:
+                response_data ={
+                    "data": None,
+                    "status": False,
+                    "code": 498,
+                    "message": "Invalid token.",
+                }
+                return Response(response_data)
+        else:
+            response_data ={
+                "data": None,
+                "status": False,
+                "code": 400,
+                "message": "No token provided.",
+            }
+            return Response(response_data)
+
+
+class GetDisheViews(APIView):   
+    def post(self, request):
+        auth_header = request.headers.get('Authorization')
+        data = request.data
+        if auth_header and auth_header.startswith('Bearer '):
+            token = auth_header.split(' ')[1]
+            
+            try:
+                decoded_payload = jwt.decode(token, algorithms=['HS256'], options={"verify_signature": False})
+                try:
+                    customer = Customer.objects.get(contact_number=decoded_payload['client_id'])
+                    try:
+                        if data["type_of_meal"] == "Breakfast":
+                            breakfast_instances = Breakfast.objects.get(food=data["type_of_food"])  # Retrieve all Breakfast instances
+                            serializer = BreakfastSerializer(breakfast_instances)
+                        elif data["type_of_meal"] == "Lunch":                   
+                            launch_instances = Launch.objects.get(food=data["type_of_food"])  # Retrieve all Launch instances
+                            serializer = LaunchSerializer(launch_instances)
+                        elif data["type_of_meal"] == "Dinner":
+                            dinner_instances = Dinner.objects.get(food=data["type_of_food"])  # Retrieve all Dinner instances
+                            serializer = DinnerSerializer(dinner_instances)
+                        elif data["type_of_meal"] == "Snacks":
+                            snacks_instances = Snacks.objects.all()  # Retrieve all Snacks instances
+                            serializer = SnacksSerializer(snacks_instances)
+                        response_data = {
+                            "data": serializer.data,
+                            "status": True,
+                            "code": 200
+                        }
+                        print(response_data)
+                        return Response(response_data)
+                    except:
+                        response_data ={
+                            "data": None,
+                            "status": False,
+                            "code": 401,
+                            "message": "Meal or Food Not Foud.",
+                        }
+                        return Response(response_data)
+                except Customer.DoesNotExist:
+                    response_data ={
+                        "data": None,
+                        "status": False,
+                        "code": 401,
+                        "message": "Invalid Authentication.",
                     }
                     return Response(response_data)
                 except Exception as e:
