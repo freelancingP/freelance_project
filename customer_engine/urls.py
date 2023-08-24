@@ -8,4 +8,6 @@ urlpatterns = [
     path('update/user/details/',views.UpdateUserDetailViews.as_view()),
     path('upload/image/',views.UploadImageView.as_view()),
     path('api/dish/calculator/',views.DishCalculatorViews.as_view()),
+    path('all/dishes/',views.AllDishesViews.as_view()),
+
 ]
