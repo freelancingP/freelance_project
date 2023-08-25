@@ -23,10 +23,10 @@ class BreakfastSerializer(serializers.ModelSerializer):
         model = Breakfast
         fields = '__all__'
 
-class LaunchSerializer(serializers.ModelSerializer):
+class LunchSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = Launch
+        model = Lunch
         fields = '__all__'
 
 class DinnerSerializer(serializers.ModelSerializer):
