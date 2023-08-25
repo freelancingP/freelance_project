@@ -163,3 +163,28 @@ class AddIngridient(models.Model):
 
     def __str__(self):
         return self.ingridient_name
+
+
+class DailyRecipe(models.Model):
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    food = models.CharField(max_length=200,null=True,blank=True)
+    quantity = models.CharField(max_length=10, null=True)
+    oil = models.FloatField(null=True)
+    gl = models.FloatField(null=True)
+    usable_cals = models.FloatField(null=True)
+    aaf_adj_prot = models.FloatField(null=True)
+    carbs = models.FloatField(null=True)
+    total_fat = models.FloatField(null=True)
+    tdf = models.FloatField(null=True)
+    sodium = models.FloatField(null=True)
+    potassium = models.FloatField(null=True)
+    phasphorous = models.FloatField(null=True)
+    calcium = models.FloatField(null=True)
+    magnecium = models.FloatField(null=True)
+    total_eaa = models.FloatField(null=True)
+    lysine = models.FloatField(null=True)
+    gross_protine = models.FloatField(null=True)
+    free_suger = models.FloatField(null=True)
+
+    def __str__(self):
+        return self.food

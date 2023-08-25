@@ -40,3 +40,9 @@ class SnacksSerializer(serializers.ModelSerializer):
     class Meta:
         model = Snacks
         fields = '__all__'
+
+class DailyRecipeSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = DailyRecipe
+        fields = '__all__'
