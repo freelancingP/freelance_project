@@ -63,7 +63,7 @@ class Breakfast(models.Model):
     def __str__(self):
         return self.food
         
-class Launch(models.Model):
+class Lunch(models.Model):
     food = models.CharField(max_length=200,null=True,blank=True)
     quantity = models.CharField(max_length=10, null=True)
     oil = models.FloatField(null=True)
