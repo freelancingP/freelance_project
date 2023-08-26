@@ -24,6 +24,7 @@ def login(request):
             user = AdminUser.objects.get(email=email)
         except:
             user=None
+        print(user.name)
         if user is not None and user.password == password:
             request.session["user"] = user.id
             request.session["password"] = user.password
@@ -46,13 +47,31 @@ def signup(request):
             user = AdminUser.objects.get(email=email)
         except:
             user = None
+        try:
+            uploaded_image = request.POST["picture"]
+            if uploaded_image:
+                aws_access_key_id = 'AKIAU62W7KNUZ4DKGRU3'
+                aws_secret_access_key = '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'
+                aws_region = 'us-east-2'
+                bucket_name = 'appstacklabs'
+                s3 = boto3.client('s3', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key, region_name=aws_region)
+                object_key = f"admin/profile/images/{uploaded_image}"  # Adjust the path in the bucket as needed
+                image_data = uploaded_image
+                # Upload the image data to S3 using put_object
+                s3.put_object(Body=image_data, Bucket=bucket_name, Key=object_key)
+                s3_image_url = f"https://{bucket_name}.s3.{aws_region}.amazonaws.com/{object_key}"
+            else:
+                s3_image_url = "https://mdbootstrap.com/img/Photos/Others/placeholder-avatar.jpg"
+        except Exception as e:
+            s3_image_url = "https://mdbootstrap.com/img/Photos/Others/placeholder-avatar.jpg"
+        print(s3_image_url)            
         if user:
             return render(request,"signup.html",{
                 'tag':"danger",
                 'message':"User already exist",
             })
         else:
-            user_data = AdminUser(name=name,email=email,password=password)
+            user_data = AdminUser(name=name,email=email,password=password,image_url = s3_image_url)
             user_data.save()
             print('cshuvev')
             return render(request,"signup.html",{
@@ -71,6 +90,7 @@ def reset_password(request):
             user = None
         if user:
             otp = random.randrange(100000, 999999)
+            print(otp)
             request.session["user"]= user.id
             request.session["otp"] = otp
             return redirect("verify_otp")
@@ -169,18 +189,22 @@ def add_customer(request):
         help = request.POST["help"]
         try:
             uploaded_image = request.POST["picture"]
-            aws_access_key_id = 'AKIAU62W7KNUZ4DKGRU3'
-            aws_secret_access_key = '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'
-            aws_region = 'us-east-2'
-            bucket_name = 'appstacklabs'
-            s3 = boto3.client('s3', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key, region_name=aws_region)
-            object_key = f"images/{uploaded_image}"  # Adjust the path in the bucket as needed
-            image_data = uploaded_image
-            # Upload the image data to S3 using put_object
-            s3.put_object(Body=image_data, Bucket=bucket_name, Key=object_key)
-            s3_image_url = f"https://{bucket_name}.s3.{aws_region}.amazonaws.com/{object_key}"
+            if uploaded_image:
+                aws_access_key_id = 'AKIAU62W7KNUZ4DKGRU3'
+                aws_secret_access_key = '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'
+                aws_region = 'us-east-2'
+                bucket_name = 'appstacklabs'
+                s3 = boto3.client('s3', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key, region_name=aws_region)
+                object_key = f"images/{uploaded_image}"  # Adjust the path in the bucket as needed
+                image_data = uploaded_image
+                # Upload the image data to S3 using put_object
+                s3.put_object(Body=image_data, Bucket=bucket_name, Key=object_key)
+                s3_image_url = f"https://{bucket_name}.s3.{aws_region}.amazonaws.com/{object_key}"
+            else:
+                s3_image_url = None
         except Exception as e:
             s3_image_url = None
+        print(s3_image_url)
         data = Customer(image_url = s3_image_url, first_name = firstname, last_name = lastname ,gender = gender,location = location, address = address, contact_number = contact,email = email, date_of_birth = dob, age = age , height = height,height_unit=height_unit, weight = weight,weight_unit=weight_unit, health_issue = health_issue, other_issue = other_issue, any_medication = any_medication, veg_nonveg = veg_nonveg, profession = profession , help=help)
         print(data)
         customer_exists = Customer.objects.filter(Q(contact_number=contact) | Q(email=email)).exists()
