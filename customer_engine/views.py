@@ -277,7 +277,6 @@ class AllDishesViews(APIView):
                     customer = Customer.objects.get(contact_number=decoded_payload['client_id'])
                     breakfast_instances = Breakfast.objects.all()  # Retrieve all Breakfast instances
                     breakfastserializer = BreakfastSerializer(breakfast_instances, many=True)
-                    print(breakfastserializer.data)
                     
                     launch_instances = Lunch.objects.all()  # Retrieve all Launch instances
                     launchserializer = LunchSerializer(launch_instances, many=True)
@@ -287,22 +286,75 @@ class AllDishesViews(APIView):
                     
                     snacks_instances = Snacks.objects.all()  # Retrieve all Snacks instances
                     snacksserializer = SnacksSerializer(snacks_instances, many=True)
-                    response_data = {
+                    response_data ={
                         "data": {
-                        "caloriesUsed": 650,
-                        "calorieBreakdown": {
-                        "calories": 100,
-                        "pral": 100,
-                        "calcium": 450
-                        },
-                        "Breakfast": breakfastserializer.data,
-                        "Launch": launchserializer.data,
-                        "Dinner": dinnerserializer.data,
-                        "Snacks": snacksserializer.data,
-                        "status": True,
-                        "code": 200
-                    },
+                          "caloriesUsed": 650,
+                          "calorieBreakdown": {
+                            "calories": 100,
+                            "pral": 100,
+                            "calcium": 450
+                          },
+                          "Breakfast": [
+                            {
+                              "dishName": None,
+                              "ingredients": None,
+                              "calories": None,
+                              "nutritionValues":breakfastserializer.data,
+                              "recipeValues": [
+                                {
+                                  "name": None,
+                                  "quantity": None
+                                }
+                              ]
+                            }
+                          ],
+                          "Launch": [
+                            {
+                              "dishName": None,
+                              "ingredients": None,
+                              "calories": None,
+                              "nutritionValues": launchserializer.data,
+                              "recipeValues": [
+                                {
+                                  "name": None,
+                                  "quantity": None
+                                }
+                              ]
+                            }
+                          ],
+                          "Dinner": [
+                            {
+                              "dishName": None,
+                              "ingredients": None,
+                              "calories": None,
+                              "nutritionValues": dinnerserializer.data,
+                              "recipeValues": [
+                                {
+                                  "name": None,
+                                  "quantity": None
+                                }
+                              ]
+                            }
+                          ],
+                          "Snacks": [
+                            {
+                              "dishName": None,
+                              "ingredients": None,
+                              "calories": None,
+                              "nutritionValues": snacksserializer.data,
+                              "recipeValues": [
+                                {
+                                  "name": None,
+                                  "quantity": None
+                                }
+                              ]
+                            }
+                          ],
+                          "status": True,
+                          "code": 200
+                        }
                     }
+
                     print(response_data)
                     return Response(response_data)
                 except Customer.DoesNotExist:
@@ -401,9 +453,20 @@ class GetDishViews(APIView):
                 serializer = serializer_class(base_queryset, many=True)
 
                 response_data = {
-                    "data": serializer.data,
-                    "status": True,
-                    "code": 200
+                  "data": {
+                    "dishName": None,
+                    "ingredients": None,
+                    "calories": None,
+                    "nutritionValues": serializer.data,
+                    "recipeValues": [
+                      {
+                        "name": None,
+                        "quantity": None
+                      }
+                    ]
+                  },
+                  "status": True,
+                  "code": 200
                 }
                 return Response(response_data)
 
