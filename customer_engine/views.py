@@ -287,72 +287,90 @@ class AllDishesViews(APIView):
                     snacks_instances = Snacks.objects.all()  # Retrieve all Snacks instances
                     snacksserializer = SnacksSerializer(snacks_instances, many=True)
                     response_data ={
-                        "data": {
-                          "caloriesUsed": 650,
-                          "calorieBreakdown": {
-                            "calories": 100,
-                            "pral": 100,
-                            "calcium": 450
-                          },
-                          "Breakfast": [
-                            {
-                              "dishName": None,
-                              "ingredients": None,
-                              "calories": None,
-                              "nutritionValues":breakfastserializer.data,
-                              "recipeValues": [
-                                {
-                                  "name": None,
-                                  "quantity": None
-                                }
-                              ]
-                            }
-                          ],
-                          "Launch": [
-                            {
-                              "dishName": None,
-                              "ingredients": None,
-                              "calories": None,
-                              "nutritionValues": launchserializer.data,
-                              "recipeValues": [
-                                {
-                                  "name": None,
-                                  "quantity": None
-                                }
-                              ]
-                            }
-                          ],
-                          "Dinner": [
-                            {
-                              "dishName": None,
-                              "ingredients": None,
-                              "calories": None,
-                              "nutritionValues": dinnerserializer.data,
-                              "recipeValues": [
-                                {
-                                  "name": None,
-                                  "quantity": None
-                                }
-                              ]
-                            }
-                          ],
-                          "Snacks": [
-                            {
-                              "dishName": None,
-                              "ingredients": None,
-                              "calories": None,
-                              "nutritionValues": snacksserializer.data,
-                              "recipeValues": [
-                                {
-                                  "name": None,
-                                  "quantity": None
-                                }
-                              ]
-                            }
-                          ],
-                          "status": True,
-                          "code": 200
-                        }
+                      "data": {
+                        "caloriesUsed": 650,
+                        "calorieBreakdown": {
+                          "calories": 100,
+                          "pral": 100,
+                          "calcium": 450
+                        },
+                        "breakfast": [
+                          {
+                            "dishName": "idli",
+                            "ingredients": "Idli 100 gms idly Ravva, Water",
+                            "calories": 400,
+                            "nutritionValues": [
+                              {
+                                "name": "oil",
+                                "quantity": 0
+                              }
+                            ],
+                            "recipeValues": [
+                              {
+                                "name": "Bajra",
+                                "quantity": "150 (gms)"
+                              }
+                            ]
+                          }
+                        ],
+                        "lunch": [
+                          {
+                            "dishName": "idli",
+                            "ingredients": "Idli 100 gms idly Ravva, Water",
+                            "calories": 400,
+                            "nutritionValues": [
+                              {
+                                "name": "oil",
+                                "quantity": 0
+                              }
+                            ],
+                            "recipeValues": [
+                              {
+                                "name": "Bajra",
+                                "quantity": "150 (gms)"
+                              }
+                            ]
+                          }
+                        ],
+                        "eveningSnacks": [
+                          {
+                            "dishName": "idli",
+                            "ingredients": "Idli 100 gms idly Ravva, Water",
+                            "calories": 400,
+                            "nutritionValues": [
+                              {
+                                "name": "oil",
+                                "quantity": 0
+                              }
+                            ],
+                            "recipeValues": [
+                              {
+                                "name": "Bajra",
+                                "quantity": "150 (gms)"
+                              }
+                            ]
+                          }
+                        ],
+                        "dinner": [
+                          {
+                            "dishName": "idli",
+                            "ingredients": "Idli 100 gms idly Ravva, Water",
+                            "calories": 400,
+                            "nutritionValues": [
+                              {
+                                "name": "oil",
+                                "quantity": 0
+                              }
+                            ],
+                            "recipeValues": [
+                              {
+                                "name": "Bajra",
+                                "quantity": "150 (gms)"
+                              }
+                            ]
+                          }
+                        ]
+                      }
                     }
 
                     print(response_data)
@@ -454,19 +472,26 @@ class GetDishViews(APIView):
 
                 response_data = {
                   "data": {
-                    "dishName": None,
-                    "ingredients": None,
-                    "calories": None,
-                    "nutritionValues": serializer.data,
+                    "dishName": "idli",
+                    "ingredients": "Idli 100 gms idly Ravva, Water",
+                    "calories": 400,
+                    "nutritionValues": [
+                        {
+                          "name": "oil",
+                          "quantity": 0.0,
+
+                        }
+                      ]
+                    },
                     "recipeValues": [
-                      {
-                        "name": None,
-                        "quantity": None
-                      }
-                    ]
-                  },
-                  "status": True,
-                  "code": 200
+                        {
+                          "name": "Bajra",
+                          "quantity": "150 (gms)",
+
+                        }
+                      ],
+                    "status": True,
+                    "code": 200
                 }
                 return Response(response_data)
 
