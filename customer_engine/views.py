@@ -16,6 +16,8 @@ from .decorators import *
 # Create your views here.
 
 
+
+
 class SendOtpViews(GenericAPIView):
     serializer_class = SendOtpSerializer  # Set the serializer class
 
@@ -296,18 +298,54 @@ class AllDishesViews(APIView):
                         },
                         "breakfast": [
                           {
-                            "dishName": "idli",
-                            "ingredients": "Idli 100 gms idly Ravva, Water",
+                            "dishName": "Bajra",
+                            "ingredients": "Bajra Chilla",
                             "calories": 400,
                             "nutritionValues": [
                               {
                                 "name": "oil",
+                                "quantity": 0
+                              },
+                              {
+                                "name": "PRAL",
+                                "quantity": 0
+                              },
+                              {
+                                "name": "GL",
+                                "quantity": 0
+                              },
+                              {
+                                "name": "AAF adj prot",
+                                "quantity": 0
+                              },
+                              {
+                                "name": "carbs",
                                 "quantity": 0
                               }
                             ],
                             "recipeValues": [
                               {
                                 "name": "Bajra",
+                                "quantity": "150 (gms)"
+                              },
+                              {
+                                "name": "Ghee / Animal Fat",
+                                "quantity": "40 (gms)"
+                              },
+                              {
+                                "name": "Pepper & Cloves",
+                                "quantity": "10 (gms)"
+                              },
+                              {
+                                "name": "Red Chillie powder",
+                                "quantity": "10 (gms)"
+                              },
+                              {
+                                "name": "Turmeric",
+                                "quantity": "5 (gms)"
+                              },
+                              {
+                                "name": "Carrot raw",
                                 "quantity": "150 (gms)"
                               }
                             ]
@@ -315,18 +353,54 @@ class AllDishesViews(APIView):
                         ],
                         "lunch": [
                           {
-                            "dishName": "idli",
-                            "ingredients": "Idli 100 gms idly Ravva, Water",
+                            "dishName": "Bajra",
+                            "ingredients": "Bajra Chilla",
                             "calories": 400,
                             "nutritionValues": [
                               {
                                 "name": "oil",
+                                "quantity": 0
+                              },
+                              {
+                                "name": "PRAL",
+                                "quantity": 0
+                              },
+                              {
+                                "name": "GL",
+                                "quantity": 0
+                              },
+                              {
+                                "name": "AAF adj prot",
+                                "quantity": 0
+                              },
+                              {
+                                "name": "carbs",
                                 "quantity": 0
                               }
                             ],
                             "recipeValues": [
                               {
                                 "name": "Bajra",
+                                "quantity": "150 (gms)"
+                              },
+                              {
+                                "name": "Ghee / Animal Fat",
+                                "quantity": "40 (gms)"
+                              },
+                              {
+                                "name": "Pepper & Cloves",
+                                "quantity": "10 (gms)"
+                              },
+                              {
+                                "name": "Red Chillie powder",
+                                "quantity": "10 (gms)"
+                              },
+                              {
+                                "name": "Turmeric",
+                                "quantity": "5 (gms)"
+                              },
+                              {
+                                "name": "Carrot raw",
                                 "quantity": "150 (gms)"
                               }
                             ]
@@ -334,12 +408,28 @@ class AllDishesViews(APIView):
                         ],
                         "eveningSnacks": [
                           {
-                            "dishName": "idli",
-                            "ingredients": "Idli 100 gms idly Ravva, Water",
+                            "dishName": "Bajra",
+                            "ingredients": "Bajra Chilla",
                             "calories": 400,
                             "nutritionValues": [
                               {
                                 "name": "oil",
+                                "quantity": 0
+                              },
+                              {
+                                "name": "PRAL",
+                                "quantity": 0
+                              },
+                              {
+                                "name": "GL",
+                                "quantity": 0
+                              },
+                              {
+                                "name": "AAF adj prot",
+                                "quantity": 0
+                              },
+                              {
+                                "name": "carbs",
                                 "quantity": 0
                               }
                             ],
@@ -347,24 +437,80 @@ class AllDishesViews(APIView):
                               {
                                 "name": "Bajra",
                                 "quantity": "150 (gms)"
+                              },
+                              {
+                                "name": "Ghee / Animal Fat",
+                                "quantity": "40 (gms)"
+                              },
+                              {
+                                "name": "Pepper & Cloves",
+                                "quantity": "10 (gms)"
+                              },
+                              {
+                                "name": "Red Chillie powder",
+                                "quantity": "10 (gms)"
+                              },
+                              {
+                                "name": "Turmeric",
+                                "quantity": "5 (gms)"
+                              },
+                              {
+                                "name": "Carrot raw",
+                                "quantity": "150 (gms)"
                               }
                             ]
                           }
                         ],
                         "dinner": [
                           {
-                            "dishName": "idli",
-                            "ingredients": "Idli 100 gms idly Ravva, Water",
+                            "dishName": "Bajra",
+                            "ingredients": "Bajra Chilla",
                             "calories": 400,
                             "nutritionValues": [
                               {
                                 "name": "oil",
+                                "quantity": 0
+                              },
+                              {
+                                "name": "PRAL",
+                                "quantity": 0
+                              },
+                              {
+                                "name": "GL",
+                                "quantity": 0
+                              },
+                              {
+                                "name": "AAF adj prot",
+                                "quantity": 0
+                              },
+                              {
+                                "name": "carbs",
                                 "quantity": 0
                               }
                             ],
                             "recipeValues": [
                               {
                                 "name": "Bajra",
+                                "quantity": "150 (gms)"
+                              },
+                              {
+                                "name": "Ghee / Animal Fat",
+                                "quantity": "40 (gms)"
+                              },
+                              {
+                                "name": "Pepper & Cloves",
+                                "quantity": "10 (gms)"
+                              },
+                              {
+                                "name": "Red Chillie powder",
+                                "quantity": "10 (gms)"
+                              },
+                              {
+                                "name": "Turmeric",
+                                "quantity": "5 (gms)"
+                              },
+                              {
+                                "name": "Carrot raw",
                                 "quantity": "150 (gms)"
                               }
                             ]
@@ -471,27 +617,61 @@ class GetDishViews(APIView):
                 serializer = serializer_class(base_queryset, many=True)
 
                 response_data = {
-                  "data": {
-                    "dishName": "idli",
-                    "ingredients": "Idli 100 gms idly Ravva, Water",
-                    "calories": 400,
-                    "nutritionValues": [
-                        {
-                          "name": "oil",
-                          "quantity": 0.0,
-
-                        }
-                      ]
-                    },
-                    "recipeValues": [
-                        {
-                          "name": "Bajra",
-                          "quantity": "150 (gms)",
-
-                        }
-                      ],
-                    "status": True,
-                    "code": 200
+                    "data": {
+                        "dishName": "Bajra",
+                        "ingredients": "Bajra Chilla",
+                        "calories": 400,
+                        "nutritionValues": [
+                          {
+                            "name": "oil",
+                            "quantity": 0
+                          },
+                          {
+                            "name": "PRAL",
+                            "quantity": 0
+                          },
+                          {
+                            "name": "GL",
+                            "quantity": 0
+                          },
+                          {
+                            "name": "AAF adj prot",
+                            "quantity": 0
+                          },
+                          {
+                            "name": "carbs",
+                            "quantity": 0
+                          }
+                        ],
+                        "recipeValues": [
+                          {
+                            "name": "Bajra",
+                            "quantity": "150 (gms)"
+                          },
+                          {
+                            "name": "Ghee / Animal Fat",
+                            "quantity": "40 (gms)"
+                          },
+                          {
+                            "name": "Pepper & Cloves",
+                            "quantity": "10 (gms)"
+                          },
+                          {
+                            "name": "Red Chillie powder",
+                            "quantity": "10 (gms)"
+                          },
+                          {
+                            "name": "Turmeric",
+                            "quantity": "5 (gms)"
+                          },
+                          {
+                            "name": "Carrot raw",
+                            "quantity": "150 (gms)"
+                          }
+                        ],
+                        "status": True,
+                        "code": 200
+                    }
                 }
                 return Response(response_data)
 
