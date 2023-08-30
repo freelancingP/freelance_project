@@ -3,7 +3,7 @@ from .models import *
 
 
 class SendOtpSerializer(serializers.Serializer):
-    number = serializers.CharField(max_length=15)
+    email_or_number = serializers.CharField(max_length=50)
     user_type = serializers.CharField(max_length=15)
 
 class VerifyOtpSerializer(serializers.Serializer):

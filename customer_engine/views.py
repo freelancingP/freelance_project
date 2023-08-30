@@ -13,7 +13,10 @@ import boto3
 from rest_framework.parsers import MultiPartParser, FileUploadParser
 import io
 from .decorators import *
+from django.db.models import Q
 # Create your views here.
+
+
 
 
 class SendOtpViews(GenericAPIView):
@@ -28,20 +31,32 @@ class SendOtpViews(GenericAPIView):
         print(user_type)
         if user_type == "login":
             try:
-                customer = Customer.objects.get(contact_number=serializer.validated_data["number"])
-                user_data = UserOTP(user = customer, otp = otp)
-                user_data.save()
-                numbers = "91" + customer.contact_number
-                sendSMS(numbers)
-                response_data = {
-                    "data": {
-                        "number": customer.contact_number,
-                        "otp": otp,
-                    },
-                    "status": True,
-                    "code": 200,
-                }
-                return Response(response_data)
+                print("uiho")
+                email_or_number = serializer.validated_data.get("email_or_number")
+                customer = Customer.objects.filter(Q(contact_number=email_or_number) | Q(email=email_or_number)).first()
+                if customer:
+                    print(customer)
+                    user_data = UserOTP(user = customer, otp = otp)
+                    print("hjhfy")
+                    user_data.save()
+                    numbers = "91" + customer.contact_number
+                    response_data = {
+                        "data": {
+                            "number": customer.contact_number,
+                            "otp": otp,
+                        },
+                        "status": True,
+                        "code": 200,
+                    }
+                    return Response(response_data)
+                else:
+                  response_data = {
+                      "data": None,
+                      "status": False,
+                      "code": 401,
+                      "message": "User Not Registered.",
+                  }
+                  return Response(response_data)
             except Customer.DoesNotExist:
                 response_data = {
                     "data": None,
@@ -52,7 +67,7 @@ class SendOtpViews(GenericAPIView):
                 return Response(response_data)
         else:
             try:
-                customer = Customer.objects.get(contact_number=serializer.validated_data["number"])
+                customer = Customer.objects.filter(Q(contact_number=serializer.validated_data["email_or_number"]) | Q(email=serializer.validated_data["email_or_number"])).exists()
             except:
                 customer = None
             if customer:
@@ -64,15 +79,15 @@ class SendOtpViews(GenericAPIView):
                 }
                 return Response(response_data)
             else:
-                data = Customer(image_url = None, first_name = None, last_name = None ,gender = None,location = None, address = None, contact_number = serializer.validated_data["number"],email = None, date_of_birth = None, age = None , height = None,height_unit=None, weight_unit=None, weight = None, health_issue = None, other_issue = None, any_medication = None, veg_nonveg = None, profession = None , help=None)
+                data = Customer(image_url = None, first_name = None, last_name = None ,gender = None,location = None, address = None, contact_number = serializer.validated_data["email_or_number"],email = None, date_of_birth = None, age = None , height = None,height_unit=None, weight_unit=None, weight = None, health_issue = None, other_issue = None, any_medication = None, veg_nonveg = None, profession = None , help=None)
                 data.save()
-                customer = Customer.objects.get(contact_number=serializer.validated_data["number"])
+                customer = Customer.objects.get(Q(contact_number=serializer.validated_data["email_or_number"]) | Q(email=serializer.validated_data["email_or_number"]))
                 user_data = UserOTP(user = customer, otp = otp)
                 user_data.save()
                 print("juwe")
                 response_data = {
                     "data": {
-                        "number": serializer.validated_data["number"],
+                        "number": serializer.validated_data["email_or_number"],
                         "otp": otp,
                     },
                     "status": True,
@@ -296,18 +311,54 @@ class AllDishesViews(APIView):
                         },
                         "breakfast": [
                           {
-                            "dishName": "idli",
-                            "ingredients": "Idli 100 gms idly Ravva, Water",
+                            "dishName": "Bajra",
+                            "ingredients": "Bajra Chilla",
                             "calories": 400,
                             "nutritionValues": [
                               {
                                 "name": "oil",
+                                "quantity": 0
+                              },
+                              {
+                                "name": "PRAL",
+                                "quantity": 0
+                              },
+                              {
+                                "name": "GL",
+                                "quantity": 0
+                              },
+                              {
+                                "name": "AAF adj prot",
+                                "quantity": 0
+                              },
+                              {
+                                "name": "carbs",
                                 "quantity": 0
                               }
                             ],
                             "recipeValues": [
                               {
                                 "name": "Bajra",
+                                "quantity": "150 (gms)"
+                              },
+                              {
+                                "name": "Ghee / Animal Fat",
+                                "quantity": "40 (gms)"
+                              },
+                              {
+                                "name": "Pepper & Cloves",
+                                "quantity": "10 (gms)"
+                              },
+                              {
+                                "name": "Red Chillie powder",
+                                "quantity": "10 (gms)"
+                              },
+                              {
+                                "name": "Turmeric",
+                                "quantity": "5 (gms)"
+                              },
+                              {
+                                "name": "Carrot raw",
                                 "quantity": "150 (gms)"
                               }
                             ]
@@ -315,18 +366,54 @@ class AllDishesViews(APIView):
                         ],
                         "lunch": [
                           {
-                            "dishName": "idli",
-                            "ingredients": "Idli 100 gms idly Ravva, Water",
+                            "dishName": "Bajra",
+                            "ingredients": "Bajra Chilla",
                             "calories": 400,
                             "nutritionValues": [
                               {
                                 "name": "oil",
+                                "quantity": 0
+                              },
+                              {
+                                "name": "PRAL",
+                                "quantity": 0
+                              },
+                              {
+                                "name": "GL",
+                                "quantity": 0
+                              },
+                              {
+                                "name": "AAF adj prot",
+                                "quantity": 0
+                              },
+                              {
+                                "name": "carbs",
                                 "quantity": 0
                               }
                             ],
                             "recipeValues": [
                               {
                                 "name": "Bajra",
+                                "quantity": "150 (gms)"
+                              },
+                              {
+                                "name": "Ghee / Animal Fat",
+                                "quantity": "40 (gms)"
+                              },
+                              {
+                                "name": "Pepper & Cloves",
+                                "quantity": "10 (gms)"
+                              },
+                              {
+                                "name": "Red Chillie powder",
+                                "quantity": "10 (gms)"
+                              },
+                              {
+                                "name": "Turmeric",
+                                "quantity": "5 (gms)"
+                              },
+                              {
+                                "name": "Carrot raw",
                                 "quantity": "150 (gms)"
                               }
                             ]
@@ -334,12 +421,28 @@ class AllDishesViews(APIView):
                         ],
                         "eveningSnacks": [
                           {
-                            "dishName": "idli",
-                            "ingredients": "Idli 100 gms idly Ravva, Water",
+                            "dishName": "Bajra",
+                            "ingredients": "Bajra Chilla",
                             "calories": 400,
                             "nutritionValues": [
                               {
                                 "name": "oil",
+                                "quantity": 0
+                              },
+                              {
+                                "name": "PRAL",
+                                "quantity": 0
+                              },
+                              {
+                                "name": "GL",
+                                "quantity": 0
+                              },
+                              {
+                                "name": "AAF adj prot",
+                                "quantity": 0
+                              },
+                              {
+                                "name": "carbs",
                                 "quantity": 0
                               }
                             ],
@@ -347,24 +450,80 @@ class AllDishesViews(APIView):
                               {
                                 "name": "Bajra",
                                 "quantity": "150 (gms)"
+                              },
+                              {
+                                "name": "Ghee / Animal Fat",
+                                "quantity": "40 (gms)"
+                              },
+                              {
+                                "name": "Pepper & Cloves",
+                                "quantity": "10 (gms)"
+                              },
+                              {
+                                "name": "Red Chillie powder",
+                                "quantity": "10 (gms)"
+                              },
+                              {
+                                "name": "Turmeric",
+                                "quantity": "5 (gms)"
+                              },
+                              {
+                                "name": "Carrot raw",
+                                "quantity": "150 (gms)"
                               }
                             ]
                           }
                         ],
                         "dinner": [
                           {
-                            "dishName": "idli",
-                            "ingredients": "Idli 100 gms idly Ravva, Water",
+                            "dishName": "Bajra",
+                            "ingredients": "Bajra Chilla",
                             "calories": 400,
                             "nutritionValues": [
                               {
                                 "name": "oil",
+                                "quantity": 0
+                              },
+                              {
+                                "name": "PRAL",
+                                "quantity": 0
+                              },
+                              {
+                                "name": "GL",
+                                "quantity": 0
+                              },
+                              {
+                                "name": "AAF adj prot",
+                                "quantity": 0
+                              },
+                              {
+                                "name": "carbs",
                                 "quantity": 0
                               }
                             ],
                             "recipeValues": [
                               {
                                 "name": "Bajra",
+                                "quantity": "150 (gms)"
+                              },
+                              {
+                                "name": "Ghee / Animal Fat",
+                                "quantity": "40 (gms)"
+                              },
+                              {
+                                "name": "Pepper & Cloves",
+                                "quantity": "10 (gms)"
+                              },
+                              {
+                                "name": "Red Chillie powder",
+                                "quantity": "10 (gms)"
+                              },
+                              {
+                                "name": "Turmeric",
+                                "quantity": "5 (gms)"
+                              },
+                              {
+                                "name": "Carrot raw",
                                 "quantity": "150 (gms)"
                               }
                             ]
@@ -471,27 +630,61 @@ class GetDishViews(APIView):
                 serializer = serializer_class(base_queryset, many=True)
 
                 response_data = {
-                  "data": {
-                    "dishName": "idli",
-                    "ingredients": "Idli 100 gms idly Ravva, Water",
-                    "calories": 400,
-                    "nutritionValues": [
-                        {
-                          "name": "oil",
-                          "quantity": 0.0,
-
-                        }
-                      ]
-                    },
-                    "recipeValues": [
-                        {
-                          "name": "Bajra",
-                          "quantity": "150 (gms)",
-
-                        }
-                      ],
-                    "status": True,
-                    "code": 200
+                    "data": {
+                        "dishName": "Bajra",
+                        "ingredients": "Bajra Chilla",
+                        "calories": 400,
+                        "nutritionValues": [
+                          {
+                            "name": "oil",
+                            "quantity": 0
+                          },
+                          {
+                            "name": "PRAL",
+                            "quantity": 0
+                          },
+                          {
+                            "name": "GL",
+                            "quantity": 0
+                          },
+                          {
+                            "name": "AAF adj prot",
+                            "quantity": 0
+                          },
+                          {
+                            "name": "carbs",
+                            "quantity": 0
+                          }
+                        ],
+                        "recipeValues": [
+                          {
+                            "name": "Bajra",
+                            "quantity": "150 (gms)"
+                          },
+                          {
+                            "name": "Ghee / Animal Fat",
+                            "quantity": "40 (gms)"
+                          },
+                          {
+                            "name": "Pepper & Cloves",
+                            "quantity": "10 (gms)"
+                          },
+                          {
+                            "name": "Red Chillie powder",
+                            "quantity": "10 (gms)"
+                          },
+                          {
+                            "name": "Turmeric",
+                            "quantity": "5 (gms)"
+                          },
+                          {
+                            "name": "Carrot raw",
+                            "quantity": "150 (gms)"
+                          }
+                        ],
+                        "status": True,
+                        "code": 200
+                    }
                 }
                 return Response(response_data)
 

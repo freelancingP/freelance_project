@@ -3,40 +3,20 @@ from django.shortcuts import redirect
 import urllib.request
 import urllib.parse
  
-# def sendSMS(numbers):
-#     apikey = "Mzg0YjM4NmE2OTY3NzI1ODQ3NjI1MTMwNmUzNTY4NzI="
-#     data = urllib.parse.urlencode({
-#         'apikey': apikey,
-#         'numbers': numbers,
-#         'message': "Your message content here",
-#         'sender': "Manish"
-#     })
-#     data = data.encode('utf-8')
+from twilio.rest import Client
 
-#     request = urllib.request.Request("https://api.textlocal.in/send")
-#     request.add_header('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
+def send_sms(request):
 
-#     f = urllib.request.urlopen(request, data)
-#     fr = f.read().decode('utf-8')
-#     print(fr)
-#     return fr
-
-def sendSMS(numbers):
-    apikey = "Mzg0YjM4NmE2OTY3NzI1ODQ3NjI1MTMwNmUzNTY4NzI="
-    data = urllib.parse.urlencode({'apikey': apikey, 'numbers': numbers,
-                                   'message': str(829903), 'sender': "Manish", 'format': 'json'})
-    data = data.encode('utf-8')
-    request = urllib.request.Request("https://api.textlocal.in/send/")
+    account_sid = 'AC954f796095e63724d29cb5bc17b5c0df'
+    auth_token = '[AuthToken]'
+    client = Client(account_sid, auth_token)
     
-    try:
-        with urllib.request.urlopen(request, data) as f:
-            response = f.read().decode('utf-8')
-            print(response)
-            return response
-    except urllib.error.HTTPError as e:
-        print("HTTP Error:", e)
-        return None
+    message = client.messages.create(
+        to='+918299037804'
+    )
 
+    print(message.sid)
+    return message.sid
 
 
     
