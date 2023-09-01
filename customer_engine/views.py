@@ -748,10 +748,20 @@ class AddCaloryViews(APIView):
                 decoded_payload = jwt.decode(token, algorithms=['HS256'], options={"verify_signature": False})
                 try:
                     customer = Customer.objects.get(contact_number=decoded_payload['client_id'])
-                    calory_data = CaloryCount(customer = customer,calory = data["calory"])
-                    calory_data.save()
-                    calory_instances = CaloryCount.objects.all()
-                    serializer = CalorySerializer(calory_instances,many=True)
+                    try:
+                        calory = CaloryCount.objects.get(customer=customer)
+                    except CaloryCount.DoesNotExist:
+                        calory = None
+                    if calory is not None:
+                      # Update existing calory_data
+                      calory.calory += float(data["calory"])
+                      calory.save()
+                    else:
+                      print("ufe")
+                      calory_data = CaloryCount(customer=customer, calory=data["calory"])
+                      calory_data.save()
+                    calory_response = CaloryCount.objects.get(customer=customer)
+                    serializer = CalorySerializer(calory_response)
     
                     response_data = {
                         "data": serializer.data,
