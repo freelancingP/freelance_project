@@ -79,8 +79,12 @@ class SendOtpViews(GenericAPIView):
                 }
                 return Response(response_data)
             else:
-                data = Customer(image_url = None, first_name = None, last_name = None ,gender = None,location = None, address = None, contact_number = serializer.validated_data["email_or_number"],email = None, date_of_birth = None, age = None , height = None,height_unit=None, weight_unit=None, weight = None, health_issue = None, other_issue = None, any_medication = None, veg_nonveg = None, profession = None , help=None)
-                data.save()
+                if data["input_type"] == "number":
+                  data = Customer(image_url = None, first_name = None, last_name = None ,gender = None,location = None, address = None, contact_number = serializer.validated_data["email_or_number"],email = None, date_of_birth = None, age = None , height = None,height_unit=None, weight_unit=None, weight = None, health_issue = None, other_issue = None, any_medication = None, veg_nonveg = None, profession = None , help=None)
+                  data.save()
+                else:
+                    data = Customer(image_url = None, first_name = None, last_name = None ,gender = None,location = None, address = None, contact_number = None,email = serializer.validated_data["email_or_number"], date_of_birth = None, age = None , height = None,height_unit=None, weight_unit=None, weight = None, health_issue = None, other_issue = None, any_medication = None, veg_nonveg = None, profession = None , help=None)
+                    data.save()
                 customer = Customer.objects.get(Q(contact_number=serializer.validated_data["email_or_number"]) | Q(email=serializer.validated_data["email_or_number"]))
                 user_data = UserOTP(user = customer, otp = otp)
                 user_data.save()
@@ -690,6 +694,81 @@ class GetDishViews(APIView):
 
             except Exception as e:
                 print(e)
+                
+            except jwt.ExpiredSignatureError:
+                response_data ={
+                    "data": None,
+                    "status": False,
+                    "code": 401,
+                    "message": "Token has expired.",
+                }
+                return Response(response_data)
+            except jwt.DecodeError:
+                response_data ={
+                    "data": None,
+                    "status": False,
+                    "code": 498,
+                    "message": "Invalid token.",
+                }
+                return Response(response_data)
+            except Customer.DoesNotExist:
+                response_data ={
+                    "data": None,
+                    "status": False,
+                    "code": 401,
+                    "message": "Invalid Authentication.",
+                }
+                return Response(response_data)
+            except Exception as e:
+                response_data ={
+                    "data": None,
+                    "status": False,
+                    "code": 500,
+                    "message": "An error occurred.",
+                }
+                return Response(response_data)
+                
+        else:
+            response_data ={
+                "data": None,
+                "status": False,
+                "code": 400,
+                "message": "No token provided.",
+            }
+            return Response(response_data)
+
+
+class AddCaloryViews(APIView):
+    def post(self, request):
+        auth_header = request.headers.get('Authorization')
+        data = request.data
+        if auth_header and auth_header.startswith('Bearer '):
+            token = auth_header.split(' ')[1]
+            try:
+                decoded_payload = jwt.decode(token, algorithms=['HS256'], options={"verify_signature": False})
+                try:
+                    customer = Customer.objects.get(contact_number=decoded_payload['client_id'])
+                    calory_data = CaloryCount(customer = customer,calory = data["calory"])
+                    calory_data.save()
+                    calory_instances = CaloryCount.objects.all()
+                    serializer = CalorySerializer(calory_instances,many=True)
+    
+                    response_data = {
+                        "data": serializer.data,
+                        "status": True,
+                        "code": 200                       
+                    }
+                    return Response(response_data)
+
+                except Exception as e:
+                    print(e)
+                    response_data ={
+                        "status": False,
+                        "data": None,
+                        "code": 401,
+                        "message": "User Does't Exist.",
+                    }
+                    return Response(response_data)
                 
             except jwt.ExpiredSignatureError:
                 response_data ={

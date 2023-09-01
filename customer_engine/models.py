@@ -39,6 +39,15 @@ class CustomerStatus(models.Model):
 
     def __str__(self):
         return self.status
+
+class CaloryCount(models.Model):
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    calory = models.FloatField(default = 0.0)
+    date = models.DateField(default=timezone.now)
+    total_calory = models.FloatField(default = 0.0)
+
+    def __str__(self):
+        return str(self.calory)
     
 class Breakfast(models.Model):
     food = models.CharField(max_length=200,null=True,blank=True)
