@@ -4,6 +4,7 @@ from .models import *
 
 class SendOtpSerializer(serializers.Serializer):
     email_or_number = serializers.CharField(max_length=50)
+    input_type = serializers.CharField(max_length=50)
     user_type = serializers.CharField(max_length=15)
 
 class VerifyOtpSerializer(serializers.Serializer):
@@ -45,4 +46,10 @@ class DailyRecipeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = DailyRecipe
+        fields = '__all__'
+
+class CalorySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CaloryCount
         fields = '__all__'

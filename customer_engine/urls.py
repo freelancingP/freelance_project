@@ -9,6 +9,7 @@ urlpatterns = [
     path('upload/image/',views.UploadImageView.as_view()),
     path('all/dishes/',views.AllDishesViews.as_view()),
     path('get/dish/',views.GetDishViews.as_view()),
+    path('add/calory/',views.AddCaloryViews.as_view()),
     # path('update/daily/recipe/',views.UpdateDailyRecipeViews.as_view()),
 
 ]
