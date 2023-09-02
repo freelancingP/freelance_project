@@ -752,24 +752,55 @@ class AddCaloryViews(APIView):
                         calory = CaloryCount.objects.get(customer=customer)
                     except CaloryCount.DoesNotExist:
                         calory = None
-                    if calory is not None:
-                      # Update existing calory_data
-                      calory.calory += float(data["calory"])
-                      calory.save()
-                    else:
-                      print("ufe")
-                      calory_data = CaloryCount(customer=customer, calory=data["calory"])
-                      calory_data.save()
-                    calory_response = CaloryCount.objects.get(customer=customer)
-                    serializer = CalorySerializer(calory_response)
-    
-                    response_data = {
-                        "data": serializer.data,
-                        "status": True,
-                        "code": 200                       
-                    }
-                    return Response(response_data)
+                    try:
+                      if data["action"] == "add":
+                        if calory is not None:
+                          # Update existing calory_data
+                          calory.calory += float(data["calory"])
+                          calory.save()
+                        else:
+                          print("ufe")
+                          calory_data = CaloryCount(customer=customer, calory=data["calory"])
+                          calory_data.save()
+                        calory_response = CaloryCount.objects.get(customer=customer)
+                        serializer = CalorySerializer(calory_response)
 
+                        response_data = {
+                            "data": serializer.data,
+                            "status": True,
+                            "code": 200                       
+                        }
+                        return Response(response_data)
+                      elif data["action"] == "remove":
+                        if calory is not None:
+                          # Update existing calory_data
+                          calory.calory -= float(data["calory"])
+                          calory.save()
+                        else:
+                          pass
+                        calory_response = CaloryCount.objects.get(customer=customer)
+                        serializer = CalorySerializer(calory_response)
+
+                        response_data = {
+                            "data": serializer.data,
+                            "status": True,
+                            "code": 200                       
+                        }
+                        return Response(response_data)
+                      else:
+                        response_data = {
+                            "message": "Provide corect request data.",
+                            "status": True,
+                            "code": 400                       
+                        }
+                        return Response(response_data)
+                    except:
+                      response_data = {
+                            "message": "Missing Required Field.",
+                            "status": True,
+                            "code": 400                       
+                        }
+                      return Response(response_data)
                 except Exception as e:
                     print(e)
                     response_data ={
