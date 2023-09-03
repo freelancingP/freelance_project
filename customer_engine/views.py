@@ -228,7 +228,36 @@ class UpdateUserDetailViews(APIView):
                             }
                             return Response(response_data)
                     customer.save()
-                    
+                    customer = Customer.objects.get(contact_number=decoded_payload['client_id'])
+                    try:
+                      calory_exists = CaloryCount.objects.get(customer=customer)
+                    except:
+                      calory_exists = None
+                    if calory_exists is None:
+                      if customer.weight is not None and customer.height is not None and customer.age is not None:
+                        if customer.gender == "Male":
+                            calory = 88.362+(float(customer.weight)*13.37)+(float(customer.height)*4.799)-(float(customer.age)*5.677)
+                            total_calory = round((calory * 0.702050619834711),2)
+                        elif customer.gender == "Female":
+                            calory = 447.593+(float(customer.weight)*9.247)+(float(customer.height)*3.098)-(float(customer.age)*4.33)
+                            total_calory = round((calory * 0.702050619834711),2)
+                        else:
+                          total_calory = 0.0
+                        calory_data = CaloryCount(customer=customer,total_calory=total_calory)
+                        calory_data.save()
+                    else:
+                      if customer.weight is not None and customer.height is not None and customer.age is not None:
+                        if customer.gender == "Male":
+                            calory = 88.362+(float(customer.weight)*13.37)+(float(customer.height)*4.799)-(float(customer.age)*5.677)
+                            total_calory = round((calory * 0.702050619834711),2)
+                        elif customer.gender == "Female":
+                            calory = 447.593+(float(customer.weight)*9.247)+(float(customer.height)*3.098)-(float(customer.age)*4.33)
+                            total_calory = round((calory * 0.702050619834711),2)
+                        else:
+                          total_calory = 0.0
+                        calory_exists.total_calory = total_calory
+                        calory_exists.save()
+
                     serializer = CustomerSerializer(customer)
                     serialized_data = serializer.data
 
@@ -249,6 +278,7 @@ class UpdateUserDetailViews(APIView):
                     }
                     return Response(response_data)
                 except Exception as e:
+                    print(e)
                     response_data ={
                         "data": None,
                         "status": False,

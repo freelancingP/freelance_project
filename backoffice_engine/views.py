@@ -13,6 +13,7 @@ import pandas as pd
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from openpyxl import load_workbook
 import boto3
+import math
 # Create your views here.
 
 def login(request):
@@ -216,6 +217,15 @@ def add_customer(request):
             })
         else:
             data.save()
+            if gender == "Male":
+                calory = 88.362+(float(weight)*13.37)+(float(height)*4.799)-(float(age)*5.677)
+                total_calory = round((calory * 0.702050619834711),2)
+            else:
+                calory = 447.593+(float(weight)*9.247)+(float(height)*3.098)-(float(age)*4.33)
+                total_calory = round((calory * 0.702050619834711),2)
+            print(total_calory)
+            calory_data = CaloryCount(customer=data,total_calory=total_calory)
+            calory_data.save()
             return render(request,"add_customer.html",{
                 "user":user,
                 "tag":"success",
@@ -276,14 +286,28 @@ def add_dish(request):
         file = request.FILES.get('uploaded-file')
         if file is not None and isinstance(file, InMemoryUploadedFile):
             try:
+                xls = pd.ExcelFile(file)
+                sheet_names = xls.sheet_names
+
+                # 'sheet_names' will now contain a list of all the sheet names in the Excel file
+                print(sheet_names)
                 df = pd.read_excel(file, engine='openpyxl')  # Explicitly specify the engine
                 data = df.to_dict(orient='records')
-                print(data)
                 for d in data:
-                    # Your code to save data to the database goes here
-                    dishes_data = Snacks(food=d["Food"], quantity=d["Qty"], gl=d["GL"], oil=d["Oil (gms)"], usable_cals=d["Useble Cals"], aaf_adj_prot=d["AAF \nadj Prot (gms)"], carbs=d["Carbs (gms)       "], total_fat=d["Total Fa t (gms)  "], tdf=d["TDF (gms)  "], sodium=d["Sodium"], potassium=d["Pota-ssium (mgm)"], phasphorous=d["Phosphorus"], calcium=d["Calcium"], magnecium=d["Magnecium"], total_eaa=d["Total EAA (mgms)"], lysine=d["Lysine (mgm)"], gross_protine=d["Gross Protein (gms)  "], free_suger=d["Free Sugars (gms)  "])
-                    dishes_data.save()
-                print(data)
+                    for sheet in sheet_names:
+                        dishes_data = None
+                        if sheet == "Dishes":
+                            dishes_data = Dishes(food=d["Food"], quantity=d["Quantity"],ingredients=d["Ingredients "],veg_nonveg_egg = d["Veg/Non Veg/Egg"],pral=d["PRAL"],gl=d["GL"], oil=d["Oil"],cals=d["Cals\nNet of  TDF"], aaf_adj_prot=d["AAF \nadj Prot"], carbs=d["Carbs          (Net of TDF)"], total_fat=d["Total Fat"], tdf=d["TDF"],sodium=d["Sodium"], potassium=d["Pota-ssium"], phasphorous=d["Phosphorus"], calcium=d["Calcium"], magnecium=d["Magnecium"], total_eaa=d["Total EAA"], lysine=d["Lysine"], gross_protine=d["Gross Protein"], free_suger=d["Free Sugars"],aa_factor=d["AA\nFactor"],glucose=d["GI       (Glu-cose)"])
+                        elif sheet == "Breakfast":
+                            dishes_data = Breakfast(food=d["Food"], quantity=d["Quantity"],ingredients=d["Ingredients "],veg_nonveg_egg = d["Veg/Non Veg/Egg"],pral=d["PRAL"],gl=d["GL"], oil=d["Oil"],cals=d["Cals\nNet of  TDF"], aaf_adj_prot=d["AAF \nadj Prot"], carbs=d["Carbs          (Net of TDF)"], total_fat=d["Total Fat"], tdf=d["TDF"],sodium=d["Sodium"], potassium=d["Pota-ssium"], phasphorous=d["Phosphorus"], calcium=d["Calcium"], magnecium=d["Magnecium"], total_eaa=d["Total EAA"], lysine=d["Lysine"], gross_protine=d["Gross Protein"], free_suger=d["Free Sugars"],aa_factor=d["AA\nFactor"],glucose=d["GI       (Glu-cose)"])
+                        elif sheet == "Lunch":
+                            dishes_data = Lunch(food=d["Food"], quantity=d["Quantity"],ingredients=d["Ingredients "],veg_nonveg_egg = d["Veg/Non Veg/Egg"],pral=d["PRAL"],gl=d["GL"], oil=d["Oil"],cals=d["Cals\nNet of  TDF"], aaf_adj_prot=d["AAF \nadj Prot"], carbs=d["Carbs          (Net of TDF)"], total_fat=d["Total Fat"], tdf=d["TDF"],sodium=d["Sodium"], potassium=d["Pota-ssium"], phasphorous=d["Phosphorus"], calcium=d["Calcium"], magnecium=d["Magnecium"], total_eaa=d["Total EAA"], lysine=d["Lysine"], gross_protine=d["Gross Protein"], free_suger=d["Free Sugars"],aa_factor=d["AA\nFactor"],glucose=d["GI       (Glu-cose)"])
+                        elif sheet == "Dinner":
+                            dishes_data = Diner(food=d["Food"], quantity=d["Quantity"],ingredients=d["Ingredients "],veg_nonveg_egg = d["Veg/Non Veg/Egg"],pral=d["PRAL"],gl=d["GL"], oil=d["Oil"],cals=d["Cals\nNet of  TDF"], aaf_adj_prot=d["AAF \nadj Prot"], carbs=d["Carbs          (Net of TDF)"], total_fat=d["Total Fat"], tdf=d["TDF"],sodium=d["Sodium"], potassium=d["Pota-ssium"], phasphorous=d["Phosphorus"], calcium=d["Calcium"], magnecium=d["Magnecium"], total_eaa=d["Total EAA"], lysine=d["Lysine"], gross_protine=d["Gross Protein"], free_suger=d["Free Sugars"],aa_factor=d["AA\nFactor"],glucose=d["GI       (Glu-cose)"])
+                        elif sheet == "Breakfast":
+                            dishes_data = Snacks(food=d["Food"], quantity=d["Quantity"],ingredients=d["Ingredients "],veg_nonveg_egg = d["Veg/Non Veg/Egg"],pral=d["PRAL"],gl=d["GL"], oil=d["Oil"],cals=d["Cals\nNet of  TDF"], aaf_adj_prot=d["AAF \nadj Prot"], carbs=d["Carbs          (Net of TDF)"], total_fat=d["Total Fat"], tdf=d["TDF"],sodium=d["Sodium"], potassium=d["Pota-ssium"], phasphorous=d["Phosphorus"], calcium=d["Calcium"], magnecium=d["Magnecium"], total_eaa=d["Total EAA"], lysine=d["Lysine"], gross_protine=d["Gross Protein"], free_suger=d["Free Sugars"],aa_factor=d["AA\nFactor"],glucose=d["GI       (Glu-cose)"])
+                        if dishes_data is not None:
+                            dishes_data.save()
                 return render(request, "add-dish-calculator.html", {
                     "user": user,
                     "tag": "success",
