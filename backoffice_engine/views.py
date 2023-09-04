@@ -20,16 +20,13 @@ def login(request):
     if request.method == "POST":
         email = request.POST['email']
         password = request.POST["password"]
-        print(email,password)
         try:
             user = AdminUser.objects.get(email=email)
         except:
             user=None
-        print(user.name)
         if user is not None and user.password == password:
             request.session["user"] = user.id
             request.session["password"] = user.password
-            print("vdfg9it")
             return redirect('dashboard')
         else:
             return render(request, "login.html", {
@@ -43,27 +40,29 @@ def signup(request):
         name = request.POST["name"]
         email = request.POST['email']
         password = request.POST["password"]
-        print(email,password)
         try:
             user = AdminUser.objects.get(email=email)
         except:
             user = None
         try:
             uploaded_image = request.POST["picture"]
+            print(uploaded_image)
             if uploaded_image:
+                print("hjsj")
                 aws_access_key_id = 'AKIAU62W7KNUZ4DKGRU3'
                 aws_secret_access_key = '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'
                 aws_region = 'us-east-2'
                 bucket_name = 'appstacklabs'
                 s3 = boto3.client('s3', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key, region_name=aws_region)
                 object_key = f"admin/profile/images/{uploaded_image}"  # Adjust the path in the bucket as needed
-                image_data = uploaded_image
+                image_data = uploaded_image.read()
                 # Upload the image data to S3 using put_object
                 s3.put_object(Body=image_data, Bucket=bucket_name, Key=object_key)
                 s3_image_url = f"https://{bucket_name}.s3.{aws_region}.amazonaws.com/{object_key}"
             else:
                 s3_image_url = "https://mdbootstrap.com/img/Photos/Others/placeholder-avatar.jpg"
         except Exception as e:
+            print(e)
             s3_image_url = "https://mdbootstrap.com/img/Photos/Others/placeholder-avatar.jpg"
         print(s3_image_url)            
         if user:
@@ -158,7 +157,8 @@ def new_password(request):
 @custom_login_required
 def index(request):
     user = AdminUser.objects.get(id = request.session["user"])
-    print(user)
+    print("hi/hello")
+    print(user.image_url)
     return render(request,"index.html",{
         "user":user
     })
