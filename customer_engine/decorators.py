@@ -3,20 +3,20 @@ from django.shortcuts import redirect
 import urllib.request
 import urllib.parse
  
-from twilio.rest import Client
+# from twilio.rest import Client
 
-def send_sms(request):
+# def send_sms(request):
 
-    account_sid = 'AC954f796095e63724d29cb5bc17b5c0df'
-    auth_token = '[AuthToken]'
-    client = Client(account_sid, auth_token)
+#     account_sid = 'AC954f796095e63724d29cb5bc17b5c0df'
+#     auth_token = '[AuthToken]'
+#     client = Client(account_sid, auth_token)
     
-    message = client.messages.create(
-        to='+918299037804'
-    )
+#     message = client.messages.create(
+#         to='+918299037804'
+#     )
 
-    print(message.sid)
-    return message.sid
+#     print(message.sid)
+#     return message.sid
 
 
     
