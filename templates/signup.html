@@ -169,6 +169,24 @@
     <script src="static/js/custom.min.js"></script>
     <script src="static/js/deznav-init.js"></script>
     <script>
+      function previewFile(event) {
+          const fileInput = event.target;
+          const previewImage = document.getElementById('previewImage');
+  
+          if (fileInput.files && fileInput.files[0]) {
+              const reader = new FileReader();
+  
+              reader.onload = function (e) {
+                  previewImage.src = e.target.result;
+              };
+  
+              reader.readAsDataURL(fileInput.files[0]);
+          } else {
+              previewImage.src = 'https://mdbootstrap.com/img/Photos/Others/placeholder-avatar.jpg';
+          }
+      }
+  </script>
+    <script>
         let passwordInput = document.querySelector('#passwordInput input[type="password"]');
         let passwordStrength= document.getElementById('passwordStrength');
         let poor = document.querySelector('#passwordStrength #poor');
