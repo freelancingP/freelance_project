@@ -37,7 +37,7 @@ class SendOtpViews(GenericAPIView):
                 if customer:
                     print(customer)
                     user_data = UserOTP(user = customer, otp = otp)
-                    print("hjhfy")
+                    print(customer.contact_number)
                     user_data.save()
                     numbers = "91" + customer.contact_number
                     response_data = {
@@ -66,6 +66,7 @@ class SendOtpViews(GenericAPIView):
                 }
                 return Response(response_data)
         else:
+            data = request.data
             try:
                 customer = Customer.objects.filter(Q(contact_number=serializer.validated_data["email_or_number"]) | Q(email=serializer.validated_data["email_or_number"])).exists()
             except:
@@ -82,22 +83,33 @@ class SendOtpViews(GenericAPIView):
                 if data["input_type"] == "number":
                   data = Customer(image_url = None, first_name = None, last_name = None ,gender = None,location = None, address = None, contact_number = serializer.validated_data["email_or_number"],email = None, date_of_birth = None, age = None , height = None,height_unit=None, weight_unit=None, weight = None, health_issue = None, other_issue = None, any_medication = None, veg_nonveg = None, profession = None , help=None)
                   data.save()
-                else:
+                elif data["input_type"] == "email":
                     data = Customer(image_url = None, first_name = None, last_name = None ,gender = None,location = None, address = None, contact_number = None,email = serializer.validated_data["email_or_number"], date_of_birth = None, age = None , height = None,height_unit=None, weight_unit=None, weight = None, health_issue = None, other_issue = None, any_medication = None, veg_nonveg = None, profession = None , help=None)
                     data.save()
-                customer = Customer.objects.get(Q(contact_number=serializer.validated_data["email_or_number"]) | Q(email=serializer.validated_data["email_or_number"]))
-                user_data = UserOTP(user = customer, otp = otp)
-                user_data.save()
-                print("juwe")
-                response_data = {
-                    "data": {
-                        "number": serializer.validated_data["email_or_number"],
-                        "otp": otp,
-                    },
-                    "status": True,
-                    "code": 200,
-                }
-                return Response(response_data)
+                else:
+                  pass
+                try:
+                  customer = Customer.objects.get(Q(contact_number=serializer.validated_data["email_or_number"]) | Q(email=serializer.validated_data["email_or_number"]))
+                  user_data = UserOTP(user = customer, otp = otp)
+                  user_data.save()
+                  print("juwe")
+                  response_data = {
+                      "data": {
+                          "number": serializer.validated_data["email_or_number"],
+                          "otp": otp,
+                      },
+                      "status": True,
+                      "code": 200,
+                  }
+                  return Response(response_data)
+                except:
+                  response_data = {
+                      "data": None,
+                      "message":"Provide Correct Input Key Value Paire",
+                      "status": False,
+                      "code": 400,
+                  }
+                  return Response(response_data)
 
 class VerifyOtpViews(GenericAPIView):
     serializer_class = VerifyOtpSerializer
@@ -802,7 +814,8 @@ class AddCaloryViews(APIView):
                         }
                         return Response(response_data)
                       elif data["action"] == "remove":
-                        if calory is not None:
+                        if calory.calory > 0.0 and calory is not None:
+                          print("dofep")
                           # Update existing calory_data
                           calory.calory -= float(data["calory"])
                           calory.save()
