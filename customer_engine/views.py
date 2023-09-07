@@ -87,7 +87,7 @@ class SendOtpViews(GenericAPIView):
                 data = Customer(image_url=None, first_name=None, last_name=None, gender=None, location=None, address=None, contact_number=contact_number, email=serializer.validated_data["email"], date_of_birth=None, age=None, height=None, height_unit=None, weight_unit=None, weight=None, health_issue=None, other_issue=None, any_medication=None, veg_nonveg=None, profession=None, help=None)
                 data.save()
                 try:
-                  customer = Customer.objects.get(Q(contact_number=contact_number) | Q(email=serializer.validated_data["email_or_number"]))
+                  customer = Customer.objects.get(Q(contact_number=contact_number) | Q(email=serializer.validated_data["email"]))
                   user_data = UserOTP(user=customer, otp=otp)
                   user_data.save()
                   print("juwe")
