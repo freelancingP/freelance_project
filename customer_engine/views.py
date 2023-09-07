@@ -21,42 +21,44 @@ from django.db.models import Q
 
 class SendOtpViews(GenericAPIView):
     serializer_class = SendOtpSerializer  # Set the serializer class
-
+    
     def post(self, request):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         otp = random.randrange(100000, 999999)
+        print(serializer.validated_data)
         
         user_type = serializer.validated_data["user_type"]
         print(user_type)
         if user_type == "login":
             try:
-                print("uiho")
-                email_or_number = serializer.validated_data.get("email_or_number")
-                customer = Customer.objects.filter(Q(contact_number=email_or_number) | Q(email=email_or_number)).first()
-                if customer:
-                    print(customer)
-                    user_data = UserOTP(user = customer, otp = otp)
-                    print(customer.contact_number)
-                    user_data.save()
-                    numbers = "91" + customer.contact_number
-                    response_data = {
-                        "data": {
-                            "number": customer.contact_number,
-                            "otp": otp,
-                        },
-                        "status": True,
-                        "code": 200,
-                    }
-                    return Response(response_data)
-                else:
+              print("uiho")
+              contact_number = serializer.validated_data.get("country_code") + serializer.validated_data.get("phone_number")
+              email_or_number = serializer.validated_data.get("email")
+              customer = Customer.objects.filter(Q(contact_number=contact_number) | Q(email=email_or_number)).first()
+              if customer:
+                  print(customer)
+                  user_data = UserOTP(user = customer, otp = otp)
+                  print(customer.contact_number)
+                  user_data.save()
+                  numbers = "91" + customer.contact_number
                   response_data = {
-                      "data": None,
-                      "status": False,
-                      "code": 401,
-                      "message": "User Not Registered.",
+                      "data": {
+                          "number": customer.contact_number,
+                          "otp": otp,
+                      },
+                      "status": True,
+                      "code": 200,
                   }
                   return Response(response_data)
+              else:
+                response_data = {
+                    "data": None,
+                    "status": False,
+                    "code": 401,
+                    "message": "User Not Registered.",
+                }
+                return Response(response_data)
             except Customer.DoesNotExist:
                 response_data = {
                     "data": None,
@@ -66,9 +68,10 @@ class SendOtpViews(GenericAPIView):
                 }
                 return Response(response_data)
         else:
-            data = request.data
             try:
-                customer = Customer.objects.filter(Q(contact_number=serializer.validated_data["email_or_number"]) | Q(email=serializer.validated_data["email_or_number"])).exists()
+                contact_number = serializer.validated_data.get("country_code") + serializer.validated_data.get("phone_number")
+                email_or_number = serializer.validated_data.get("email")
+                customer = Customer.objects.filter(Q(contact_number=contact_number) | Q(email=email_or_number)).exists()
             except:
                 customer = None
             if customer:
@@ -80,29 +83,26 @@ class SendOtpViews(GenericAPIView):
                 }
                 return Response(response_data)
             else:
-                if data["input_type"] == "number":
-                  data = Customer(image_url = None, first_name = None, last_name = None ,gender = None,location = None, address = None, contact_number = serializer.validated_data["email_or_number"],email = None, date_of_birth = None, age = None , height = None,height_unit=None, weight_unit=None, weight = None, health_issue = None, other_issue = None, any_medication = None, veg_nonveg = None, profession = None , help=None)
-                  data.save()
-                elif data["input_type"] == "email":
-                    data = Customer(image_url = None, first_name = None, last_name = None ,gender = None,location = None, address = None, contact_number = None,email = serializer.validated_data["email_or_number"], date_of_birth = None, age = None , height = None,height_unit=None, weight_unit=None, weight = None, health_issue = None, other_issue = None, any_medication = None, veg_nonveg = None, profession = None , help=None)
-                    data.save()
-                else:
-                  pass
+                contact_number = serializer.validated_data["country_code"] + serializer.validated_data["phone_number"]
+                data = Customer(image_url=None, first_name=None, last_name=None, gender=None, location=None, address=None, contact_number=contact_number, email=serializer.validated_data["email"], date_of_birth=None, age=None, height=None, height_unit=None, weight_unit=None, weight=None, health_issue=None, other_issue=None, any_medication=None, veg_nonveg=None, profession=None, help=None)
+                data.save()
                 try:
-                  customer = Customer.objects.get(Q(contact_number=serializer.validated_data["email_or_number"]) | Q(email=serializer.validated_data["email_or_number"]))
-                  user_data = UserOTP(user = customer, otp = otp)
+                  customer = Customer.objects.get(Q(contact_number=contact_number) | Q(email=serializer.validated_data["email_or_number"]))
+                  user_data = UserOTP(user=customer, otp=otp)
                   user_data.save()
                   print("juwe")
                   response_data = {
                       "data": {
-                          "number": serializer.validated_data["email_or_number"],
+                          "phone_number": customer.contact_number,
+                          "email": customer.contact_number,
                           "otp": otp,
                       },
                       "status": True,
                       "code": 200,
                   }
                   return Response(response_data)
-                except:
+                except Exception as e:
+                  print(e)
                   response_data = {
                       "data": None,
                       "message":"Provide Correct Input Key Value Paire",
@@ -336,249 +336,168 @@ class AllDishesViews(APIView):
                 decoded_payload = jwt.decode(token, algorithms=['HS256'], options={"verify_signature": False})
                 try:
                     customer = Customer.objects.get(contact_number=decoded_payload['client_id'])
+                    print(customer)
+                    t_calory = CaloryCount.objects.get(customer=customer)
                     breakfast_instances = Breakfast.objects.all()  # Retrieve all Breakfast instances
                     breakfastserializer = BreakfastSerializer(breakfast_instances, many=True)
+                    breakfast_data_list = breakfastserializer.data
+
+                    breackfast_data = []
+                    for data in breakfast_data_list:
+                        input_string = data['ingredients']
+
+                        ingredients = input_string.split(",")  # Split the string into a list of ingredients
+
+                        recipe_values = []
+
+                        for ingredient in ingredients:
+                            # Assuming you want to create a dictionary with a "name" key and a fixed "quantity" value
+                            recipe_values.append({
+                                "name": ingredient,
+                                "colour":"#01BA91",
+                            })
+                        breakfast_item = {
+                            "dishId": data['id'],
+                            "dishName": data['food'],
+                            "ingredients": data['ingredients'],
+                            "calories": 400,
+                            "nutritionValues": [
+                              {
+                                "name": data['oil'],
+                                "quantity": data['quantity'],
+                                "percentage":None,
+                                "colour":"#01BA91",
+                              },
+
+                            ],
+                            "recipeValues": recipe_values
+                          }
+                        breackfast_data.append(breakfast_item)
                     
                     launch_instances = Lunch.objects.all()  # Retrieve all Launch instances
                     launchserializer = LunchSerializer(launch_instances, many=True)
+                    lunch_data_list = launchserializer.data
+
+                    lunch_data = []
+                    for data in lunch_data_list:
+                        input_string = data['ingredients']
+
+                        ingredients = input_string.split(",")  # Split the string into a list of ingredients
+
+                        recipe_values = []
+
+                        for ingredient in ingredients:
+                            # Assuming you want to create a dictionary with a "name" key and a fixed "quantity" value
+                            recipe_values.append({
+                                "name": ingredient,
+                                "colour":"#01BA91",
+                            })
+                        lunch_item = {
+                            "dishId": data['id'],
+                            "dishName": data['food'],
+                            "ingredients": data['ingredients'],
+                            "calories": 400,
+                            "nutritionValues": [
+                              {
+                                "name": data['oil'],
+                                "quantity": data['quantity'],
+                                "percentage":None,
+                                "colour":"#01BA91",
+                              },
+
+                            ],
+                            "recipeValues": recipe_values
+                          }
+                        lunch_data.append(lunch_item)
                     
                     dinner_instances = Dinner.objects.all()  # Retrieve all Dinner instances
                     dinnerserializer = DinnerSerializer(dinner_instances, many=True)
+                    dinner_data_list = dinnerserializer.data
+
+                    dinner_data = []
+                    for data in dinner_data_list:
+                        input_string = data['ingredients']
+
+                        ingredients = input_string.split(",")  # Split the string into a list of ingredients
+
+                        recipe_values = []
+
+                        for ingredient in ingredients:
+                            # Assuming you want to create a dictionary with a "name" key and a fixed "quantity" value
+                            recipe_values.append({
+                                "name": ingredient,
+                                "colour":"#01BA91",
+                            })
+                        dinner_item = {
+                            "dishId": data['id'],
+                            "dishName": data['food'],
+                            "ingredients": data['ingredients'],
+                            "calories": 400,
+                            "nutritionValues": [
+                              {
+                                "name": data['oil'],
+                                "quantity": data['quantity'],
+                                "percentage":None,
+                                "colour":"#01BA91",
+                              },
+
+                            ],
+                            "recipeValues": recipe_values
+                          }
+                        dinner_data.append(dinner_item)
                     
                     snacks_instances = Snacks.objects.all()  # Retrieve all Snacks instances
                     snacksserializer = SnacksSerializer(snacks_instances, many=True)
+                    snacks_data_list = snacksserializer.data
+
+                    snacks_data = []
+                    for data in snacks_data_list:
+                        input_string = data['ingredients']
+
+                        ingredients = input_string.split(",")  # Split the string into a list of ingredients
+
+                        recipe_values = []
+
+                        for ingredient in ingredients:
+                            # Assuming you want to create a dictionary with a "name" key and a fixed "quantity" value
+                            recipe_values.append({
+                                "name": ingredient,
+                                "colour":"#01BA91",
+                            })
+                        snacks_item = {
+                            "dishId": data['id'],
+                            "dishName": data['food'],
+                            "ingredients": data['ingredients'],
+                            "calories": 400,
+                            "nutritionValues": [
+                              {
+                                "name": data['oil'],
+                                "quantity": data['quantity'],
+                                "percentage":None,
+                                "colour":"#01BA91",
+                              },
+
+                            ],
+                            "recipeValues":recipe_values
+                          }
+                        snacks_data.append(snacks_item)
                     response_data ={
                       "data": {
                         "caloriesUsed": 650,
+                        "totalCalory": t_calory.total_calory,
                         "calorieBreakdown": {
                           "calories": 100,
                           "pral": 100,
                           "calcium": 450
                         },
-                        "breakfast": [
-                          {
-                            "dishName": "Bajra",
-                            "ingredients": "Bajra Chilla",
-                            "calories": 400,
-                            "nutritionValues": [
-                              {
-                                "name": "oil",
-                                "quantity": 0
-                              },
-                              {
-                                "name": "PRAL",
-                                "quantity": 0
-                              },
-                              {
-                                "name": "GL",
-                                "quantity": 0
-                              },
-                              {
-                                "name": "AAF adj prot",
-                                "quantity": 0
-                              },
-                              {
-                                "name": "carbs",
-                                "quantity": 0
-                              }
-                            ],
-                            "recipeValues": [
-                              {
-                                "name": "Bajra",
-                                "quantity": "150 (gms)"
-                              },
-                              {
-                                "name": "Ghee / Animal Fat",
-                                "quantity": "40 (gms)"
-                              },
-                              {
-                                "name": "Pepper & Cloves",
-                                "quantity": "10 (gms)"
-                              },
-                              {
-                                "name": "Red Chillie powder",
-                                "quantity": "10 (gms)"
-                              },
-                              {
-                                "name": "Turmeric",
-                                "quantity": "5 (gms)"
-                              },
-                              {
-                                "name": "Carrot raw",
-                                "quantity": "150 (gms)"
-                              }
-                            ]
-                          }
-                        ],
-                        "lunch": [
-                          {
-                            "dishName": "Bajra",
-                            "ingredients": "Bajra Chilla",
-                            "calories": 400,
-                            "nutritionValues": [
-                              {
-                                "name": "oil",
-                                "quantity": 0
-                              },
-                              {
-                                "name": "PRAL",
-                                "quantity": 0
-                              },
-                              {
-                                "name": "GL",
-                                "quantity": 0
-                              },
-                              {
-                                "name": "AAF adj prot",
-                                "quantity": 0
-                              },
-                              {
-                                "name": "carbs",
-                                "quantity": 0
-                              }
-                            ],
-                            "recipeValues": [
-                              {
-                                "name": "Bajra",
-                                "quantity": "150 (gms)"
-                              },
-                              {
-                                "name": "Ghee / Animal Fat",
-                                "quantity": "40 (gms)"
-                              },
-                              {
-                                "name": "Pepper & Cloves",
-                                "quantity": "10 (gms)"
-                              },
-                              {
-                                "name": "Red Chillie powder",
-                                "quantity": "10 (gms)"
-                              },
-                              {
-                                "name": "Turmeric",
-                                "quantity": "5 (gms)"
-                              },
-                              {
-                                "name": "Carrot raw",
-                                "quantity": "150 (gms)"
-                              }
-                            ]
-                          }
-                        ],
-                        "eveningSnacks": [
-                          {
-                            "dishName": "Bajra",
-                            "ingredients": "Bajra Chilla",
-                            "calories": 400,
-                            "nutritionValues": [
-                              {
-                                "name": "oil",
-                                "quantity": 0
-                              },
-                              {
-                                "name": "PRAL",
-                                "quantity": 0
-                              },
-                              {
-                                "name": "GL",
-                                "quantity": 0
-                              },
-                              {
-                                "name": "AAF adj prot",
-                                "quantity": 0
-                              },
-                              {
-                                "name": "carbs",
-                                "quantity": 0
-                              }
-                            ],
-                            "recipeValues": [
-                              {
-                                "name": "Bajra",
-                                "quantity": "150 (gms)"
-                              },
-                              {
-                                "name": "Ghee / Animal Fat",
-                                "quantity": "40 (gms)"
-                              },
-                              {
-                                "name": "Pepper & Cloves",
-                                "quantity": "10 (gms)"
-                              },
-                              {
-                                "name": "Red Chillie powder",
-                                "quantity": "10 (gms)"
-                              },
-                              {
-                                "name": "Turmeric",
-                                "quantity": "5 (gms)"
-                              },
-                              {
-                                "name": "Carrot raw",
-                                "quantity": "150 (gms)"
-                              }
-                            ]
-                          }
-                        ],
-                        "dinner": [
-                          {
-                            "dishName": "Bajra",
-                            "ingredients": "Bajra Chilla",
-                            "calories": 400,
-                            "nutritionValues": [
-                              {
-                                "name": "oil",
-                                "quantity": 0
-                              },
-                              {
-                                "name": "PRAL",
-                                "quantity": 0
-                              },
-                              {
-                                "name": "GL",
-                                "quantity": 0
-                              },
-                              {
-                                "name": "AAF adj prot",
-                                "quantity": 0
-                              },
-                              {
-                                "name": "carbs",
-                                "quantity": 0
-                              }
-                            ],
-                            "recipeValues": [
-                              {
-                                "name": "Bajra",
-                                "quantity": "150 (gms)"
-                              },
-                              {
-                                "name": "Ghee / Animal Fat",
-                                "quantity": "40 (gms)"
-                              },
-                              {
-                                "name": "Pepper & Cloves",
-                                "quantity": "10 (gms)"
-                              },
-                              {
-                                "name": "Red Chillie powder",
-                                "quantity": "10 (gms)"
-                              },
-                              {
-                                "name": "Turmeric",
-                                "quantity": "5 (gms)"
-                              },
-                              {
-                                "name": "Carrot raw",
-                                "quantity": "150 (gms)"
-                              }
-                            ]
-                          }
-                        ]
+                        "breakfast": breackfast_data,
+                        "lunch": lunch_data,
+                        "Snacks": snacks_data,
+                        "dinner": dinner_data,
                       }
                     }
 
-                    print(response_data)
+                    # print(response_data)
                     return Response(response_data)
                 except Customer.DoesNotExist:
                     response_data ={
@@ -589,7 +508,7 @@ class AllDishesViews(APIView):
                     }
                     return Response(response_data)
                 except Exception as e:
-                    print
+                    print(e)
                     response_data ={
                         "data": None,
                         "status": False,
@@ -674,64 +593,39 @@ class GetDishViews(APIView):
 
                 # Serialize the filtered queryset
                 serializer = serializer_class(base_queryset, many=True)
-
-                response_data = {
-                    "data": {
-                        "dishName": "Bajra",
-                        "ingredients": "Bajra Chilla",
+                serializer_data_list = serializer.data
+                response_data = []
+                for data in serializer_data_list:
+                    input_string = data['ingredients']
+                    ingredients = input_string.split(",")  # Split the string into a list of ingredient
+                    recipe_values = []
+                    for ingredient in ingredients:
+                        # Assuming you want to create a dictionary with a "name" key and a fixed "quantity" value
+                        recipe_values.append({
+                            "name": ingredient,
+                            "colour":"#01BA91",
+                        })
+                    breakfast_item = {
+                        "dishId": data['id'],
+                        "dishName": data['food'],
+                        "ingredients": data['ingredients'],
                         "calories": 400,
                         "nutritionValues": [
                           {
-                            "name": "oil",
-                            "quantity": 0
-                          },
-                          {
-                            "name": "PRAL",
-                            "quantity": 0
-                          },
-                          {
-                            "name": "GL",
-                            "quantity": 0
-                          },
-                          {
-                            "name": "AAF adj prot",
-                            "quantity": 0
-                          },
-                          {
-                            "name": "carbs",
-                            "quantity": 0
+                            "name": data['oil'],
+                            "quantity": data['quantity'],
+                            "percentage":None,
+                            "colour":"#01BA91",
                           }
                         ],
-                        "recipeValues": [
-                          {
-                            "name": "Bajra",
-                            "quantity": "150 (gms)"
-                          },
-                          {
-                            "name": "Ghee / Animal Fat",
-                            "quantity": "40 (gms)"
-                          },
-                          {
-                            "name": "Pepper & Cloves",
-                            "quantity": "10 (gms)"
-                          },
-                          {
-                            "name": "Red Chillie powder",
-                            "quantity": "10 (gms)"
-                          },
-                          {
-                            "name": "Turmeric",
-                            "quantity": "5 (gms)"
-                          },
-                          {
-                            "name": "Carrot raw",
-                            "quantity": "150 (gms)"
-                          }
-                        ],
+                        "recipeValues": recipe_values
+                      }
+                    response_data.append(breakfast_item)
+                response_data = {
+                    "data": response_data,
                         "status": True,
                         "code": 200
                     }
-                }
                 return Response(response_data)
 
             except Exception as e:
@@ -791,57 +685,69 @@ class AddCaloryViews(APIView):
                 try:
                     customer = Customer.objects.get(contact_number=decoded_payload['client_id'])
                     try:
-                        calory = CaloryCount.objects.get(customer=customer)
+                        calory = CaloryCount.objects.filter(customer=customer, dish=data["dish"], dish_type=data["dish_type"]).first()
                     except CaloryCount.DoesNotExist:
                         calory = None
                     try:
-                      if data["action"] == "add":
-                        if calory is not None:
-                          # Update existing calory_data
-                          calory.calory += float(data["calory"])
-                          calory.save()
-                        else:
-                          print("ufe")
-                          calory_data = CaloryCount(customer=customer, calory=data["calory"])
-                          calory_data.save()
-                        calory_response = CaloryCount.objects.get(customer=customer)
-                        serializer = CalorySerializer(calory_response)
+                      print(request.data)
+                      if all(key in data for key in ("dish_type", "dish", "calory","action")):
+                        if data["action"] == "add":
+                          print("vbfhvuyr")
+                          if calory is not None:
+                            for c in calory:
+                              if c.dish == data["dish"] and c.dish_type == data["dish_type"]:
+                                # Update existing calory_data
+                                calory.calory += float(data["calory"])
+                                calory.save()
+                          else:
+                            print("ufe")
+                            calory_data = CaloryCount(customer=customer, calory=data["calory"],dish=data["dish"],dish_type=data["dish_type"])
+                            calory_data.save()
+                          calory_response = CaloryCount.objects.get(customer=customer)
+                          serializer = CalorySerializer(calory_response)
 
-                        response_data = {
-                            "data": serializer.data,
-                            "status": True,
-                            "code": 200                       
-                        }
-                        return Response(response_data)
-                      elif data["action"] == "remove":
-                        if calory.calory > 0.0 and calory is not None:
-                          print("dofep")
-                          # Update existing calory_data
-                          calory.calory -= float(data["calory"])
-                          calory.save()
-                        else:
-                          pass
-                        calory_response = CaloryCount.objects.get(customer=customer)
-                        serializer = CalorySerializer(calory_response)
+                          response_data = {
+                              "data": serializer.data,
+                              "status": True,
+                              "code": 200                       
+                          }
+                          return Response(response_data)
+                        elif data["action"] == "remove":
+                          if calory.calory > 0.0 and calory is not None:
+                            print("dofep")
+                            # Update existing calory_data
+                            calory.calory -= float(data["calory"])
+                            calory.save()
+                          else:
+                            pass
+                          calory_response = CaloryCount.objects.get(customer=customer)
+                          serializer = CalorySerializer(calory_response)
 
-                        response_data = {
-                            "data": serializer.data,
-                            "status": True,
-                            "code": 200                       
-                        }
-                        return Response(response_data)
+                          response_data = {
+                              "data": serializer.data,
+                              "status": True,
+                              "code": 200                       
+                          }
+                          return Response(response_data)
+                        else:
+                          response_data = {
+                              "message": "Provide corect request data.",
+                              "status": True,
+                              "code": 400                       
+                          }
+                          return Response(response_data)
                       else:
                         response_data = {
-                            "message": "Provide corect request data.",
+                            "message": "Missing Required Field.",
                             "status": True,
                             "code": 400                       
                         }
                         return Response(response_data)
                     except:
                       response_data = {
-                            "message": "Missing Required Field.",
+                            "message": "An Error Occured.",
                             "status": True,
-                            "code": 400                       
+                            "code": 500                       
                         }
                       return Response(response_data)
                 except Exception as e:

@@ -293,6 +293,7 @@ def add_dish(request):
                 print(sheet_names)
                 df = pd.read_excel(file, engine='openpyxl')  # Explicitly specify the engine
                 data = df.to_dict(orient='records')
+                print(data)
                 for d in data:
                     for sheet in sheet_names:
                         dishes_data = None
@@ -301,7 +302,7 @@ def add_dish(request):
                         elif sheet == "Breakfast":
                             dishes_data = Breakfast(food=d["Food"], quantity=d["Quantity"],ingredients=d["Ingredients "],veg_nonveg_egg = d["Veg/Non Veg/Egg"],pral=d["PRAL"],gl=d["GL"], oil=d["Oil"],cals=d["Cals\nNet of  TDF"], aaf_adj_prot=d["AAF \nadj Prot"], carbs=d["Carbs          (Net of TDF)"], total_fat=d["Total Fat"], tdf=d["TDF"],sodium=d["Sodium"], potassium=d["Pota-ssium"], phasphorous=d["Phosphorus"], calcium=d["Calcium"], magnecium=d["Magnecium"], total_eaa=d["Total EAA"], lysine=d["Lysine"], gross_protine=d["Gross Protein"], free_suger=d["Free Sugars"],aa_factor=d["AA\nFactor"],glucose=d["GI       (Glu-cose)"])
                         elif sheet == "Lunch":
-                            dishes_data = Lunch(food=d["Food"], quantity=d["Quantity"],ingredients=d["Ingredients "],veg_nonveg_egg = d["Veg/Non Veg/Egg"],pral=d["PRAL"],gl=d["GL"], oil=d["Oil"],cals=d["Cals\nNet of  TDF"], aaf_adj_prot=d["AAF \nadj Prot"], carbs=d["Carbs          (Net of TDF)"], total_fat=d["Total Fat"], tdf=d["TDF"],sodium=d["Sodium"], potassium=d["Pota-ssium"], phasphorous=d["Phosphorus"], calcium=d["Calcium"], magnecium=d["Magnecium"], total_eaa=d["Total EAA"], lysine=d["Lysine"], gross_protine=d["Gross Protein"], free_suger=d["Free Sugars"],aa_factor=d["AA\nFactor"],glucose=d["GI       (Glu-cose)"])
+                            dishes_data = Lunch(food=d["Food"], quantity=d["Quantity"],ingredients=d["Ingredients"],veg_nonveg_egg = d["Veg/Non Veg/Egg"],pral=d["PRAL"],gl=d["GL"], oil=d["Oil"],cals=d["Cals\nNet of  TDF"], aaf_adj_prot=d["AAF \nadj Prot"], carbs=d["Carbs          (Net of TDF)"], total_fat=d["Total Fat"], tdf=d["TDF"],sodium=d["Sodium"], potassium=d["Pota-ssium"], phasphorous=d["Phosphorus"], calcium=d["Calcium"], magnecium=d["Magnecium"], total_eaa=d["Total EAA"], lysine=d["Lysine"], gross_protine=d["Gross Protein"], free_suger=d["Free Sugars"])
                         elif sheet == "Dinner":
                             dishes_data = Diner(food=d["Food"], quantity=d["Quantity"],ingredients=d["Ingredients "],veg_nonveg_egg = d["Veg/Non Veg/Egg"],pral=d["PRAL"],gl=d["GL"], oil=d["Oil"],cals=d["Cals\nNet of  TDF"], aaf_adj_prot=d["AAF \nadj Prot"], carbs=d["Carbs          (Net of TDF)"], total_fat=d["Total Fat"], tdf=d["TDF"],sodium=d["Sodium"], potassium=d["Pota-ssium"], phasphorous=d["Phosphorus"], calcium=d["Calcium"], magnecium=d["Magnecium"], total_eaa=d["Total EAA"], lysine=d["Lysine"], gross_protine=d["Gross Protein"], free_suger=d["Free Sugars"],aa_factor=d["AA\nFactor"],glucose=d["GI       (Glu-cose)"])
                         elif sheet == "Breakfast":
