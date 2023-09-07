@@ -34,8 +34,8 @@ class SendOtpViews(GenericAPIView):
             try:
               print("uiho")
               contact_number = serializer.validated_data.get("country_code") + serializer.validated_data.get("phone_number")
-              email_or_number = serializer.validated_data.get("email")
-              customer = Customer.objects.filter(Q(contact_number=contact_number) | Q(email=email_or_number)).first()
+              email = serializer.validated_data.get("email")
+              customer = Customer.objects.filter(Q(contact_number=contact_number) | Q(email=email)).first()
               if customer:
                   print(customer)
                   user_data = UserOTP(user = customer, otp = otp)
@@ -45,6 +45,7 @@ class SendOtpViews(GenericAPIView):
                   response_data = {
                       "data": {
                           "number": customer.contact_number,
+                          "email": customer.email,
                           "otp": otp,
                       },
                       "status": True,
@@ -70,8 +71,8 @@ class SendOtpViews(GenericAPIView):
         else:
             try:
                 contact_number = serializer.validated_data.get("country_code") + serializer.validated_data.get("phone_number")
-                email_or_number = serializer.validated_data.get("email")
-                customer = Customer.objects.filter(Q(contact_number=contact_number) | Q(email=email_or_number)).exists()
+                email = serializer.validated_data.get("email")
+                customer = Customer.objects.filter(Q(contact_number=contact_number) | Q(email=email)).exists()
             except:
                 customer = None
             if customer:
