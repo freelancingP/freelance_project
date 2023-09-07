@@ -359,7 +359,6 @@ class AllDishesViews(APIView):
                             # Assuming you want to create a dictionary with a "name" key and a fixed "quantity" value
                             recipe_values.append({
                                 "name": ingredient,
-                                "colour":"#01BA91",
                             })
                         breakfast_item = {
                             "dishId": data['id'],
@@ -370,7 +369,7 @@ class AllDishesViews(APIView):
                               {
                                 "name": data['oil'],
                                 "quantity": data['quantity'],
-                                "percentage":None,
+                                "percentage":25,
                                 "colour":"#01BA91",
                               },
 
@@ -395,7 +394,6 @@ class AllDishesViews(APIView):
                             # Assuming you want to create a dictionary with a "name" key and a fixed "quantity" value
                             recipe_values.append({
                                 "name": ingredient,
-                                "colour":"#01BA91",
                             })
                         lunch_item = {
                             "dishId": data['id'],
@@ -406,7 +404,7 @@ class AllDishesViews(APIView):
                               {
                                 "name": data['oil'],
                                 "quantity": data['quantity'],
-                                "percentage":None,
+                                "percentage":25,
                                 "colour":"#01BA91",
                               },
 
@@ -431,7 +429,6 @@ class AllDishesViews(APIView):
                             # Assuming you want to create a dictionary with a "name" key and a fixed "quantity" value
                             recipe_values.append({
                                 "name": ingredient,
-                                "colour":"#01BA91",
                             })
                         dinner_item = {
                             "dishId": data['id'],
@@ -442,7 +439,7 @@ class AllDishesViews(APIView):
                               {
                                 "name": data['oil'],
                                 "quantity": data['quantity'],
-                                "percentage":None,
+                                "percentage":25,
                                 "colour":"#01BA91",
                               },
 
@@ -467,7 +464,6 @@ class AllDishesViews(APIView):
                             # Assuming you want to create a dictionary with a "name" key and a fixed "quantity" value
                             recipe_values.append({
                                 "name": ingredient,
-                                "colour":"#01BA91",
                             })
                         snacks_item = {
                             "dishId": data['id'],
@@ -478,7 +474,7 @@ class AllDishesViews(APIView):
                               {
                                 "name": data['oil'],
                                 "quantity": data['quantity'],
-                                "percentage":None,
+                                "percentage":25,
                                 "colour":"#01BA91",
                               },
 
@@ -608,7 +604,6 @@ class GetDishViews(APIView):
                         # Assuming you want to create a dictionary with a "name" key and a fixed "quantity" value
                         recipe_values.append({
                             "name": ingredient,
-                            "colour":"#01BA91",
                         })
                     breakfast_item = {
                         "dishId": data['id'],
@@ -619,7 +614,7 @@ class GetDishViews(APIView):
                           {
                             "name": data['oil'],
                             "quantity": data['quantity'],
-                            "percentage":None,
+                            "percentage":25,
                             "colour":"#01BA91",
                           }
                         ],
