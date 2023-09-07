@@ -338,7 +338,11 @@ class AllDishesViews(APIView):
                 try:
                     customer = Customer.objects.get(contact_number=decoded_payload['client_id'])
                     print(customer)
-                    t_calory = CaloryCount.objects.get(customer=customer)
+                    try:
+                        t_calory = CaloryCount.objects.get(customer=customer)
+                        total_calory = t_calory.total_calory
+                    except:
+                        total_calory = None
                     breakfast_instances = Breakfast.objects.all()  # Retrieve all Breakfast instances
                     breakfastserializer = BreakfastSerializer(breakfast_instances, many=True)
                     breakfast_data_list = breakfastserializer.data
@@ -485,7 +489,7 @@ class AllDishesViews(APIView):
                     response_data ={
                       "data": {
                         "caloriesUsed": 650,
-                        "totalCalory": t_calory.total_calory,
+                        "totalCalory": total_calory,
                         "calorieBreakdown": {
                           "calories": 100,
                           "pral": 100,
