@@ -42,6 +42,8 @@ class CustomerStatus(models.Model):
 
 class CaloryCount(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    dish_type = models.CharField(max_length=100,blank=True,null = True)
+    dish = models.IntegerField(null = True)
     calory = models.FloatField(default = 0.0)
     date = models.DateField(default=timezone.now)
     total_calory = models.FloatField(default = 0.0)
