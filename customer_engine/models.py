@@ -45,7 +45,7 @@ class CaloryCount(models.Model):
     dish_type = models.CharField(max_length=100,blank=True,null = True)
     dish = models.IntegerField(null = True)
     calory = models.FloatField(default = 0.0)
-    date = models.DateField(default=timezone.now)
+    date = models.DateField(null=True,blank=True)
     total_calory = models.FloatField(default = 0.0)
 
     def __str__(self):

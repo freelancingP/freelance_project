@@ -685,65 +685,64 @@ class AddCaloryViews(APIView):
                 try:
                     customer = Customer.objects.get(contact_number=decoded_payload['client_id'])
                     try:
-                        calory = CaloryCount.objects.filter(customer=customer, dish=data["dish"], dish_type=data["dish_type"]).first()
+                        calory = CaloryCount.objects.filter(customer=customer, dish=data["dish"], dish_type=data["dish_type"],date=data["date"]).first()
                     except CaloryCount.DoesNotExist:
                         calory = None
                     try:
                       print(request.data)
-                      if all(key in data for key in ("dish_type", "dish", "calory","action")):
-                        if data["action"] == "add":
-                          print("vbfhvuyr")
-                          if calory is not None:
-                            for c in calory:
-                              if c.dish == data["dish"] and c.dish_type == data["dish_type"]:
-                                # Update existing calory_data
-                                calory.calory += float(data["calory"])
-                                calory.save()
+                      if all(key in data for key in ("dish_type", "dish", "calory", "action","date")):
+                          if data["action"] == "add":
+                              if calory is not None:
+                                  # Update existing calory_data
+                                  calory.calory += float(data["calory"])
+                                  calory.save()
+                              else:
+                                  print("ufe")
+                                  calory_data = CaloryCount(customer=customer, calory=data["calory"], dish=data["dish"], dish_type=data["dish_type"],date=data["date"])
+                                  calory_data.save()
+                  
+                              calory_response = CaloryCount.objects.filter(customer=customer, date=data["date"])
+                              serializer = CalorySerializer(calory_response, many=True)
+                  
+                              response_data = {
+                                  "data": serializer.data,
+                                  "status": True,
+                                  "code": 200
+                              }
+                              return Response(response_data)
+                          elif data["action"] == "remove":
+                              if calory is not None and calory.calory > 0.0:
+                                  print("dofep")
+                                  # Update existing calory_data
+                                  calory.calory -= float(data["calory"])
+                                  calory.save()
+                  
+                              calory_response = CaloryCount.objects.filter(customer=customer, date=data["date"])
+                              serializer = CalorySerializer(calory_response, many=True)
+                  
+                              response_data = {
+                                  "data": serializer.data,
+                                  "status": True,
+                                  "code": 200
+                              }
+                              return Response(response_data)
                           else:
-                            print("ufe")
-                            calory_data = CaloryCount(customer=customer, calory=data["calory"],dish=data["dish"],dish_type=data["dish_type"])
-                            calory_data.save()
-                          calory_response = CaloryCount.objects.get(customer=customer)
-                          serializer = CalorySerializer(calory_response)
-
-                          response_data = {
-                              "data": serializer.data,
-                              "status": True,
-                              "code": 200                       
-                          }
-                          return Response(response_data)
-                        elif data["action"] == "remove":
-                          if calory.calory > 0.0 and calory is not None:
-                            print("dofep")
-                            # Update existing calory_data
-                            calory.calory -= float(data["calory"])
-                            calory.save()
-                          else:
-                            pass
-                          calory_response = CaloryCount.objects.get(customer=customer)
-                          serializer = CalorySerializer(calory_response)
-
-                          response_data = {
-                              "data": serializer.data,
-                              "status": True,
-                              "code": 200                       
-                          }
-                          return Response(response_data)
-                        else:
-                          response_data = {
-                              "message": "Provide corect request data.",
-                              "status": True,
-                              "code": 400                       
-                          }
-                          return Response(response_data)
+                              response_data = {
+                                  "message": "Provide correct request data.",
+                                  "status": True,
+                                  "code": 400
+                              }
+                              return Response(response_data)
                       else:
-                        response_data = {
-                            "message": "Missing Required Field.",
-                            "status": True,
-                            "code": 400                       
-                        }
-                        return Response(response_data)
-                    except:
+                          response_data = {
+                              "message": "Missing Required Field.",
+                              "status": True,
+                              "code": 400
+                          }
+                          return Response(response_data)
+
+                    except Exception as e:
+                      print(e)
                       response_data = {
                             "message": "An Error Occured.",
                             "status": True,
