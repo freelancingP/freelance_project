@@ -373,11 +373,109 @@ class AllDishesViews(APIView):
                             "calories": 400,
                             "nutritionValues": [
                               {
-                                "name": data['oil'],
-                                "quantity": data['quantity'],
+                                "name": "PRAL",
+                                "quantity": data['pral'],
                                 "percentage":25,
                                 "colour":"#01BA91",
                               },
+                              {
+                                "name": "Oil",
+                                "quantity": data['oil'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                              {
+                                "name": "GL",
+                                "quantity": data['gl'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                              {
+                                "name": "Calory",
+                                "quantity": data['cals'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                              {
+                                "name": "Aaf adj prot",
+                                "quantity": data['aaf_adj_prot'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                              {
+                                "name": "Carbohydrate",
+                                "quantity": data['carbs'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                              {
+                                "name": "Total Fat",
+                                "quantity": data['total_fat'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                              {
+                                "name": "TDF",
+                                "quantity": data['tdf'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                              {
+                                "name": "Sodium",
+                                "quantity": data['sodium'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                              {
+                                "name": "Potassium",
+                                "quantity": data['potassium'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                              {
+                                "name": "Phasphorous",
+                                "quantity": data['phasphorous'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                              {
+                                "name": "Calcium",
+                                "quantity": data['calcium'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                              {
+                                "name": "Magnecium",
+                                "quantity": data['magnecium'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                              {
+                                "name": "Total EAA",
+                                "quantity": data['total_eaa'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                              {
+                                "name": "Lysine",
+                                "quantity": data['lysine'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                              {
+                                "name": "Gross Protine",
+                                "quantity": data['gross_protine'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                                                            {
+                                "name": "Free Sugar",
+                                "quantity": data['free_suger'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                              
+                              
 
                             ],
                             "recipeValues": recipe_values
@@ -408,11 +506,109 @@ class AllDishesViews(APIView):
                             "calories": 400,
                             "nutritionValues": [
                               {
-                                "name": data['oil'],
-                                "quantity": data['quantity'],
+                                "name": "PRAL",
+                                "quantity": data['pral'],
                                 "percentage":25,
                                 "colour":"#01BA91",
                               },
+                              {
+                                "name": "Oil",
+                                "quantity": data['oil'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                              {
+                                "name": "GL",
+                                "quantity": data['gl'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                              {
+                                "name": "Calory",
+                                "quantity": data['cals'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                              {
+                                "name": "Aaf adj prot",
+                                "quantity": data['aaf_adj_prot'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                              {
+                                "name": "Carbohydrate",
+                                "quantity": data['carbs'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                              {
+                                "name": "Total Fat",
+                                "quantity": data['total_fat'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                              {
+                                "name": "TDF",
+                                "quantity": data['tdf'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                              {
+                                "name": "Sodium",
+                                "quantity": data['sodium'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                              {
+                                "name": "Potassium",
+                                "quantity": data['potassium'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                              {
+                                "name": "Phasphorous",
+                                "quantity": data['phasphorous'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                              {
+                                "name": "Calcium",
+                                "quantity": data['calcium'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                              {
+                                "name": "Magnecium",
+                                "quantity": data['magnecium'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                              {
+                                "name": "Total EAA",
+                                "quantity": data['total_eaa'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                              {
+                                "name": "Lysine",
+                                "quantity": data['lysine'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                              {
+                                "name": "Gross Protine",
+                                "quantity": data['gross_protine'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                                                            {
+                                "name": "Free Sugar",
+                                "quantity": data['free_suger'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                              
+                              
 
                             ],
                             "recipeValues": recipe_values
@@ -443,11 +639,109 @@ class AllDishesViews(APIView):
                             "calories": 400,
                             "nutritionValues": [
                               {
-                                "name": data['oil'],
-                                "quantity": data['quantity'],
+                                "name": "PRAL",
+                                "quantity": data['pral'],
                                 "percentage":25,
                                 "colour":"#01BA91",
                               },
+                              {
+                                "name": "Oil",
+                                "quantity": data['oil'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                              {
+                                "name": "GL",
+                                "quantity": data['gl'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                              {
+                                "name": "Calory",
+                                "quantity": data['cals'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                              {
+                                "name": "Aaf adj prot",
+                                "quantity": data['aaf_adj_prot'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                              {
+                                "name": "Carbohydrate",
+                                "quantity": data['carbs'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                              {
+                                "name": "Total Fat",
+                                "quantity": data['total_fat'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                              {
+                                "name": "TDF",
+                                "quantity": data['tdf'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                              {
+                                "name": "Sodium",
+                                "quantity": data['sodium'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                              {
+                                "name": "Potassium",
+                                "quantity": data['potassium'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                              {
+                                "name": "Phasphorous",
+                                "quantity": data['phasphorous'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                              {
+                                "name": "Calcium",
+                                "quantity": data['calcium'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                              {
+                                "name": "Magnecium",
+                                "quantity": data['magnecium'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                              {
+                                "name": "Total EAA",
+                                "quantity": data['total_eaa'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                              {
+                                "name": "Lysine",
+                                "quantity": data['lysine'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                              {
+                                "name": "Gross Protine",
+                                "quantity": data['gross_protine'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                                                            {
+                                "name": "Free Sugar",
+                                "quantity": data['free_suger'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                              
+                              
 
                             ],
                             "recipeValues": recipe_values
@@ -478,11 +772,109 @@ class AllDishesViews(APIView):
                             "calories": 400,
                             "nutritionValues": [
                               {
-                                "name": data['oil'],
-                                "quantity": data['quantity'],
+                                "name": "PRAL",
+                                "quantity": data['pral'],
                                 "percentage":25,
                                 "colour":"#01BA91",
                               },
+                              {
+                                "name": "Oil",
+                                "quantity": data['oil'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                              {
+                                "name": "GL",
+                                "quantity": data['gl'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                              {
+                                "name": "Calory",
+                                "quantity": data['cals'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                              {
+                                "name": "Aaf adj prot",
+                                "quantity": data['aaf_adj_prot'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                              {
+                                "name": "Carbohydrate",
+                                "quantity": data['carbs'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                              {
+                                "name": "Total Fat",
+                                "quantity": data['total_fat'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                              {
+                                "name": "TDF",
+                                "quantity": data['tdf'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                              {
+                                "name": "Sodium",
+                                "quantity": data['sodium'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                              {
+                                "name": "Potassium",
+                                "quantity": data['potassium'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                              {
+                                "name": "Phasphorous",
+                                "quantity": data['phasphorous'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                              {
+                                "name": "Calcium",
+                                "quantity": data['calcium'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                              {
+                                "name": "Magnecium",
+                                "quantity": data['magnecium'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                              {
+                                "name": "Total EAA",
+                                "quantity": data['total_eaa'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                              {
+                                "name": "Lysine",
+                                "quantity": data['lysine'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                              {
+                                "name": "Gross Protine",
+                                "quantity": data['gross_protine'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                                                            {
+                                "name": "Free Sugar",
+                                "quantity": data['free_suger'],
+                                "percentage":25,
+                                "colour":"#01BA91",
+                              },
+                              
+                              
 
                             ],
                             "recipeValues":recipe_values
@@ -617,12 +1009,108 @@ class GetDishViews(APIView):
                         "ingredients": data['ingredients'],
                         "calories": 400,
                         "nutritionValues": [
-                          {
-                            "name": data['oil'],
-                            "quantity": data['quantity'],
-                            "percentage":25,
-                            "colour":"#01BA91",
-                          }
+                            {
+                              "name": "PRAL",
+                              "quantity": data['pral'],
+                              "percentage":25,
+                              "colour":"#01BA91",
+                            },
+                            {
+                              "name": "Oil",
+                              "quantity": data['oil'],
+                              "percentage":25,
+                              "colour":"#01BA91",
+                            },
+                            {
+                              "name": "GL",
+                              "quantity": data['gl'],
+                              "percentage":25,
+                              "colour":"#01BA91",
+                            },
+                            {
+                              "name": "Calory",
+                              "quantity": data['cals'],
+                              "percentage":25,
+                              "colour":"#01BA91",
+                            },
+                            {
+                              "name": "Aaf adj prot",
+                              "quantity": data['aaf_adj_prot'],
+                              "percentage":25,
+                              "colour":"#01BA91",
+                            },
+                            {
+                              "name": "Carbohydrate",
+                              "quantity": data['carbs'],
+                              "percentage":25,
+                              "colour":"#01BA91",
+                            },
+                            {
+                              "name": "Total Fat",
+                              "quantity": data['total_fat'],
+                              "percentage":25,
+                              "colour":"#01BA91",
+                            },
+                            {
+                              "name": "TDF",
+                              "quantity": data['tdf'],
+                              "percentage":25,
+                              "colour":"#01BA91",
+                            },
+                            {
+                              "name": "Sodium",
+                              "quantity": data['sodium'],
+                              "percentage":25,
+                              "colour":"#01BA91",
+                            },
+                            {
+                              "name": "Potassium",
+                              "quantity": data['potassium'],
+                              "percentage":25,
+                              "colour":"#01BA91",
+                            },
+                            {
+                              "name": "Phasphorous",
+                              "quantity": data['phasphorous'],
+                              "percentage":25,
+                              "colour":"#01BA91",
+                            },
+                            {
+                              "name": "Calcium",
+                              "quantity": data['calcium'],
+                              "percentage":25,
+                              "colour":"#01BA91",
+                            },
+                            {
+                              "name": "Magnecium",
+                              "quantity": data['magnecium'],
+                              "percentage":25,
+                              "colour":"#01BA91",
+                            },
+                            {
+                              "name": "Total EAA",
+                              "quantity": data['total_eaa'],
+                              "percentage":25,
+                              "colour":"#01BA91",
+                            },
+                            {
+                              "name": "Lysine",
+                              "quantity": data['lysine'],
+                              "percentage":25,
+                              "colour":"#01BA91",
+                            },
+                            {
+                              "name": "Gross Protine",
+                              "quantity": data['gross_protine'],
+                              "percentage":25,
+                              "colour":"#01BA91",
+                            },
+                            {
+                              "name": "Free Sugar",
+                              "quantity": data['free_suger'],
+                              "percentage":25,
+                              "colour":"#01BA91",
+                            },
                         ],
                         "recipeValues": recipe_values
                       }
