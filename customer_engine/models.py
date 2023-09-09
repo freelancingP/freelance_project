@@ -24,21 +24,12 @@ class Customer(models.Model):
     profession = models.CharField(max_length=200,blank=True, null=True)
     help = models.CharField(max_length=500, blank=True, null=True)
     date = models.DateField(default=timezone.now)
+    otp = models.IntegerField()
+    status = models.CharField(max_length=200)
 
     def __str__(self):
         return str(self.id)
 
-class UserOTP(models.Model):
-    user = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    otp = models.IntegerField()
-
-    
-class CustomerStatus(models.Model):
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    status = models.CharField(max_length=200)
-
-    def __str__(self):
-        return self.status
 
 class CaloryCount(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
@@ -51,7 +42,16 @@ class CaloryCount(models.Model):
     def __str__(self):
         return str(self.calory)
     
-class Breakfast(models.Model):
+    
+class DailySnacks(models.Model):
+    TYPE_CHOICES = (
+        ('breakfast', 'Breakfast'),
+        ('lunch', 'Lunch'),
+        ('dinner', 'Dinner'),
+        ('Snacks', 'Snacks'),
+
+    )
+    meal_type = models.CharField(max_length=10, choices=TYPE_CHOICES)
     food = models.CharField(max_length=200,null=True,blank=True)
     quantity = models.CharField(max_length=10, null=True)
     ingredients = models.CharField(max_length=255,null=True,blank=True)
@@ -79,90 +79,6 @@ class Breakfast(models.Model):
     def __str__(self):
         return self.food
         
-class Lunch(models.Model):
-    food = models.CharField(max_length=200,null=True,blank=True)
-    quantity = models.CharField(max_length=10, null=True)
-    ingredients = models.CharField(max_length=255,null=True,blank=True)
-    veg_nonveg_egg = models.CharField(max_length=255,null=True,blank=True)
-    pral = models.FloatField(null=True)
-    oil = models.FloatField(null=True)
-    gl = models.FloatField(null=True)
-    cals = models.FloatField(null=True)
-    aaf_adj_prot = models.FloatField(null=True)
-    carbs = models.FloatField(null=True)
-    total_fat = models.FloatField(null=True)
-    tdf = models.FloatField(null=True)
-    sodium = models.FloatField(null=True)
-    potassium = models.FloatField(null=True)
-    phasphorous = models.FloatField(null=True)
-    calcium = models.FloatField(null=True)
-    magnecium = models.FloatField(null=True)
-    total_eaa = models.FloatField(null=True)
-    lysine = models.FloatField(null=True)
-    gross_protine = models.FloatField(null=True)
-    free_suger = models.FloatField(null=True)
-    aa_factor = models.FloatField(null=True)
-    glucose = models.FloatField(null=True)
-
-    def __str__(self):
-        return self.food
-
-class Dinner(models.Model):
-    food = models.CharField(max_length=200,null=True,blank=True)
-    quantity = models.CharField(max_length=10, null=True)
-    ingredients = models.CharField(max_length=255,null=True,blank=True)
-    veg_nonveg_egg = models.CharField(max_length=255,null=True,blank=True)
-    pral = models.FloatField(null=True)
-    oil = models.FloatField(null=True)
-    gl = models.FloatField(null=True)
-    cals = models.FloatField(null=True)
-    aaf_adj_prot = models.FloatField(null=True)
-    carbs = models.FloatField(null=True)
-    total_fat = models.FloatField(null=True)
-    tdf = models.FloatField(null=True)
-    sodium = models.FloatField(null=True)
-    potassium = models.FloatField(null=True)
-    phasphorous = models.FloatField(null=True)
-    calcium = models.FloatField(null=True)
-    magnecium = models.FloatField(null=True)
-    total_eaa = models.FloatField(null=True)
-    lysine = models.FloatField(null=True)
-    gross_protine = models.FloatField(null=True)
-    free_suger = models.FloatField(null=True)
-    aa_factor = models.FloatField(null=True)
-    glucose = models.FloatField(null=True)
-
-    def __str__(self):
-        return self.food
-
-class Snacks(models.Model):
-    food = models.CharField(max_length=200,null=True,blank=True)
-    quantity = models.CharField(max_length=10, null=True)
-    ingredients = models.CharField(max_length=255,null=True,blank=True)
-    veg_nonveg_egg = models.CharField(max_length=255,null=True,blank=True)
-    pral = models.FloatField(null=True)
-    oil = models.FloatField(null=True)
-    gl = models.FloatField(null=True)
-    cals = models.FloatField(null=True)
-    aaf_adj_prot = models.FloatField(null=True)
-    carbs = models.FloatField(null=True)
-    total_fat = models.FloatField(null=True)
-    tdf = models.FloatField(null=True)
-    sodium = models.FloatField(null=True)
-    potassium = models.FloatField(null=True)
-    phasphorous = models.FloatField(null=True)
-    calcium = models.FloatField(null=True)
-    magnecium = models.FloatField(null=True)
-    total_eaa = models.FloatField(null=True)
-    lysine = models.FloatField(null=True)
-    gross_protine = models.FloatField(null=True)
-    free_suger = models.FloatField(null=True)
-    aa_factor = models.FloatField(null=True)
-    glucose = models.FloatField(null=True)
-
-    def __str__(self):
-        return self.food
-
 
 
 class AddRecipe(models.Model):
@@ -198,24 +114,7 @@ class AddIngridient(models.Model):
 
 class DailyRecipe(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    food = models.CharField(max_length=200,null=True,blank=True)
-    quantity = models.CharField(max_length=10, null=True)
-    oil = models.FloatField(null=True)
-    gl = models.FloatField(null=True)
-    usable_cals = models.FloatField(null=True)
-    aaf_adj_prot = models.FloatField(null=True)
-    carbs = models.FloatField(null=True)
-    total_fat = models.FloatField(null=True)
-    tdf = models.FloatField(null=True)
-    sodium = models.FloatField(null=True)
-    potassium = models.FloatField(null=True)
-    phasphorous = models.FloatField(null=True)
-    calcium = models.FloatField(null=True)
-    magnecium = models.FloatField(null=True)
-    total_eaa = models.FloatField(null=True)
-    lysine = models.FloatField(null=True)
-    gross_protine = models.FloatField(null=True)
-    free_suger = models.FloatField(null=True)
+    dishes = models.ForeignKey(DailySnacks, on_delete=models.CASCADE )
 
     def __str__(self):
         return self.food
@@ -247,3 +146,6 @@ class Dishes(models.Model):
 
     def __str__(self):
         return self.food
+
+
+
