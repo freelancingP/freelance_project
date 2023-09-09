@@ -14,6 +14,8 @@ from rest_framework.parsers import MultiPartParser, FileUploadParser
 import io
 from .decorators import *
 from django.db.models import Q
+from datetime import datetime
+
 # Create your views here.
 
 
@@ -35,7 +37,7 @@ class SendOtpViews(GenericAPIView):
               print("uiho")
               contact_number = serializer.validated_data.get("country_code") + serializer.validated_data.get("phone_number")
               email = serializer.validated_data.get("email")
-              customer = Customer.objects.filter(Q(contact_number=contact_number) | Q(email=email)).first()
+              customer = Customer.objects.filter(Q(contact_number=contact_number) & Q(email=email)).first()
               if customer:
                   print(customer)
                   user_data = UserOTP(user = customer, otp = otp)
@@ -72,7 +74,7 @@ class SendOtpViews(GenericAPIView):
             try:
                 contact_number = serializer.validated_data.get("country_code") + serializer.validated_data.get("phone_number")
                 email = serializer.validated_data.get("email")
-                customer = Customer.objects.filter(Q(contact_number=contact_number) | Q(email=email)).exists()
+                customer = Customer.objects.filter(Q(contact_number=contact_number) | Q(email=email)).first()
             except:
                 customer = None
             if customer:
@@ -88,7 +90,7 @@ class SendOtpViews(GenericAPIView):
                 data = Customer(image_url=None, first_name=None, last_name=None, gender=None, location=None, address=None, contact_number=contact_number, email=serializer.validated_data["email"], date_of_birth=None, age=None, height=None, height_unit=None, weight_unit=None, weight=None, health_issue=None, other_issue=None, any_medication=None, veg_nonveg=None, profession=None, help=None)
                 data.save()
                 try:
-                  customer = Customer.objects.get(Q(contact_number=contact_number) | Q(email=serializer.validated_data["email"]))
+                  customer = Customer.objects.get(Q(contact_number=contact_number) & Q(email=email))
                   user_data = UserOTP(user=customer, otp=otp)
                   user_data.save()
                   print("juwe")
@@ -125,8 +127,11 @@ class VerifyOtpViews(GenericAPIView):
             otp = None
         if otp:
             otp.delete()         
-            customer = Customer.objects.get(contact_number=otp.user.contact_number)
-            print(customer)
+            try:
+                customer = Customer.objects.get(Q(contact_number=otp.user.contact_number) & Q(email=otp.user.email))
+                print(customer)
+            except Customer.DoesNotExist:
+                customer = None
             access_token_expiry = datetime.utcnow() + timedelta(minutes=30)
             refresh_token_expiry = datetime.utcnow() + timedelta(minutes=30)
             # Generate the access token
@@ -135,7 +140,7 @@ class VerifyOtpViews(GenericAPIView):
                 'exp': access_token_expiry,
                 'iat': datetime.utcnow(),
             }
-            access_token = jwt.encode(access_token_payload, str(customer.id), algorithm='HS256')
+            access_token = jwt.encode(access_token_payload, str(customer.email), algorithm='HS256')
             # Generate the refresh token
             refresh_token_payload = {
                 'client_id': customer.email,
@@ -225,6 +230,7 @@ class UpdateUserDetailViews(APIView):
             
             try:
                 decoded_payload = jwt.decode(token, algorithms=['HS256'], options={"verify_signature": False})
+                print(decoded_payload)
                 try:
                     customer = Customer.objects.get(contact_number=decoded_payload['client_id'])
                     for key, value in data.items():
@@ -673,7 +679,6 @@ class GetDishViews(APIView):
             }
             return Response(response_data)
 
-
 class AddCaloryViews(APIView):
     def post(self, request):
         auth_header = request.headers.get('Authorization')
@@ -684,81 +689,82 @@ class AddCaloryViews(APIView):
                 decoded_payload = jwt.decode(token, algorithms=['HS256'], options={"verify_signature": False})
                 try:
                     customer = Customer.objects.get(contact_number=decoded_payload['client_id'])
-                    try:
-                        calory = CaloryCount.objects.filter(customer=customer, dish=data["dish"], dish_type=data["dish_type"],date=data["date"]).first()
-                    except CaloryCount.DoesNotExist:
-                        calory = None
-                    try:
-                      print(request.data)
-                      if all(key in data for key in ("dish_type", "dish", "calory", "action","date")):
-                          if data["action"] == "add":
-                              if calory is not None:
-                                  # Update existing calory_data
-                                  calory.calory += float(data["calory"])
-                                  calory.save()
-                              else:
-                                  print("ufe")
-                                  calory_data = CaloryCount(customer=customer, calory=data["calory"], dish=data["dish"], dish_type=data["dish_type"],date=data["date"])
-                                  calory_data.save()
-                  
-                              calory_response = CaloryCount.objects.filter(customer=customer, date=data["date"])
-                              serializer = CalorySerializer(calory_response, many=True)
-                  
-                              response_data = {
-                                  "data": serializer.data,
-                                  "status": True,
-                                  "code": 200
-                              }
-                              return Response(response_data)
-                          elif data["action"] == "remove":
-                              if calory is not None and calory.calory > 0.0:
-                                  print("dofep")
-                                  # Update existing calory_data
-                                  calory.calory -= float(data["calory"])
-                                  calory.save()
-                  
-                              calory_response = CaloryCount.objects.filter(customer=customer, date=data["date"])
-                              serializer = CalorySerializer(calory_response, many=True)
-                  
-                              response_data = {
-                                  "data": serializer.data,
-                                  "status": True,
-                                  "code": 200
-                              }
-                              return Response(response_data)
-                          else:
-                              response_data = {
-                                  "message": "Provide correct request data.",
-                                  "status": True,
-                                  "code": 400
-                              }
-                              return Response(response_data)
-                      else:
-                          response_data = {
-                              "message": "Missing Required Field.",
-                              "status": True,
-                              "code": 400
-                          }
-                          return Response(response_data)
 
-                    except Exception as e:
-                      print(e)
-                      response_data = {
-                            "message": "An Error Occured.",
-                            "status": True,
-                            "code": 500                       
-                        }
-                      return Response(response_data)
+                    # Get the list of dishes from the data
+                    dishes_list = data.get("dishes", [])
+                    current_date = datetime.now().date()
+                    meal_type = data.get("mealType")
+                    try:
+                       total_calory = CaloryCount.objects.get(customer=customer) 
+                    except:
+                        total_calory = None
+                    for dish_id in dishes_list:
+                        try:
+                            # Check if a CaloryCount object already exists for the same customer, meal type, and date
+                            calory = CaloryCount.objects.get(customer=customer, date=current_date)
+                            if data["action"] == "add":
+                                # Update existing calory_data by appending the new dish_id
+                                if calory.meal_type != meal_type:
+                                    meal = data["mealType"]
+                                    calory.meal_type += f",{meal}"
+                                else:
+                                    pass
+                                calory.dishes += f",{dish_id}"
+                                calory.save()
+                            elif data["action"] == "remove":
+                                updated_dishes = calory.dishes.split(",")
+                                updated_meal = calory.meal_type.split(",")
+
+                                if str(dish_id) in updated_dishes:
+                                    updated_dishes.remove(str(dish_id))
+
+                                if data["mealType"] in updated_meal:
+                                    updated_meal.remove(data["mealType"])
+
+                                calory.dishes = ",".join(updated_dishes)
+                                calory.meal_type = ",".join(updated_meal)
+                                calory.save()
+
+                        except CaloryCount.DoesNotExist:
+                            if data["action"] == "add":
+                                if total_calory:
+                                    total_calory.dishes = f"{dish_id}"
+                                    total_calory.meal_type=meal_type
+                                    total_calory.date=current_date
+                                    total_calory.save()
+                                else:
+                                    # Create a new CaloryCount object if it doesn't exist
+                                    calory_data = CaloryCount(customer=customer, dishes=f"{dish_id}", meal_type=meal_type, date=current_date)
+                                    calory_data.save()
+                            elif data["action"] == "remove":
+                                # Handle the case where the CaloryCount object doesn't exist
+                                pass
+                        except Exception as e:
+                            print(e)
+                            response_data = {
+                                "message": "An Error Occurred.",
+                                "status": True,
+                                "code": 500
+                            }
+                            return Response(response_data)
+
+                    response_data = {
+                        "data": True,
+                        "status": True,
+                        "code": 200
+                    }
+                    return Response(response_data)
+
                 except Exception as e:
                     print(e)
                     response_data ={
                         "status": False,
                         "data": None,
                         "code": 401,
-                        "message": "User Does't Exist.",
+                        "message": "User Doesn't Exist.",
                     }
                     return Response(response_data)
-                
+
             except jwt.ExpiredSignatureError:
                 response_data ={
                     "data": None,
@@ -791,7 +797,6 @@ class AddCaloryViews(APIView):
                     "message": "An error occurred.",
                 }
                 return Response(response_data)
-                
         else:
             response_data ={
                 "data": None,
@@ -800,3 +805,4 @@ class AddCaloryViews(APIView):
                 "message": "No token provided.",
             }
             return Response(response_data)
+

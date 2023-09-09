@@ -42,14 +42,14 @@ class CustomerStatus(models.Model):
 
 class CaloryCount(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    dish_type = models.CharField(max_length=100,blank=True,null = True)
-    dish = models.IntegerField(null = True)
-    calory = models.FloatField(default = 0.0)
+    meal_type = models.CharField(max_length=100,blank=True,null = True)
+    dishes = models.CharField(max_length=200,null = True,blank=True)
+    # calory = models.FloatField(default = 0.0)
     date = models.DateField(null=True,blank=True)
     total_calory = models.FloatField(default = 0.0)
 
     def __str__(self):
-        return str(self.calory)
+        return str(self.meal_type)
     
 class Breakfast(models.Model):
     food = models.CharField(max_length=200,null=True,blank=True)
