@@ -370,7 +370,7 @@ class AllDishesViews(APIView):
                             "dishId": data['id'],
                             "dishName": data['food'],
                             "ingredients": data['ingredients'],
-                            "calories": 400,
+                            "calories": data["cals"],
                             "nutritionValues": [
                               {
                                 "name": "PRAL",
@@ -503,7 +503,7 @@ class AllDishesViews(APIView):
                             "dishId": data['id'],
                             "dishName": data['food'],
                             "ingredients": data['ingredients'],
-                            "calories": 400,
+                            "calories": data["cals"],
                             "nutritionValues": [
                               {
                                 "name": "PRAL",
@@ -636,7 +636,7 @@ class AllDishesViews(APIView):
                             "dishId": data['id'],
                             "dishName": data['food'],
                             "ingredients": data['ingredients'],
-                            "calories": 400,
+                            "calories": data["cals"],
                             "nutritionValues": [
                               {
                                 "name": "PRAL",
@@ -769,7 +769,7 @@ class AllDishesViews(APIView):
                             "dishId": data['id'],
                             "dishName": data['food'],
                             "ingredients": data['ingredients'],
-                            "calories": 400,
+                            "calories": data["cals"],
                             "nutritionValues": [
                               {
                                 "name": "PRAL",
@@ -1007,7 +1007,7 @@ class GetDishViews(APIView):
                         "dishId": data['id'],
                         "dishName": data['food'],
                         "ingredients": data['ingredients'],
-                        "calories": 400,
+                        "calories": data["cals"],
                         "nutritionValues": [
                             {
                               "name": "PRAL",
