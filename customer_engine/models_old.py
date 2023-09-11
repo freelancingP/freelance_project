@@ -77,7 +77,7 @@ class Breakfast(models.Model):
     glucose = models.FloatField(null=True)
 
     def __str__(self):
-        return self.food
+        return str(self.food)
         
 class Lunch(models.Model):
     food = models.CharField(max_length=200,null=True,blank=True)
@@ -105,7 +105,7 @@ class Lunch(models.Model):
     glucose = models.FloatField(null=True)
 
     def __str__(self):
-        return self.food
+        return str(self.food)
 
 class Dinner(models.Model):
     food = models.CharField(max_length=200,null=True,blank=True)
@@ -133,7 +133,7 @@ class Dinner(models.Model):
     glucose = models.FloatField(null=True)
 
     def __str__(self):
-        return self.food
+        return str(self.food)
 
 class Snacks(models.Model):
     food = models.CharField(max_length=200,null=True,blank=True)
@@ -161,7 +161,7 @@ class Snacks(models.Model):
     glucose = models.FloatField(null=True)
 
     def __str__(self):
-        return self.food
+        return str(self.food)
 
 
 

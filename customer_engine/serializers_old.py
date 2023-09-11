@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import *
+from .models_old import *
 
 
 class SendOtpSerializer(serializers.Serializer):

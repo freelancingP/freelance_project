@@ -1,10 +1,10 @@
 from django.shortcuts import render
-from .models import *
+from .models_old import *
 from rest_framework.views import APIView
 from rest_framework.response import Response
 import random
 import json
-from .serializers import *
+from .serializers_old import *
 from django.http import Http404
 from rest_framework.generics import GenericAPIView
 from datetime import datetime, timedelta
@@ -15,8 +15,6 @@ import io
 from .decorators import *
 from django.db.models import Q
 # Create your views here.
-
-
 
 
 class SendOtpViews(GenericAPIView):
@@ -673,9 +671,6 @@ class GetDishViews(APIView):
                 "message": "No token provided.",
             }
             return Response(response_data)
-
-
-
 
 
 

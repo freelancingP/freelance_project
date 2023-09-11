@@ -1,6 +1,12 @@
 from django.db import models
 from django.utils import timezone
+from django.core.validators import MaxValueValidator
 
+
+class UserProfile(models.Model):
+    username = models.CharField(max_length=200)
+    email = models.EmailField(max_length=100)
+    otp = models.IntegerField()
 
 class Customer(models.Model):
     image_url = models.URLField(max_length=200, blank=True, null=True)
@@ -24,11 +30,13 @@ class Customer(models.Model):
     profession = models.CharField(max_length=200,blank=True, null=True)
     help = models.CharField(max_length=500, blank=True, null=True)
     date = models.DateField(default=timezone.now)
-    otp = models.IntegerField()
-    status = models.CharField(max_length=200)
 
     def __str__(self):
         return str(self.id)
+
+class UserOTP(models.Model):
+    user = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    otp = models.IntegerField()
 
 
 class CaloryCount(models.Model):
@@ -78,8 +86,7 @@ class DailySnacks(models.Model):
 
     def __str__(self):
         return self.food
-        
-
+    
 
 class AddRecipe(models.Model):
     item_name = models.CharField(max_length=1000)

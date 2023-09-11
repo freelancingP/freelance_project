@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect
 from django.contrib.auth import authenticate, login
 from .models import *
-from customer_engine.models import *
+# from customer_engine.models_new_bkp import *
 from customer_engine.decorators import custom_login_required
 from django.shortcuts import redirect
 from django.urls import reverse
