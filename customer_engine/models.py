@@ -59,7 +59,7 @@ class DailySnacks(models.Model):
         ('breakfast', 'Breakfast'),
         ('lunch', 'Lunch'),
         ('dinner', 'Dinner'),
-        ('Snacks', 'Snacks'),
+        ('snacks', 'Snacks'),
 
     )
     meal_type = models.CharField(max_length=10, choices=TYPE_CHOICES)
@@ -88,7 +88,7 @@ class DailySnacks(models.Model):
     glucose = models.FloatField(null=True)
 
     def __str__(self):
-        return self.food
+        return str(self.food)
     
 
 class AddRecipe(models.Model):

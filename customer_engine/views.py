@@ -30,7 +30,7 @@ from rest_framework.authtoken.models import Token
 
 class LoginAPIView(APIView):
     serializer_class = LoginSerializer
-    
+
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
         
@@ -46,10 +46,11 @@ class LoginAPIView(APIView):
                 existing_user.save()
                 
                 # Get or create an authentication token for the user
-                token, created = Token.objects.get_or_create(user=existing_user)
+                token_obj = Token.objects.get_or_create(user=existing_user)
+
                 
                 # Include the authentication token in the response
-                return Response({'otp': existing_user.otp, 'auth_token': token.key}, status=status.HTTP_200_OK)
+                return Response({'otp': existing_user.otp, 'token': str(token_obj)}, status=status.HTTP_200_OK)
 
             # Create a new user
             new_user = UserProfile(username=validated_data['username'], email=validated_data['email'])
@@ -57,10 +58,10 @@ class LoginAPIView(APIView):
             new_user.save()
             
             # Get or create an authentication token for the new user
-            token, created = Token.objects.get_or_create(user=new_user)
+            token_obj = Token.objects.get_or_create(user=new_user)
             
             # Include the authentication token in the response
-            return Response({'otp': new_user.otp, 'auth_token': token.key}, status=status.HTTP_200_OK)
+            return Response({'otp': new_user.otp, 'token': str(token_obj)}, status=status.HTTP_200_OK)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -413,7 +414,45 @@ class AllDishesViewSet(viewsets.ModelViewSet):
 
         serializer = self.get_serializer(queryset, many=True)
         return Response({"data": {"dishes": serializer.data}})
-        
+            
+
+class DailyCaloryView(APIView):
+
+    def post(self, request, format=None):
+        meal_type = request.data.get('meal_type')
+        data_queryset = DailySnacks.objects.filter(meal_type=meal_type)
+
+        if data_queryset.exists():
+            data_list = list(data_queryset)
+
+            total_calories = 0.0
+            total_carbs = 0.0
+            total_proteins = 0.0
+
+            for item in data_list:
+                if item.cals is not None:
+                    total_calories += item.cals
+                if item.carbs is not None:
+                    total_carbs += item.carbs
+                if item.pral is not None:
+                    total_proteins += item.pral
+
+            daily_totals = {
+                'calories': total_calories,
+                'carbs': total_carbs,
+                'proteins': total_proteins,
+            }
+
+
+            return Response(daily_totals, status=status.HTTP_201_CREATED)
+        return Response({'error': 'No data found for the given meal type.'}, status=status.HTTP_400_BAD_REQUEST)
+    
+
+
+
+
+
+    
 
 
 
