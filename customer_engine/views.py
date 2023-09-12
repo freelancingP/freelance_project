@@ -449,10 +449,3 @@ class DailyCaloryView(APIView):
     
 
 
-
-
-
-    
-
-
-
