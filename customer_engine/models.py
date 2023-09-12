@@ -1,12 +1,15 @@
 from django.db import models
 from django.utils import timezone
 from django.core.validators import MaxValueValidator
+from django.contrib.auth.models import User
 
 
 class UserProfile(models.Model):
     username = models.CharField(max_length=200)
     email = models.EmailField(max_length=100)
     otp = models.IntegerField()
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
 
 class Customer(models.Model):
     image_url = models.URLField(max_length=200, blank=True, null=True)

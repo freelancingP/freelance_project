@@ -25,11 +25,12 @@ from rest_framework import viewsets, filters
 from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
 from rest_framework import status
+from rest_framework.authtoken.models import Token
 
 
 class LoginAPIView(APIView):
     serializer_class = LoginSerializer
-
+    
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
         
@@ -43,16 +44,26 @@ class LoginAPIView(APIView):
                 # Generate and save a new OTP for the existing user
                 existing_user.otp = ''.join(random.choices("0123456789", k=6))
                 existing_user.save()
-                return Response({'otp': existing_user.otp}, status=status.HTTP_200_OK)
+                
+                # Get or create an authentication token for the user
+                token, created = Token.objects.get_or_create(user=existing_user)
+                
+                # Include the authentication token in the response
+                return Response({'otp': existing_user.otp, 'auth_token': token.key}, status=status.HTTP_200_OK)
 
             # Create a new user
             new_user = UserProfile(username=validated_data['username'], email=validated_data['email'])
             new_user.otp = ''.join(random.choices("0123456789", k=6))
             new_user.save()
-
-            return Response({'otp': new_user.otp}, status=status.HTTP_200_OK)
+            
+            # Get or create an authentication token for the new user
+            token, created = Token.objects.get_or_create(user=new_user)
+            
+            # Include the authentication token in the response
+            return Response({'otp': new_user.otp, 'auth_token': token.key}, status=status.HTTP_200_OK)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     
 
 
@@ -380,6 +391,7 @@ class UpdateUserDetailViews(APIView):
                 "message": "No token provided.",
             }
             return Response(response_data)
+
 
 
 class AllDishesViewSet(viewsets.ModelViewSet):
