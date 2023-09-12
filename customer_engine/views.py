@@ -26,6 +26,7 @@ from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
 from rest_framework import status
 from rest_framework.authtoken.models import Token
+from rest_framework.exceptions import ValidationError
 
 
 class LoginAPIView(APIView):
@@ -33,39 +34,25 @@ class LoginAPIView(APIView):
 
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
-        
         if serializer.is_valid():
             validated_data = serializer.validated_data
             
-            # Check if a user with the provided username already exists
             existing_user = UserProfile.objects.filter(username=validated_data['username']).first()
-            
             if existing_user:
-                # Generate and save a new OTP for the existing user
                 existing_user.otp = ''.join(random.choices("0123456789", k=6))
                 existing_user.save()
                 
-                # Get or create an authentication token for the user
-                token_obj = Token.objects.get_or_create(user=existing_user)
-
-                
-                # Include the authentication token in the response
-                return Response({'otp': existing_user.otp, 'token': str(token_obj)}, status=status.HTTP_200_OK)
+                return Response({'otp': existing_user.otp}, status=status.HTTP_200_OK)
 
             # Create a new user
             new_user = UserProfile(username=validated_data['username'], email=validated_data['email'])
             new_user.otp = ''.join(random.choices("0123456789", k=6))
             new_user.save()
-            
-            # Get or create an authentication token for the new user
-            token_obj = Token.objects.get_or_create(user=new_user)
-            
-            # Include the authentication token in the response
-            return Response({'otp': new_user.otp, 'token': str(token_obj)}, status=status.HTTP_200_OK)
+                        
+            return Response({'otp': new_user.otp}, status=status.HTTP_200_OK)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    
 
 
 class OTPVerifyAPI(APIView):
@@ -283,8 +270,6 @@ class UploadImageView(GenericAPIView):
     
 
 
-
-
 class UpdateUserDetailViews(APIView):   
     def post(self, request):
         auth_header = request.headers.get('Authorization')
@@ -446,6 +431,5 @@ class DailyCaloryView(APIView):
 
             return Response(daily_totals, status=status.HTTP_201_CREATED)
         return Response({'error': 'No data found for the given meal type.'}, status=status.HTTP_400_BAD_REQUEST)
-    
 
 

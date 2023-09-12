@@ -8,7 +8,6 @@ class UserProfile(models.Model):
     username = models.CharField(max_length=200)
     email = models.EmailField(max_length=100)
     otp = models.IntegerField()
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
 
 
 class Customer(models.Model):
