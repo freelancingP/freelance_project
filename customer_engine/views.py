@@ -1,5 +1,6 @@
-from django.shortcuts import render
+from .serializers import *
 from .models import *
+from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 import random
@@ -8,19 +9,85 @@ from .serializers import *
 from django.http import Http404
 from rest_framework.generics import GenericAPIView
 from datetime import datetime, timedelta
-import jwt
 import boto3
 from rest_framework.parsers import MultiPartParser, FileUploadParser
 import io
 from .decorators import *
 from django.db.models import Q
-from datetime import datetime
+from rest_framework import viewsets
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from .models import Customer, DailySnacks
+from .serializers import DailySnacksSerializer
+import jwt
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import viewsets, filters
+from rest_framework.decorators import action
+from rest_framework.pagination import PageNumberPagination
+from rest_framework import status
+from rest_framework.authtoken.models import Token
+
+
+class LoginAPIView(APIView):
+    serializer_class = LoginSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data)
+        
+        if serializer.is_valid():
+            validated_data = serializer.validated_data
+            
+            # Check if a user with the provided username already exists
+            existing_user = UserProfile.objects.filter(username=validated_data['username']).first()
+            
+            if existing_user:
+                # Generate and save a new OTP for the existing user
+                existing_user.otp = ''.join(random.choices("0123456789", k=6))
+                existing_user.save()
+                
+                # Get or create an authentication token for the user
+                token_obj = Token.objects.get_or_create(user=existing_user)
+
+                
+                # Include the authentication token in the response
+                return Response({'otp': existing_user.otp, 'token': str(token_obj)}, status=status.HTTP_200_OK)
+
+            # Create a new user
+            new_user = UserProfile(username=validated_data['username'], email=validated_data['email'])
+            new_user.otp = ''.join(random.choices("0123456789", k=6))
+            new_user.save()
+            
+            # Get or create an authentication token for the new user
+            token_obj = Token.objects.get_or_create(user=new_user)
+            
+            # Include the authentication token in the response
+            return Response({'otp': new_user.otp, 'token': str(token_obj)}, status=status.HTTP_200_OK)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    
+
+
+class OTPVerifyAPI(APIView):
+    def post(self, request, *args, **kwargs):
+        otp = request.data.get('otp')
+        username = request.data.get('username')
+        
+        if not otp or not username:
+            return Response({'error': 'Both username and OTP are required'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            user = UserProfile.objects.get(username=username)
+        except UserProfile.DoesNotExist:
+            return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+        if user.otp == int(otp):
+            
+            return Response({'message': 'OTP verification successful'}, status=status.HTTP_200_OK)
+        else:
+            return Response({'error': 'Invalid OTP'}, status=status.HTTP_400_BAD_REQUEST)
+
 
 # Create your views here.
-
-
-
-
 class SendOtpViews(GenericAPIView):
     serializer_class = SendOtpSerializer  # Set the serializer class
     
@@ -332,965 +399,57 @@ class UpdateUserDetailViews(APIView):
 
 
 
-class AllDishesViews(APIView):   
+class AllDishesViewSet(viewsets.ModelViewSet):
+    queryset = DailySnacks.objects.all()
+    serializer_class = DailySnacksSerializer
+    pagination_class = PageNumberPagination
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filterset_fields = ['meal_type','food']
+    search_fields = ['meal_type','food']   
+   
+
     def get(self, request):
-        auth_header = request.headers.get('Authorization')
-        data = request.data
-        if auth_header and auth_header.startswith('Bearer '):
-            token = auth_header.split(' ')[1]
+        queryset = self.filter_queryset(self.get_queryset())
+        page = self.paginate_queryset(queryset)
+
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response({"data": {"dishes": serializer.data}})
             
-            try:
-                decoded_payload = jwt.decode(token, algorithms=['HS256'], options={"verify_signature": False})
-                try:
-                    customer = Customer.objects.get(contact_number=decoded_payload['client_id'])
-                    print(customer)
-                    try:
-                        t_calory = CaloryCount.objects.get(customer=customer)
-                        total_calory = t_calory.total_calory
-                    except:
-                        total_calory = None
-                    breakfast_instances = Breakfast.objects.all()  # Retrieve all Breakfast instances
-                    breakfastserializer = BreakfastSerializer(breakfast_instances, many=True)
-                    breakfast_data_list = breakfastserializer.data
 
-                    breackfast_data = []
-                    for data in breakfast_data_list:
-                        input_string = data['ingredients']
+class DailyCaloryView(APIView):
 
-                        ingredients = input_string.split(",")  # Split the string into a list of ingredients
+    def post(self, request, format=None):
+        meal_type = request.data.get('meal_type')
+        data_queryset = DailySnacks.objects.filter(meal_type=meal_type)
 
-                        recipe_values = []
+        if data_queryset.exists():
+            data_list = list(data_queryset)
 
-                        for ingredient in ingredients:
-                            # Assuming you want to create a dictionary with a "name" key and a fixed "quantity" value
-                            recipe_values.append({
-                                "name": ingredient,
-                            })
-                        breakfast_item = {
-                            "dishId": data['id'],
-                            "dishName": data['food'],
-                            "ingredients": data['ingredients'],
-                            "calories": data["cals"],
-                            "nutritionValues": [
-                              {
-                                "name": "PRAL",
-                                "quantity": data['pral'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              {
-                                "name": "Oil",
-                                "quantity": data['oil'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              {
-                                "name": "GL",
-                                "quantity": data['gl'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              {
-                                "name": "Calory",
-                                "quantity": data['cals'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              {
-                                "name": "Aaf adj prot",
-                                "quantity": data['aaf_adj_prot'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              {
-                                "name": "Carbohydrate",
-                                "quantity": data['carbs'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              {
-                                "name": "Total Fat",
-                                "quantity": data['total_fat'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              {
-                                "name": "TDF",
-                                "quantity": data['tdf'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              {
-                                "name": "Sodium",
-                                "quantity": data['sodium'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              {
-                                "name": "Potassium",
-                                "quantity": data['potassium'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              {
-                                "name": "Phasphorous",
-                                "quantity": data['phasphorous'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              {
-                                "name": "Calcium",
-                                "quantity": data['calcium'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              {
-                                "name": "Magnecium",
-                                "quantity": data['magnecium'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              {
-                                "name": "Total EAA",
-                                "quantity": data['total_eaa'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              {
-                                "name": "Lysine",
-                                "quantity": data['lysine'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              {
-                                "name": "Gross Protine",
-                                "quantity": data['gross_protine'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                                                            {
-                                "name": "Free Sugar",
-                                "quantity": data['free_suger'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              
-                              
+            total_calories = 0.0
+            total_carbs = 0.0
+            total_proteins = 0.0
 
-                            ],
-                            "recipeValues": recipe_values
-                          }
-                        breackfast_data.append(breakfast_item)
-                    
-                    launch_instances = Lunch.objects.all()  # Retrieve all Launch instances
-                    launchserializer = LunchSerializer(launch_instances, many=True)
-                    lunch_data_list = launchserializer.data
+            for item in data_list:
+                if item.cals is not None:
+                    total_calories += item.cals
+                if item.carbs is not None:
+                    total_carbs += item.carbs
+                if item.pral is not None:
+                    total_proteins += item.pral
 
-                    lunch_data = []
-                    for data in lunch_data_list:
-                        input_string = data['ingredients']
-
-                        ingredients = input_string.split(",")  # Split the string into a list of ingredients
-
-                        recipe_values = []
-
-                        for ingredient in ingredients:
-                            # Assuming you want to create a dictionary with a "name" key and a fixed "quantity" value
-                            recipe_values.append({
-                                "name": ingredient,
-                            })
-                        lunch_item = {
-                            "dishId": data['id'],
-                            "dishName": data['food'],
-                            "ingredients": data['ingredients'],
-                            "calories": data["cals"],
-                            "nutritionValues": [
-                              {
-                                "name": "PRAL",
-                                "quantity": data['pral'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              {
-                                "name": "Oil",
-                                "quantity": data['oil'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              {
-                                "name": "GL",
-                                "quantity": data['gl'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              {
-                                "name": "Calory",
-                                "quantity": data['cals'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              {
-                                "name": "Aaf adj prot",
-                                "quantity": data['aaf_adj_prot'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              {
-                                "name": "Carbohydrate",
-                                "quantity": data['carbs'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              {
-                                "name": "Total Fat",
-                                "quantity": data['total_fat'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              {
-                                "name": "TDF",
-                                "quantity": data['tdf'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              {
-                                "name": "Sodium",
-                                "quantity": data['sodium'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              {
-                                "name": "Potassium",
-                                "quantity": data['potassium'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              {
-                                "name": "Phasphorous",
-                                "quantity": data['phasphorous'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              {
-                                "name": "Calcium",
-                                "quantity": data['calcium'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              {
-                                "name": "Magnecium",
-                                "quantity": data['magnecium'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              {
-                                "name": "Total EAA",
-                                "quantity": data['total_eaa'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              {
-                                "name": "Lysine",
-                                "quantity": data['lysine'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              {
-                                "name": "Gross Protine",
-                                "quantity": data['gross_protine'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                                                            {
-                                "name": "Free Sugar",
-                                "quantity": data['free_suger'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              
-                              
-
-                            ],
-                            "recipeValues": recipe_values
-                          }
-                        lunch_data.append(lunch_item)
-                    
-                    dinner_instances = Dinner.objects.all()  # Retrieve all Dinner instances
-                    dinnerserializer = DinnerSerializer(dinner_instances, many=True)
-                    dinner_data_list = dinnerserializer.data
-
-                    dinner_data = []
-                    for data in dinner_data_list:
-                        input_string = data['ingredients']
-
-                        ingredients = input_string.split(",")  # Split the string into a list of ingredients
-
-                        recipe_values = []
-
-                        for ingredient in ingredients:
-                            # Assuming you want to create a dictionary with a "name" key and a fixed "quantity" value
-                            recipe_values.append({
-                                "name": ingredient,
-                            })
-                        dinner_item = {
-                            "dishId": data['id'],
-                            "dishName": data['food'],
-                            "ingredients": data['ingredients'],
-                            "calories": data["cals"],
-                            "nutritionValues": [
-                              {
-                                "name": "PRAL",
-                                "quantity": data['pral'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              {
-                                "name": "Oil",
-                                "quantity": data['oil'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              {
-                                "name": "GL",
-                                "quantity": data['gl'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              {
-                                "name": "Calory",
-                                "quantity": data['cals'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              {
-                                "name": "Aaf adj prot",
-                                "quantity": data['aaf_adj_prot'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              {
-                                "name": "Carbohydrate",
-                                "quantity": data['carbs'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              {
-                                "name": "Total Fat",
-                                "quantity": data['total_fat'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              {
-                                "name": "TDF",
-                                "quantity": data['tdf'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              {
-                                "name": "Sodium",
-                                "quantity": data['sodium'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              {
-                                "name": "Potassium",
-                                "quantity": data['potassium'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              {
-                                "name": "Phasphorous",
-                                "quantity": data['phasphorous'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              {
-                                "name": "Calcium",
-                                "quantity": data['calcium'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              {
-                                "name": "Magnecium",
-                                "quantity": data['magnecium'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              {
-                                "name": "Total EAA",
-                                "quantity": data['total_eaa'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              {
-                                "name": "Lysine",
-                                "quantity": data['lysine'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              {
-                                "name": "Gross Protine",
-                                "quantity": data['gross_protine'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                                                            {
-                                "name": "Free Sugar",
-                                "quantity": data['free_suger'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              
-                              
-
-                            ],
-                            "recipeValues": recipe_values
-                          }
-                        dinner_data.append(dinner_item)
-                    
-                    snacks_instances = Snacks.objects.all()  # Retrieve all Snacks instances
-                    snacksserializer = SnacksSerializer(snacks_instances, many=True)
-                    snacks_data_list = snacksserializer.data
-
-                    snacks_data = []
-                    for data in snacks_data_list:
-                        input_string = data['ingredients']
-
-                        ingredients = input_string.split(",")  # Split the string into a list of ingredients
-
-                        recipe_values = []
-
-                        for ingredient in ingredients:
-                            # Assuming you want to create a dictionary with a "name" key and a fixed "quantity" value
-                            recipe_values.append({
-                                "name": ingredient,
-                            })
-                        snacks_item = {
-                            "dishId": data['id'],
-                            "dishName": data['food'],
-                            "ingredients": data['ingredients'],
-                            "calories": data["cals"],
-                            "nutritionValues": [
-                              {
-                                "name": "PRAL",
-                                "quantity": data['pral'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              {
-                                "name": "Oil",
-                                "quantity": data['oil'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              {
-                                "name": "GL",
-                                "quantity": data['gl'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              {
-                                "name": "Calory",
-                                "quantity": data['cals'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              {
-                                "name": "Aaf adj prot",
-                                "quantity": data['aaf_adj_prot'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              {
-                                "name": "Carbohydrate",
-                                "quantity": data['carbs'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              {
-                                "name": "Total Fat",
-                                "quantity": data['total_fat'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              {
-                                "name": "TDF",
-                                "quantity": data['tdf'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              {
-                                "name": "Sodium",
-                                "quantity": data['sodium'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              {
-                                "name": "Potassium",
-                                "quantity": data['potassium'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              {
-                                "name": "Phasphorous",
-                                "quantity": data['phasphorous'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              {
-                                "name": "Calcium",
-                                "quantity": data['calcium'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              {
-                                "name": "Magnecium",
-                                "quantity": data['magnecium'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              {
-                                "name": "Total EAA",
-                                "quantity": data['total_eaa'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              {
-                                "name": "Lysine",
-                                "quantity": data['lysine'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              {
-                                "name": "Gross Protine",
-                                "quantity": data['gross_protine'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                                                            {
-                                "name": "Free Sugar",
-                                "quantity": data['free_suger'],
-                                "percentage":25,
-                                "colour":"#01BA91",
-                              },
-                              
-                              
-
-                            ],
-                            "recipeValues":recipe_values
-                          }
-                        snacks_data.append(snacks_item)
-                    response_data ={
-                      "data": {
-                        "caloriesUsed": 650,
-                        "totalCalory": total_calory,
-                        "calorieBreakdown": {
-                          "calories": 100,
-                          "pral": 100,
-                          "calcium": 450
-                        },
-                        "breakfast": breackfast_data,
-                        "lunch": lunch_data,
-                        "Snacks": snacks_data,
-                        "dinner": dinner_data,
-                      }
-                    }
-
-                    # print(response_data)
-                    return Response(response_data)
-                except Customer.DoesNotExist:
-                    response_data ={
-                        "data": None,
-                        "status": False,
-                        "code": 401,
-                        "message": "Invalid Authentication.",
-                    }
-                    return Response(response_data)
-                except Exception as e:
-                    print(e)
-                    response_data ={
-                        "data": None,
-                        "status": False,
-                        "code": 500,
-                        "message": "An error occurred.",
-                    }
-                    return Response(response_data)
-            except jwt.ExpiredSignatureError:
-                response_data ={
-                    "data": None,
-                    "status": False,
-                    "code": 401,
-                    "message": "Token has expired.",
-                }
-                return Response(response_data)
-            except jwt.DecodeError:
-                response_data ={
-                    "data": None,
-                    "status": False,
-                    "code": 498,
-                    "message": "Invalid token.",
-                }
-                return Response(response_data)
-        else:
-            response_data ={
-                "data": None,
-                "status": False,
-                "code": 400,
-                "message": "No token provided.",
+            daily_totals = {
+                'calories': total_calories,
+                'carbs': total_carbs,
+                'proteins': total_proteins,
             }
-            return Response(response_data)
 
 
-class GetDishViews(APIView):
-    def get(self, request):
-        auth_header = request.headers.get('Authorization')
-        if auth_header and auth_header.startswith('Bearer '):
-            token = auth_header.split(' ')[1]
-            try:
-                decoded_payload = jwt.decode(token, algorithms=['HS256'], options={"verify_signature": False})
-                customer = Customer.objects.get(contact_number=decoded_payload['client_id'])
-                
-                meal_type = request.query_params.get('mealType')
-                search_keyword = request.query_params.get('search')
-                is_veg = request.query_params.get('isVeg')
-                is_non_veg = request.query_params.get('isNonVeg')
-                is_egg = request.query_params.get('isEgg')
+            return Response(daily_totals, status=status.HTTP_201_CREATED)
+        return Response({'error': 'No data found for the given meal type.'}, status=status.HTTP_400_BAD_REQUEST)
+    
 
-                # Create a base queryset based on meal type
-                if meal_type == "Breakfast":
-                    base_queryset = Breakfast.objects.all()
-                    serializer_class = BreakfastSerializer
-                elif meal_type == "Lunch":
-                    base_queryset = Lunch.objects.all()
-                    serializer_class = LunchSerializer
-                elif meal_type == "Dinner":
-                    base_queryset = Dinner.objects.all()
-                    serializer_class = DinnerSerializer
-                elif meal_type == "Snacks":
-                    base_queryset = Snacks.objects.all()
-                    serializer_class = SnacksSerializer
-                else:
-                    response_data = {
-                        "data": None,
-                        "status": False,
-                        "code": 400,
-                        "message": "Invalid meal type provided.",
-                    }
-                    return Response(response_data)
-
-                # Apply additional filters based on other query parameters
-                # if is_veg:
-                #     base_queryset = base_queryset.filter(is_veg=True)
-                # if is_non_veg:
-                #     base_queryset = base_queryset.filter(is_non_veg=True)
-                # if is_egg:
-                #     base_queryset = base_queryset.filter(is_egg=True)
-
-                # Apply search filter
-                if search_keyword:
-                    base_queryset = base_queryset.filter(food__icontains=search_keyword)
-
-                # Serialize the filtered queryset
-                serializer = serializer_class(base_queryset, many=True)
-                serializer_data_list = serializer.data
-                response_data = []
-                for data in serializer_data_list:
-                    input_string = data['ingredients']
-                    ingredients = input_string.split(",")  # Split the string into a list of ingredient
-                    recipe_values = []
-                    for ingredient in ingredients:
-                        # Assuming you want to create a dictionary with a "name" key and a fixed "quantity" value
-                        recipe_values.append({
-                            "name": ingredient,
-                        })
-                    breakfast_item = {
-                        "dishId": data['id'],
-                        "dishName": data['food'],
-                        "ingredients": data['ingredients'],
-                        "calories": data["cals"],
-                        "nutritionValues": [
-                            {
-                              "name": "PRAL",
-                              "quantity": data['pral'],
-                              "percentage":25,
-                              "colour":"#01BA91",
-                            },
-                            {
-                              "name": "Oil",
-                              "quantity": data['oil'],
-                              "percentage":25,
-                              "colour":"#01BA91",
-                            },
-                            {
-                              "name": "GL",
-                              "quantity": data['gl'],
-                              "percentage":25,
-                              "colour":"#01BA91",
-                            },
-                            {
-                              "name": "Calory",
-                              "quantity": data['cals'],
-                              "percentage":25,
-                              "colour":"#01BA91",
-                            },
-                            {
-                              "name": "Aaf adj prot",
-                              "quantity": data['aaf_adj_prot'],
-                              "percentage":25,
-                              "colour":"#01BA91",
-                            },
-                            {
-                              "name": "Carbohydrate",
-                              "quantity": data['carbs'],
-                              "percentage":25,
-                              "colour":"#01BA91",
-                            },
-                            {
-                              "name": "Total Fat",
-                              "quantity": data['total_fat'],
-                              "percentage":25,
-                              "colour":"#01BA91",
-                            },
-                            {
-                              "name": "TDF",
-                              "quantity": data['tdf'],
-                              "percentage":25,
-                              "colour":"#01BA91",
-                            },
-                            {
-                              "name": "Sodium",
-                              "quantity": data['sodium'],
-                              "percentage":25,
-                              "colour":"#01BA91",
-                            },
-                            {
-                              "name": "Potassium",
-                              "quantity": data['potassium'],
-                              "percentage":25,
-                              "colour":"#01BA91",
-                            },
-                            {
-                              "name": "Phasphorous",
-                              "quantity": data['phasphorous'],
-                              "percentage":25,
-                              "colour":"#01BA91",
-                            },
-                            {
-                              "name": "Calcium",
-                              "quantity": data['calcium'],
-                              "percentage":25,
-                              "colour":"#01BA91",
-                            },
-                            {
-                              "name": "Magnecium",
-                              "quantity": data['magnecium'],
-                              "percentage":25,
-                              "colour":"#01BA91",
-                            },
-                            {
-                              "name": "Total EAA",
-                              "quantity": data['total_eaa'],
-                              "percentage":25,
-                              "colour":"#01BA91",
-                            },
-                            {
-                              "name": "Lysine",
-                              "quantity": data['lysine'],
-                              "percentage":25,
-                              "colour":"#01BA91",
-                            },
-                            {
-                              "name": "Gross Protine",
-                              "quantity": data['gross_protine'],
-                              "percentage":25,
-                              "colour":"#01BA91",
-                            },
-                            {
-                              "name": "Free Sugar",
-                              "quantity": data['free_suger'],
-                              "percentage":25,
-                              "colour":"#01BA91",
-                            },
-                        ],
-                        "recipeValues": recipe_values
-                      }
-                    response_data.append(breakfast_item)
-                response_data = {
-                    "data": response_data,
-                        "status": True,
-                        "code": 200
-                    }
-                return Response(response_data)
-
-            except Exception as e:
-                print(e)
-                
-            except jwt.ExpiredSignatureError:
-                response_data ={
-                    "data": None,
-                    "status": False,
-                    "code": 401,
-                    "message": "Token has expired.",
-                }
-                return Response(response_data)
-            except jwt.DecodeError:
-                response_data ={
-                    "data": None,
-                    "status": False,
-                    "code": 498,
-                    "message": "Invalid token.",
-                }
-                return Response(response_data)
-            except Customer.DoesNotExist:
-                response_data ={
-                    "data": None,
-                    "status": False,
-                    "code": 401,
-                    "message": "Invalid Authentication.",
-                }
-                return Response(response_data)
-            except Exception as e:
-                response_data ={
-                    "data": None,
-                    "status": False,
-                    "code": 500,
-                    "message": "An error occurred.",
-                }
-                return Response(response_data)
-                
-        else:
-            response_data ={
-                "data": None,
-                "status": False,
-                "code": 400,
-                "message": "No token provided.",
-            }
-            return Response(response_data)
-
-class AddCaloryViews(APIView):
-    def post(self, request):
-        auth_header = request.headers.get('Authorization')
-        data = request.data
-        if auth_header and auth_header.startswith('Bearer '):
-            token = auth_header.split(' ')[1]
-            try:
-                decoded_payload = jwt.decode(token, algorithms=['HS256'], options={"verify_signature": False})
-                try:
-                    customer = Customer.objects.get(contact_number=decoded_payload['client_id'])
-
-                    # Get the list of dishes from the data
-                    dishes_list = data.get("dishes", [])
-                    current_date = datetime.now().date()
-                    meal_type = data.get("mealType")
-                    try:
-                       total_calory = CaloryCount.objects.get(customer=customer) 
-                    except:
-                        total_calory = None
-                    for dish_id in dishes_list:
-                        try:
-                            # Check if a CaloryCount object already exists for the same customer, meal type, and date
-                            calory = CaloryCount.objects.get(customer=customer, date=current_date)
-                            if data["action"] == "add":
-                                # Update existing calory_data by appending the new dish_id
-                                if calory.meal_type != meal_type:
-                                    meal = data["mealType"]
-                                    calory.meal_type += f",{meal}"
-                                else:
-                                    pass
-                                calory.dishes += f",{dish_id}"
-                                calory.save()
-                            elif data["action"] == "remove":
-                                updated_dishes = calory.dishes.split(",")
-                                updated_meal = calory.meal_type.split(",")
-
-                                if str(dish_id) in updated_dishes:
-                                    updated_dishes.remove(str(dish_id))
-
-                                if data["mealType"] in updated_meal:
-                                    updated_meal.remove(data["mealType"])
-
-                                calory.dishes = ",".join(updated_dishes)
-                                calory.meal_type = ",".join(updated_meal)
-                                calory.save()
-
-                        except CaloryCount.DoesNotExist:
-                            if data["action"] == "add":
-                                if total_calory:
-                                    total_calory.dishes = f"{dish_id}"
-                                    total_calory.meal_type=meal_type
-                                    total_calory.date=current_date
-                                    total_calory.save()
-                                else:
-                                    # Create a new CaloryCount object if it doesn't exist
-                                    calory_data = CaloryCount(customer=customer, dishes=f"{dish_id}", meal_type=meal_type, date=current_date)
-                                    calory_data.save()
-                            elif data["action"] == "remove":
-                                # Handle the case where the CaloryCount object doesn't exist
-                                pass
-                        except Exception as e:
-                            print(e)
-                            response_data = {
-                                "message": "An Error Occurred.",
-                                "status": True,
-                                "code": 500
-                            }
-                            return Response(response_data)
-
-                    response_data = {
-                        "data": True,
-                        "status": True,
-                        "code": 200
-                    }
-                    return Response(response_data)
-
-                except Exception as e:
-                    print(e)
-                    response_data ={
-                        "status": False,
-                        "data": None,
-                        "code": 401,
-                        "message": "User Doesn't Exist.",
-                    }
-                    return Response(response_data)
-
-            except jwt.ExpiredSignatureError:
-                response_data ={
-                    "data": None,
-                    "status": False,
-                    "code": 401,
-                    "message": "Token has expired.",
-                }
-                return Response(response_data)
-            except jwt.DecodeError:
-                response_data ={
-                    "data": None,
-                    "status": False,
-                    "code": 498,
-                    "message": "Invalid token.",
-                }
-                return Response(response_data)
-            except Customer.DoesNotExist:
-                response_data ={
-                    "data": None,
-                    "status": False,
-                    "code": 401,
-                    "message": "Invalid Authentication.",
-                }
-                return Response(response_data)
-            except Exception as e:
-                response_data ={
-                    "data": None,
-                    "status": False,
-                    "code": 500,
-                    "message": "An error occurred.",
-                }
-                return Response(response_data)
-        else:
-            response_data ={
-                "data": None,
-                "status": False,
-                "code": 400,
-                "message": "No token provided.",
-            }
-            return Response(response_data)
 

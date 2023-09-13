@@ -1,14 +1,5 @@
 from django.db import models
 from django.utils import timezone
-from django.core.validators import MaxValueValidator
-from django.contrib.auth.models import User
-
-
-class UserProfile(models.Model):
-    username = models.CharField(max_length=200)
-    email = models.EmailField(max_length=100)
-    otp = models.IntegerField()
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
 
 
 class Customer(models.Model):
@@ -41,28 +32,26 @@ class UserOTP(models.Model):
     user = models.ForeignKey(Customer, on_delete=models.CASCADE)
     otp = models.IntegerField()
 
+    
+class CustomerStatus(models.Model):
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    status = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.status
 
 class CaloryCount(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    meal_type = models.CharField(max_length=100,blank=True,null = True)
-    dishes = models.CharField(max_length=200,null = True,blank=True)
-    # calory = models.FloatField(default = 0.0)
+    dish_type = models.CharField(max_length=100,blank=True,null = True)
+    dish = models.IntegerField(null = True)
+    calory = models.FloatField(default = 0.0)
     date = models.DateField(null=True,blank=True)
     total_calory = models.FloatField(default = 0.0)
 
     def __str__(self):
-        return str(self.meal_type)
+        return str(self.calory)
     
-    
-class DailySnacks(models.Model):
-    TYPE_CHOICES = (
-        ('breakfast', 'Breakfast'),
-        ('lunch', 'Lunch'),
-        ('dinner', 'Dinner'),
-        ('evening_snacks', 'Evening Snacks'),
-
-    )
-    meal_type = models.CharField(max_length=15, choices=TYPE_CHOICES)
+class Breakfast(models.Model):
     food = models.CharField(max_length=200,null=True,blank=True)
     quantity = models.CharField(max_length=10, null=True)
     ingredients = models.CharField(max_length=255,null=True,blank=True)
@@ -89,7 +78,92 @@ class DailySnacks(models.Model):
 
     def __str__(self):
         return str(self.food)
-    
+        
+class Lunch(models.Model):
+    food = models.CharField(max_length=200,null=True,blank=True)
+    quantity = models.CharField(max_length=10, null=True)
+    ingredients = models.CharField(max_length=255,null=True,blank=True)
+    veg_nonveg_egg = models.CharField(max_length=255,null=True,blank=True)
+    pral = models.FloatField(null=True)
+    oil = models.FloatField(null=True)
+    gl = models.FloatField(null=True)
+    cals = models.FloatField(null=True)
+    aaf_adj_prot = models.FloatField(null=True)
+    carbs = models.FloatField(null=True)
+    total_fat = models.FloatField(null=True)
+    tdf = models.FloatField(null=True)
+    sodium = models.FloatField(null=True)
+    potassium = models.FloatField(null=True)
+    phasphorous = models.FloatField(null=True)
+    calcium = models.FloatField(null=True)
+    magnecium = models.FloatField(null=True)
+    total_eaa = models.FloatField(null=True)
+    lysine = models.FloatField(null=True)
+    gross_protine = models.FloatField(null=True)
+    free_suger = models.FloatField(null=True)
+    aa_factor = models.FloatField(null=True)
+    glucose = models.FloatField(null=True)
+
+    def __str__(self):
+        return str(self.food)
+
+class Dinner(models.Model):
+    food = models.CharField(max_length=200,null=True,blank=True)
+    quantity = models.CharField(max_length=10, null=True)
+    ingredients = models.CharField(max_length=255,null=True,blank=True)
+    veg_nonveg_egg = models.CharField(max_length=255,null=True,blank=True)
+    pral = models.FloatField(null=True)
+    oil = models.FloatField(null=True)
+    gl = models.FloatField(null=True)
+    cals = models.FloatField(null=True)
+    aaf_adj_prot = models.FloatField(null=True)
+    carbs = models.FloatField(null=True)
+    total_fat = models.FloatField(null=True)
+    tdf = models.FloatField(null=True)
+    sodium = models.FloatField(null=True)
+    potassium = models.FloatField(null=True)
+    phasphorous = models.FloatField(null=True)
+    calcium = models.FloatField(null=True)
+    magnecium = models.FloatField(null=True)
+    total_eaa = models.FloatField(null=True)
+    lysine = models.FloatField(null=True)
+    gross_protine = models.FloatField(null=True)
+    free_suger = models.FloatField(null=True)
+    aa_factor = models.FloatField(null=True)
+    glucose = models.FloatField(null=True)
+
+    def __str__(self):
+        return str(self.food)
+
+class Snacks(models.Model):
+    food = models.CharField(max_length=200,null=True,blank=True)
+    quantity = models.CharField(max_length=10, null=True)
+    ingredients = models.CharField(max_length=255,null=True,blank=True)
+    veg_nonveg_egg = models.CharField(max_length=255,null=True,blank=True)
+    pral = models.FloatField(null=True)
+    oil = models.FloatField(null=True)
+    gl = models.FloatField(null=True)
+    cals = models.FloatField(null=True)
+    aaf_adj_prot = models.FloatField(null=True)
+    carbs = models.FloatField(null=True)
+    total_fat = models.FloatField(null=True)
+    tdf = models.FloatField(null=True)
+    sodium = models.FloatField(null=True)
+    potassium = models.FloatField(null=True)
+    phasphorous = models.FloatField(null=True)
+    calcium = models.FloatField(null=True)
+    magnecium = models.FloatField(null=True)
+    total_eaa = models.FloatField(null=True)
+    lysine = models.FloatField(null=True)
+    gross_protine = models.FloatField(null=True)
+    free_suger = models.FloatField(null=True)
+    aa_factor = models.FloatField(null=True)
+    glucose = models.FloatField(null=True)
+
+    def __str__(self):
+        return str(self.food)
+
+
 
 class AddRecipe(models.Model):
     item_name = models.CharField(max_length=1000)
@@ -124,7 +198,24 @@ class AddIngridient(models.Model):
 
 class DailyRecipe(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    dishes = models.ForeignKey(DailySnacks, on_delete=models.CASCADE )
+    food = models.CharField(max_length=200,null=True,blank=True)
+    quantity = models.CharField(max_length=10, null=True)
+    oil = models.FloatField(null=True)
+    gl = models.FloatField(null=True)
+    usable_cals = models.FloatField(null=True)
+    aaf_adj_prot = models.FloatField(null=True)
+    carbs = models.FloatField(null=True)
+    total_fat = models.FloatField(null=True)
+    tdf = models.FloatField(null=True)
+    sodium = models.FloatField(null=True)
+    potassium = models.FloatField(null=True)
+    phasphorous = models.FloatField(null=True)
+    calcium = models.FloatField(null=True)
+    magnecium = models.FloatField(null=True)
+    total_eaa = models.FloatField(null=True)
+    lysine = models.FloatField(null=True)
+    gross_protine = models.FloatField(null=True)
+    free_suger = models.FloatField(null=True)
 
     def __str__(self):
         return self.food

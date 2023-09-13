@@ -1,21 +1,5 @@
 from rest_framework import serializers
-from .models import *
-# from .models import UserProfile
-import random
-
-
-class UserOtpSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UserOTP
-        fields =  '__all__'
-
-class LoginSerializer(serializers.ModelSerializer):
-    otp = serializers.IntegerField(default=None, read_only=True)
-
-    class Meta:
-        model = UserProfile
-        fields = ('username', 'email', 'otp')
-        read_only_fields = ('otp',)
+from .models_old import *
 
 
 class SendOtpSerializer(serializers.Serializer):
@@ -24,10 +8,10 @@ class SendOtpSerializer(serializers.Serializer):
     email = serializers.CharField(max_length=50)
     user_type = serializers.CharField(max_length=15)
 
-
 class VerifyOtpSerializer(serializers.Serializer):
     otp = serializers.CharField(max_length=6)
     
+
 
 class CustomerSerializer(serializers.ModelSerializer):
 
@@ -35,15 +19,41 @@ class CustomerSerializer(serializers.ModelSerializer):
         model = Customer
         fields = '__all__'
 
-class DailySnacksSerializer(serializers.ModelSerializer):
+class BreakfastSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = DailySnacks
+        model = Breakfast
         fields = '__all__'
 
+class LunchSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Lunch
+        fields = '__all__'
+
+class DinnerSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Dinner
+        fields = '__all__'
+
+class SnacksSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Snacks
+        fields = '__all__'
+
+class DailyRecipeSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = DailyRecipe
+        fields = '__all__'
 
 class CalorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CaloryCount
         fields = '__all__'
+
+
+
