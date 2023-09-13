@@ -41,15 +41,17 @@ class LoginAPIView(APIView):
             if existing_user:
                 existing_user.otp = ''.join(random.choices("0123456789", k=6))
                 existing_user.save()
-                
-                return Response({'otp': existing_user.otp}, status=status.HTTP_200_OK)
+                token, created = Token.objects.get_or_create(user=existing_user)
+
+                return Response({'otp': existing_user.otp, 'token': token.key}, status=status.HTTP_200_OK)
 
             # Create a new user
             new_user = UserProfile(username=validated_data['username'], email=validated_data['email'])
             new_user.otp = ''.join(random.choices("0123456789", k=6))
             new_user.save()
-                        
-            return Response({'otp': new_user.otp}, status=status.HTTP_200_OK)
+            token, created = Token.objects.get_or_create(user=new_user)
+
+            return Response({'otp': new_user.otp, 'token': token.key}, status=status.HTTP_200_OK)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -387,7 +389,7 @@ class AllDishesViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ['meal_type','food']
     search_fields = ['meal_type','food']   
-   
+    
 
     def get(self, request):
         queryset = self.filter_queryset(self.get_queryset())
@@ -398,7 +400,14 @@ class AllDishesViewSet(viewsets.ModelViewSet):
             return self.get_paginated_response(serializer.data)
 
         serializer = self.get_serializer(queryset, many=True)
-        return Response({"data": {"dishes": serializer.data}})
+
+        data ={
+            "message":"Success",
+            "status":status.HTTP_200_OK,
+            "data":{"dishes": serializer.data}
+        }
+        return Response(data)
+    
             
 
 class DailyCaloryView(APIView):
@@ -427,9 +436,29 @@ class DailyCaloryView(APIView):
                 'carbs': total_carbs,
                 'proteins': total_proteins,
             }
+            serializer = DailyCalorySerializer(data_list, many=True)  # Replace YourSerializer with your actual serializer class
 
+            data = {
+                "message": "Success",
+                "status": status.HTTP_200_OK,
+                "data": {
+                    "daily_calories": daily_totals,
+                }
+            }
 
-            return Response(daily_totals, status=status.HTTP_201_CREATED)
+            return Response(data, status=status.HTTP_201_CREATED)
         return Response({'error': 'No data found for the given meal type.'}, status=status.HTTP_400_BAD_REQUEST)
 
 
+class AddCaloryViews(APIView):
+    def post(self, request):
+        serializer = AddCalorySerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            data = {
+                "message": "Success",
+                "status": status.HTTP_201_CREATED,
+                "data": {"calory": serializer.data}
+            }
+            return Response(data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

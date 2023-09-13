@@ -2,7 +2,7 @@ from rest_framework.routers import DefaultRouter
 from  .views import AllDishesViewSet
 from django.urls import path,include
 from . import views
-from .views import LoginAPIView, OTPVerifyAPI, DailyCaloryView
+from .views import  OTPVerifyAPI, DailyCaloryView, AddCaloryViews, LoginAPIView
 
 
 router = DefaultRouter()
@@ -19,6 +19,8 @@ urlpatterns = [
     path('update/user/details/',views.UpdateUserDetailViews.as_view()),
     path('upload/image/',views.UploadImageView.as_view()),
     path('daily_calories/', DailyCaloryView.as_view(), name='daily_calories'),
+    path('add/calory/', AddCaloryViews.as_view(), name='daily_calories'),
+
 
 
 

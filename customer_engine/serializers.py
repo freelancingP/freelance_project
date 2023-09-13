@@ -39,7 +39,7 @@ class DailySnacksSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = DailySnacks
-        fields = '__all__'
+        fields = ['id','food','ingredients','cals']
 
 
 class CalorySerializer(serializers.ModelSerializer):
@@ -47,3 +47,14 @@ class CalorySerializer(serializers.ModelSerializer):
     class Meta:
         model = CaloryCount
         fields = '__all__'
+
+class DailyCalorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DailySnacks
+        fields = ['cals','carbs','pral']
+
+class AddCalorySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = UserSnacks
+        exclude = ('created_at', 'updated_at')

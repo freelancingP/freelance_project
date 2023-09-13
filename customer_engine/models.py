@@ -2,15 +2,17 @@ from django.db import models
 from django.utils import timezone
 from django.core.validators import MaxValueValidator
 from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser, Group, Permission
 
 
 class UserProfile(models.Model):
     username = models.CharField(max_length=200)
     email = models.EmailField(max_length=100)
     otp = models.IntegerField()
+    
 
 
-class Customer(models.Model):
+class Customer(AbstractUser):
     image_url = models.URLField(max_length=200, blank=True, null=True)
     first_name = models.CharField(max_length=100,blank=True, null=True)
     last_name = models.CharField(max_length=100,blank=True, null=True)
@@ -32,6 +34,18 @@ class Customer(models.Model):
     profession = models.CharField(max_length=200,blank=True, null=True)
     help = models.CharField(max_length=500, blank=True, null=True)
     date = models.DateField(default=timezone.now)
+    groups = models.ManyToManyField(
+        Group,
+        verbose_name='groups',  
+        blank=True,
+        related_name='user_profiles' 
+    )
+    user_permissions = models.ManyToManyField(
+        Permission,
+        verbose_name='user permissions',
+        blank=True,
+        related_name='user_profiles_permissions'
+    )
 
     def __str__(self):
         return str(self.id)
@@ -52,7 +66,7 @@ class CaloryCount(models.Model):
     def __str__(self):
         return str(self.calory)
     
-    
+
 class DailySnacks(models.Model):
     TYPE_CHOICES = (
         ('breakfast', 'Breakfast'),
@@ -88,7 +102,13 @@ class DailySnacks(models.Model):
 
     def __str__(self):
         return str(self.food)
-    
+
+class UserSnacks(models.Model):
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    dailySnacks = models.ForeignKey(DailySnacks, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
 
 class AddRecipe(models.Model):
     item_name = models.CharField(max_length=1000)
@@ -124,6 +144,7 @@ class AddIngridient(models.Model):
 class DailyRecipe(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     dishes = models.ForeignKey(DailySnacks, on_delete=models.CASCADE )
+    
 
     def __str__(self):
         return self.food
