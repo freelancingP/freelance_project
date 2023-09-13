@@ -48,10 +48,6 @@ class CalorySerializer(serializers.ModelSerializer):
         model = CaloryCount
         fields = '__all__'
 
-class DailyCalorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = DailySnacks
-        fields = ['cals','carbs','pral']
 
 class AddCalorySerializer(serializers.ModelSerializer):
 

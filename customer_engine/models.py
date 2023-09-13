@@ -105,7 +105,7 @@ class DailySnacks(models.Model):
 
 class UserSnacks(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    dailySnacks = models.ForeignKey(DailySnacks, on_delete=models.CASCADE)
+    dish_ids = models.ForeignKey(DailySnacks, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

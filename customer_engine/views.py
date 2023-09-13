@@ -27,7 +27,19 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.exceptions import ValidationError
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 
+
+
+def get_tokens_for_user(user):
+    refresh = RefreshToken.for_user(user)
+
+    return {
+        'refresh': str(refresh),
+        'access': str(refresh.access_token),
+    }
 
 class LoginAPIView(APIView):
     serializer_class = LoginSerializer
@@ -41,17 +53,18 @@ class LoginAPIView(APIView):
             if existing_user:
                 existing_user.otp = ''.join(random.choices("0123456789", k=6))
                 existing_user.save()
-                token, created = Token.objects.get_or_create(user=existing_user)
+                # token, created = Token.objects.get_or_create(user=existing_user)
+                token = get_tokens_for_user(existing_user)
 
-                return Response({'otp': existing_user.otp, 'token': token.key}, status=status.HTTP_200_OK)
+                return Response({'otp': existing_user.otp, 'token': token}, status=status.HTTP_200_OK)
 
             # Create a new user
             new_user = UserProfile(username=validated_data['username'], email=validated_data['email'])
             new_user.otp = ''.join(random.choices("0123456789", k=6))
             new_user.save()
-            token, created = Token.objects.get_or_create(user=new_user)
+            token = get_tokens_for_user(existing_user)
 
-            return Response({'otp': new_user.otp, 'token': token.key}, status=status.HTTP_200_OK)
+            return Response({'otp': new_user.otp, 'token': token}, status=status.HTTP_200_OK)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -272,7 +285,8 @@ class UploadImageView(GenericAPIView):
     
 
 
-class UpdateUserDetailViews(APIView):   
+class UpdateUserDetailViews(APIView):  
+
     def post(self, request):
         auth_header = request.headers.get('Authorization')
         data = request.data
@@ -383,16 +397,19 @@ class UpdateUserDetailViews(APIView):
 
 
 class AllDishesViewSet(viewsets.ModelViewSet):
+
     queryset = DailySnacks.objects.all()
     serializer_class = DailySnacksSerializer
     pagination_class = PageNumberPagination
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ['meal_type','food']
     search_fields = ['meal_type','food']   
+    authentication_classes=[TokenAuthentication]
+    permission_classes=[IsAuthenticated]
     
-
     def get(self, request):
         queryset = self.filter_queryset(self.get_queryset())
+        
         page = self.paginate_queryset(queryset)
 
         if page is not None:
@@ -408,7 +425,6 @@ class AllDishesViewSet(viewsets.ModelViewSet):
         }
         return Response(data)
     
-            
 
 class DailyCaloryView(APIView):
 
@@ -436,7 +452,6 @@ class DailyCaloryView(APIView):
                 'carbs': total_carbs,
                 'proteins': total_proteins,
             }
-            serializer = DailyCalorySerializer(data_list, many=True)  # Replace YourSerializer with your actual serializer class
 
             data = {
                 "message": "Success",
@@ -451,6 +466,7 @@ class DailyCaloryView(APIView):
 
 
 class AddCaloryViews(APIView):
+
     def post(self, request):
         serializer = AddCalorySerializer(data=request.data)
         if serializer.is_valid():
