@@ -432,9 +432,14 @@ class OTPVerifyAPI(APIView):
             if user_otp: 
                 if int(user_otp.otp) == int(otp):
                     token = get_tokens_for_user(user_otp.customer)
+                    customer_serializer = CustomerSerializer(user_otp.customer)
+
                     status_code = status.HTTP_200_OK
                     message = "OTP verification successful"
-                    data = {'token': token["access"]}
+
+                    token_data = {'token': token["access"]}
+                    customer_data = customer_serializer.data 
+                    data = {**token_data, **customer_data}    
                     response = JsonResponse(
                         status=status_code,
                         msg=message,
@@ -499,24 +504,41 @@ class AllDishesViewSet(viewsets.ModelViewSet):
     
     def get(self, request): 
         queryset = self.filter_queryset(self.get_queryset())
-        
+            
         page = self.paginate_queryset(queryset)
 
         if page is not None:
             serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        serializer = self.get_serializer(queryset, many=True)
-
-        data ={
-            "message":"Success",
-            "status":status.HTTP_200_OK,
-            "data":{"dishes": serializer.data}
-        }
-        return Response(data)
+            status_code = status.HTTP_200_OK
+            message = "successful"
+            data = {"dishes": serializer.data}
+            response = JsonResponse(
+                status=status_code,
+                msg=message,
+                data=data,
+                success=True,
+                error={},
+                count=len(data),
+            )
+            return response
+        else:
+            status_code = status.HTTP_400_BAD_REQUEST
+            data = ""
+            response = JsonResponse(
+                status=status_code,
+                msg="Error",
+                data=data,
+                success=False,
+                error="Invalid token",
+                count=len(data),
+            )
+            return response
+            
+        
     
-
 class DailyCaloryView(APIView):
+    authentication_classes=[JWTAuthentication]
+    permission_classes=[IsAuthenticated]
 
     def post(self, request, format=None):
         meal_type = request.data.get('meal_type')
@@ -542,18 +564,31 @@ class DailyCaloryView(APIView):
                 'carbs': total_carbs,
                 'proteins': total_proteins,
             }
-
-            data = {
-                "message": "Success",
-                "status": status.HTTP_200_OK,
-                "data": {
-                    "daily_calories": daily_totals,
-                }
-            }
-
-            return Response(data, status=status.HTTP_201_CREATED)
-        return Response({'error': 'No data found for the given meal type.'}, status=status.HTTP_400_BAD_REQUEST)
-
+            status_code = status.HTTP_200_OK
+            message = "successful"
+            data = {"daily_calories": daily_totals.data}
+            response = JsonResponse(
+                status=status_code,
+                msg=message,
+                data=data,
+                success=True,
+                error={},
+                count=len(data),
+            )
+            return response
+        else:
+            status_code = status.HTTP_400_BAD_REQUEST
+            data = ""
+            response = JsonResponse(
+                status=status_code,
+                msg="Error",
+                data=data,
+                success=False,
+                error="No data found for the given meal type",
+                count=len(data),
+            )
+            return response
+           
 
 class AddCaloryViews(APIView):
     authentication_classes=[JWTAuthentication]
@@ -594,11 +629,28 @@ class AddCaloryViews(APIView):
         serializer = AddCalorySerializer(data=save_calories, many=True)
         if serializer.is_valid():
             serializer.save()
-
-            data = {
-                "message": "Success",
-                "status": status.HTTP_201_CREATED,
-                "data": serializer.data
-            }
-            return Response(data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            status_code = status.HTTP_200_OK
+            message = "successful"
+            data = JsonResponse(
+                    status=status_code,
+                    msg=message,
+                    data=data,
+                    success=True,
+                    error={},
+                    count=len(data),
+                )
+            return data
+        else:
+            status_code = status.HTTP_400_BAD_REQUEST
+            data = ""
+            response = JsonResponse(
+                status=status_code,
+                msg="Error",
+                data=data,
+                success=False,
+                error="Invalid OTP",
+                count=len(data),
+            )
+            return response
+            
+      

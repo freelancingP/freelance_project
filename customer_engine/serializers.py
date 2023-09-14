@@ -9,15 +9,6 @@ class UserOtpSerializer(serializers.ModelSerializer):
         model = UserOTP
         fields =  '__all__'
 
-# class LoginSerializer(serializers.ModelSerializer):
-#     otp = serializers.IntegerField(default=None, read_only=True)
-
-#     class Meta:
-#         model = UserProfile
-#         fields = ('username', 'email', 'otp')
-#         read_only_fields = ('otp',)
-
-
 class SendOtpSerializer(serializers.Serializer):
     country_code = serializers.CharField(max_length=4)
     phone_number = serializers.CharField(max_length=15)
@@ -57,3 +48,9 @@ class AddCalorySerializer(serializers.ModelSerializer):
     class Meta:
         model = UserSnacks
         exclude = ('created_at', 'updated_at')
+
+
+class CustomerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Customer
+        fields = '__all__'

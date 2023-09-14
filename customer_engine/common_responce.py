@@ -26,25 +26,3 @@ class JsonResponse(Response):
             for name, value in headers.items():
                 self[name] = value
                 
-          
-                
-#   if not data or data_count == 0:
-#             status_code = status.HTTP_204_NO_CONTENT
-#             response = JsonResponse(
-#                 status=status_code,
-#                 data=data,
-#                 success=False,
-#                 error={"No State Found"},
-#                 count=len(data),
-#             )
-#         else:
-#             status_code = status.HTTP_200_OK
-#             message = "Success"
-#             response = JsonResponse(
-#                 status=status_code,
-#                 msg=message,
-#                 data=data,
-#                 success=True,
-#                 error={},
-#                 count=len(data),
-#             )
