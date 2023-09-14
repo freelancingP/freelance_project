@@ -5,13 +5,6 @@ from django.contrib.auth.models import User
 from django.contrib.auth.models import AbstractUser, Group, Permission
 
 
-class UserProfile(models.Model):
-    username = models.CharField(max_length=200)
-    email = models.EmailField(max_length=100)
-    otp = models.IntegerField()
-    
-
-
 class Customer(AbstractUser):
     image_url = models.URLField(max_length=200, blank=True, null=True)
     first_name = models.CharField(max_length=100,blank=True, null=True)
@@ -51,7 +44,7 @@ class Customer(AbstractUser):
         return str(self.id)
 
 class UserOTP(models.Model):
-    user = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     otp = models.IntegerField()
 
 
@@ -105,7 +98,7 @@ class DailySnacks(models.Model):
 
 class UserSnacks(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    dish_ids = models.ForeignKey(DailySnacks, on_delete=models.CASCADE)
+    dish = models.ForeignKey(DailySnacks, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

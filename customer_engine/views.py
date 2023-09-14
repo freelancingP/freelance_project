@@ -30,64 +30,8 @@ from rest_framework.exceptions import ValidationError
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
-
-
-
-def get_tokens_for_user(user):
-    refresh = RefreshToken.for_user(user)
-
-    return {
-        'refresh': str(refresh),
-        'access': str(refresh.access_token),
-    }
-
-class LoginAPIView(APIView):
-    serializer_class = LoginSerializer
-
-    def post(self, request, *args, **kwargs):
-        serializer = self.serializer_class(data=request.data)
-        if serializer.is_valid():
-            validated_data = serializer.validated_data
-            
-            existing_user = UserProfile.objects.filter(username=validated_data['username']).first()
-            if existing_user:
-                existing_user.otp = ''.join(random.choices("0123456789", k=6))
-                existing_user.save()
-                # token, created = Token.objects.get_or_create(user=existing_user)
-                token = get_tokens_for_user(existing_user)
-
-                return Response({'otp': existing_user.otp, 'token': token}, status=status.HTTP_200_OK)
-
-            # Create a new user
-            new_user = UserProfile(username=validated_data['username'], email=validated_data['email'])
-            new_user.otp = ''.join(random.choices("0123456789", k=6))
-            new_user.save()
-            token = get_tokens_for_user(existing_user)
-
-            return Response({'otp': new_user.otp, 'token': token}, status=status.HTTP_200_OK)
-        
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-
-class OTPVerifyAPI(APIView):
-    def post(self, request, *args, **kwargs):
-        otp = request.data.get('otp')
-        username = request.data.get('username')
-        
-        if not otp or not username:
-            return Response({'error': 'Both username and OTP are required'}, status=status.HTTP_400_BAD_REQUEST)
-
-        try:
-            user = UserProfile.objects.get(username=username)
-        except UserProfile.DoesNotExist:
-            return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
-        if user.otp == int(otp):
-            
-            return Response({'message': 'OTP verification successful'}, status=status.HTTP_200_OK)
-        else:
-            return Response({'error': 'Invalid OTP'}, status=status.HTTP_400_BAD_REQUEST)
-
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from .common_responce import JsonResponse
 
 # Create your views here.
 class SendOtpViews(GenericAPIView):
@@ -97,13 +41,11 @@ class SendOtpViews(GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         otp = random.randrange(100000, 999999)
-        print(serializer.validated_data)
-        
         user_type = serializer.validated_data["user_type"]
-        print(user_type)
+
         if user_type == "login":
             try:
-              print("uiho")
+             
               contact_number = serializer.validated_data.get("country_code") + serializer.validated_data.get("phone_number")
               email = serializer.validated_data.get("email")
               customer = Customer.objects.filter(Q(contact_number=contact_number) | Q(email=email)).first()
@@ -162,7 +104,7 @@ class SendOtpViews(GenericAPIView):
                   customer = Customer.objects.get(Q(contact_number=contact_number) | Q(email=serializer.validated_data["email"]))
                   user_data = UserOTP(user=customer, otp=otp)
                   user_data.save()
-                  print("juwe")
+               
                   response_data = {
                       "data": {
                           "phone_number": customer.contact_number,
@@ -396,6 +338,154 @@ class UpdateUserDetailViews(APIView):
 
 
 
+
+def get_tokens_for_user(user):
+    refresh = RefreshToken.for_user(user)
+
+    return {
+        'access': str(refresh.access_token),
+    }
+
+class LoginAPIView(APIView):
+    
+    def post(self, request):
+
+        serializer_class = SendOtpSerializer
+        # Create an instance of the serializer class
+        serializer = serializer_class(data=request.data)
+
+        if serializer.is_valid():
+            validated_data = serializer.validated_data
+
+            contact_number = validated_data.get("country_code") + validated_data.get("phone_number")
+            email = validated_data.get("email")
+            user_otp = UserOTP.objects.filter(customer__contact_number=contact_number, customer__email=email).last()
+
+            if user_otp:
+                # return otp 
+
+                user_otp.otp = ''.join(random.choices("0123456789", k=6))
+                user_otp.save()
+
+                status_code = status.HTTP_200_OK
+                message = "Success"
+                data = {'otp': user_otp.otp}
+                response = JsonResponse(
+                    status=status_code,
+                    msg=message,
+                    data=data,
+                    success=True,
+                    error={},
+                    count=len(data),
+                )
+                return response
+
+            # Create a new user
+            new_customer = Customer(username=validated_data['email'], email=validated_data['email'], contact_number=contact_number)
+            new_customer.save()
+
+            otp = ''.join(random.choices("0123456789", k=6))
+            new_user_otp = UserOTP(customer_id=new_customer.id, otp=otp)
+            new_user_otp.save()
+
+            status_code = status.HTTP_200_OK
+            message = "Success"
+            data = {'otp': new_user_otp.otp}
+            response = JsonResponse(
+                status=status_code,
+                msg=message,
+                data=data,
+                success=True,
+                error={},
+                count=len(data),
+            )
+            return response
+        
+        status_code = status.HTTP_400_BAD_REQUEST
+        data = ""
+        response = JsonResponse(
+            status=status_code,
+            data=data,
+            success=False,
+            error=serializer.errors,
+            count=len(data),
+        )
+        return response
+
+
+
+class OTPVerifyAPI(APIView):
+    def post(self, request):
+
+        serializer_class = VerifyOtpSerializer
+        # Create an instance of the serializer class
+        serializer = serializer_class(data=request.data)
+
+        if serializer.is_valid():
+            validated_data = serializer.validated_data
+                
+            otp = validated_data.get('otp')
+            email = validated_data.get('email')
+            contact_number = validated_data.get("country_code") + validated_data.get("phone_number")
+            user_otp = UserOTP.objects.filter(customer__contact_number=contact_number, customer__email=email).last()
+
+            if user_otp: 
+                if int(user_otp.otp) == int(otp):
+                    token = get_tokens_for_user(user_otp.customer)
+                    status_code = status.HTTP_200_OK
+                    message = "OTP verification successful"
+                    data = {'token': token["access"]}
+                    response = JsonResponse(
+                        status=status_code,
+                        msg=message,
+                        data=data,
+                        success=True,
+                        error={},
+                        count=len(data),
+                    )
+                    return response
+
+                else:
+                    status_code = status.HTTP_400_BAD_REQUEST
+                    data = ""
+                    response = JsonResponse(
+                        status=status_code,
+                        msg="Error",
+                        data=data,
+                        success=False,
+                        error="Invalid OTP",
+                        count=len(data),
+                    )
+                    return response
+            else:
+                    status_code = status.HTTP_400_BAD_REQUEST
+                    data = ""
+                    response = JsonResponse(
+                        status=status_code,
+                        msg="Error",
+                        data=data,
+                        success=False,
+                        error="User not found",
+                        count=len(data),
+                    )
+                    return response
+
+        else:
+            status_code = status.HTTP_400_BAD_REQUEST
+            data = ""
+            response = JsonResponse(
+                status=status_code,
+                msg="Error",
+                data=data,
+                success=False,
+                error="Both Email, Phone Number and OTP are required",
+                count=len(data),
+            )
+            return response
+
+        
+
+
 class AllDishesViewSet(viewsets.ModelViewSet):
 
     queryset = DailySnacks.objects.all()
@@ -404,10 +494,10 @@ class AllDishesViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ['meal_type','food']
     search_fields = ['meal_type','food']   
-    authentication_classes=[TokenAuthentication]
+    authentication_classes=[JWTAuthentication]
     permission_classes=[IsAuthenticated]
     
-    def get(self, request):
+    def get(self, request): 
         queryset = self.filter_queryset(self.get_queryset())
         
         page = self.paginate_queryset(queryset)
@@ -466,15 +556,49 @@ class DailyCaloryView(APIView):
 
 
 class AddCaloryViews(APIView):
+    authentication_classes=[JWTAuthentication]
+    permission_classes=[IsAuthenticated]
 
     def post(self, request):
-        serializer = AddCalorySerializer(data=request.data)
+        customer = request.user.id
+        
+        """
+        payload = {
+            "dish_ids": [21,33,4,]    
+            
+        }
+        """
+        
+        data = request.data
+        given_dish_ids = set(data.get("dish_ids", []))
+
+
+        # Retrieve existing UserSnacks objects for the customer
+        existing_dish_ids = set(UserSnacks.objects.filter(customer=customer).values_list('dish_id', flat=True))
+
+        # Calculate dish IDs to add (those in given_dish_ids but not in existing_dish_ids)
+        dish_ids_to_add = given_dish_ids - existing_dish_ids
+
+        # Calculate dish IDs to remove (those in existing_dish_ids but not in given_dish_ids)
+        dish_ids_to_remove = existing_dish_ids - given_dish_ids
+        # Remove UserSnacks objects for dish_ids_to_remove
+        UserSnacks.objects.filter(customer=customer, dish_id__in=dish_ids_to_remove).delete()
+
+        save_calories = []
+        for row in dish_ids_to_add:
+            save_calories.append({
+                "customer":customer,
+                "dish":row
+            })
+
+        serializer = AddCalorySerializer(data=save_calories, many=True)
         if serializer.is_valid():
             serializer.save()
+
             data = {
                 "message": "Success",
                 "status": status.HTTP_201_CREATED,
-                "data": {"calory": serializer.data}
+                "data": serializer.data
             }
             return Response(data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

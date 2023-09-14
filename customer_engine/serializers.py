@@ -9,23 +9,26 @@ class UserOtpSerializer(serializers.ModelSerializer):
         model = UserOTP
         fields =  '__all__'
 
-class LoginSerializer(serializers.ModelSerializer):
-    otp = serializers.IntegerField(default=None, read_only=True)
+# class LoginSerializer(serializers.ModelSerializer):
+#     otp = serializers.IntegerField(default=None, read_only=True)
 
-    class Meta:
-        model = UserProfile
-        fields = ('username', 'email', 'otp')
-        read_only_fields = ('otp',)
+#     class Meta:
+#         model = UserProfile
+#         fields = ('username', 'email', 'otp')
+#         read_only_fields = ('otp',)
 
 
 class SendOtpSerializer(serializers.Serializer):
     country_code = serializers.CharField(max_length=4)
     phone_number = serializers.CharField(max_length=15)
     email = serializers.CharField(max_length=50)
-    user_type = serializers.CharField(max_length=15)
+    # user_type = serializers.CharField(max_length=15)
 
 
 class VerifyOtpSerializer(serializers.Serializer):
+    country_code = serializers.CharField(max_length=4)
+    phone_number = serializers.CharField(max_length=15)
+    email = serializers.CharField(max_length=50)
     otp = serializers.CharField(max_length=6)
     
 
