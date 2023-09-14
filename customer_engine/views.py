@@ -339,12 +339,6 @@ class UpdateUserDetailViews(APIView):
 
 
 
-def get_tokens_for_user(user):
-    refresh = RefreshToken.for_user(user)
-
-    return {
-        'access': str(refresh.access_token),
-    }
 
 class LoginAPIView(APIView):
     
@@ -413,6 +407,12 @@ class LoginAPIView(APIView):
         return response
 
 
+def get_tokens_for_user(user):
+    refresh = RefreshToken.for_user(user)
+
+    return {
+        'access': str(refresh.access_token),
+    }
 
 class OTPVerifyAPI(APIView):
     def post(self, request):
@@ -537,8 +537,6 @@ class AllDishesViewSet(viewsets.ModelViewSet):
         
     
 class DailyCaloryView(APIView):
-    authentication_classes=[JWTAuthentication]
-    permission_classes=[IsAuthenticated]
 
     def post(self, request, format=None):
         meal_type = request.data.get('meal_type')
@@ -653,4 +651,4 @@ class AddCaloryViews(APIView):
             )
             return response
             
-      
+           

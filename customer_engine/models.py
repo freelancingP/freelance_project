@@ -42,6 +42,8 @@ class Customer(AbstractUser):
 
     def __str__(self):
         return str(self.id)
+    
+
 
 class UserOTP(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
@@ -95,6 +97,7 @@ class DailySnacks(models.Model):
 
     def __str__(self):
         return str(self.food)
+
 
 class UserSnacks(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
