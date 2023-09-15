@@ -229,116 +229,79 @@ class UploadImageView(GenericAPIView):
 
 class UpdateUserDetailViews(APIView):  
 
+    authentication_classes=[JWTAuthentication]
+    permission_classes=[IsAuthenticated]
+
     def post(self, request):
-        auth_header = request.headers.get('Authorization')
-        data = request.data
-        if auth_header and auth_header.startswith('Bearer '):
-            token = auth_header.split(' ')[1]
-            
+       
+        data = request.data 
+         
+        try:
+            customer = Customer.objects.get(id=request.user.id)
+            for key, value in data.items():
+                if isinstance(value, list):
+                    value = ', '.join(value)  # Convert list to comma-separated string
+                if hasattr(customer, key):
+                    setattr(customer, key, value)
+                else:
+                    response_data ={
+                        "data": None,
+                        "status": False,
+                        "code": 400,
+                        "message": f"Invalid field name: {key}",
+                    }
+                    return Response(response_data)
+            customer.save()
+            customer = Customer.objects.get(id=request.user.id)
             try:
-                decoded_payload = jwt.decode(token, algorithms=['HS256'], options={"verify_signature": False})
-                try:
-                    customer = Customer.objects.get(contact_number=decoded_payload['client_id'])
-                    for key, value in data.items():
-                        if isinstance(value, list):
-                            value = ', '.join(value)  # Convert list to comma-separated string
-                        if hasattr(customer, key):
-                            setattr(customer, key, value)
-                        else:
-                            response_data ={
-                                "data": None,
-                                "status": False,
-                                "code": 400,
-                                "message": f"Invalid field name: {key}",
-                            }
-                            return Response(response_data)
-                    customer.save()
-                    customer = Customer.objects.get(contact_number=decoded_payload['client_id'])
-                    try:
-                      calory_exists = CaloryCount.objects.get(customer=customer)
-                    except:
-                      calory_exists = None
-                    if calory_exists is None:
-                      if customer.weight is not None and customer.height is not None and customer.age is not None:
-                        if customer.gender == "Male":
-                            calory = 88.362+(float(customer.weight)*13.37)+(float(customer.height)*4.799)-(float(customer.age)*5.677)
-                            total_calory = round((calory * 0.702050619834711),2)
-                        elif customer.gender == "Female":
-                            calory = 447.593+(float(customer.weight)*9.247)+(float(customer.height)*3.098)-(float(customer.age)*4.33)
-                            total_calory = round((calory * 0.702050619834711),2)
-                        else:
-                          total_calory = 0.0
-                        calory_data = CaloryCount(customer=customer,total_calory=total_calory)
-                        calory_data.save()
+                calory_exists = CaloryCount.objects.get(customer=customer)
+            except:
+                calory_exists = None
+            if calory_exists is None:
+                if customer.weight is not None and customer.height is not None and customer.age is not None:
+                    if customer.gender == "Male":
+                        calory = 88.362+(float(customer.weight)*13.37)+(float(customer.height)*4.799)-(float(customer.age)*5.677)
+                        total_calory = round((calory * 0.702050619834711),2)
+                    elif customer.gender == "Female":
+                        calory = 447.593+(float(customer.weight)*9.247)+(float(customer.height)*3.098)-(float(customer.age)*4.33)
+                        total_calory = round((calory * 0.702050619834711),2)
                     else:
-                      if customer.weight is not None and customer.height is not None and customer.age is not None:
-                        if customer.gender == "Male":
-                            calory = 88.362+(float(customer.weight)*13.37)+(float(customer.height)*4.799)-(float(customer.age)*5.677)
-                            total_calory = round((calory * 0.702050619834711),2)
-                        elif customer.gender == "Female":
-                            calory = 447.593+(float(customer.weight)*9.247)+(float(customer.height)*3.098)-(float(customer.age)*4.33)
-                            total_calory = round((calory * 0.702050619834711),2)
-                        else:
-                          total_calory = 0.0
-                        calory_exists.total_calory = total_calory
-                        calory_exists.save()
+                        total_calory = 0.0
+                    calory_data = CaloryCount(customer=customer,total_calory=total_calory)
+                    calory_data.save()
+            else:
+                if customer.weight is not None and customer.height is not None and customer.age is not None:
+                    if customer.gender == "Male":
+                        calory = 88.362+(float(customer.weight)*13.37)+(float(customer.height)*4.799)-(float(customer.age)*5.677)
+                        total_calory = round((calory * 0.702050619834711),2)
+                    elif customer.gender == "Female":
+                        calory = 447.593+(float(customer.weight)*9.247)+(float(customer.height)*3.098)-(float(customer.age)*4.33)
+                        total_calory = round((calory * 0.702050619834711),2)
+                    else:
+                        total_calory = 0.0
+                    calory_exists.total_calory = total_calory
+                    calory_exists.save()
 
-                    serializer = CustomerSerializer(customer)
-                    serialized_data = serializer.data
+            serializer = CustomerSerializer(customer)
+            serialized_data = serializer.data
 
-                    response_data = {
-                        "data": serialized_data,
-                        "status": True,
-                        "code": 200,
-                        "message": "User Detail Successfully updated.",
-                    }
-                    return Response(response_data)
-                    
-                except Customer.DoesNotExist:
-                    response_data ={
-                        "data": None,
-                        "status": False,
-                        "code": 401,
-                        "message": "User Doesn't exist.",
-                    }
-                    return Response(response_data)
-                except Exception as e:
-                    print(e)
-                    response_data ={
-                        "data": None,
-                        "status": False,
-                        "code": 500,
-                        "message": "An error occurred.",
-                    }
-                    return Response(response_data)
-            except jwt.ExpiredSignatureError:
-                response_data ={
-                    "data": None,
-                    "status": False,
-                    "code": 401,
-                    "message": "Token has expired.",
-                }
-                return Response(response_data)
-            except jwt.DecodeError:
-                response_data ={
-                    "data": None,
-                    "status": False,
-                    "code": 498,
-                    "message": "Invalid token.",
-                }
-                return Response(response_data)
-        else:
+            response_data = {
+                "data": serialized_data,
+                "status": True,
+                "code": 200,
+                "message": "User Detail Successfully updated.",
+            }
+            return Response(response_data)
+            
+        except Customer.DoesNotExist:
             response_data ={
                 "data": None,
                 "status": False,
-                "code": 400,
-                "message": "No token provided.",
+                "code": 401,
+                "message": "User Doesn't exist.",
             }
             return Response(response_data)
-
-
-
-
+      
 
 class LoginAPIView(APIView):
     
@@ -564,7 +527,7 @@ class DailyCaloryView(APIView):
             }
             status_code = status.HTTP_200_OK
             message = "successful"
-            data = {"daily_calories": daily_totals.data}
+            data = {"daily_calories": daily_totals}
             response = JsonResponse(
                 status=status_code,
                 msg=message,
@@ -597,7 +560,7 @@ class AddCaloryViews(APIView):
         
         """
         payload = {
-            "dish_ids": [21,33,4,]    
+            "dish_ids": [21,33,4]
             
         }
         """
@@ -646,9 +609,71 @@ class AddCaloryViews(APIView):
                 msg="Error",
                 data=data,
                 success=False,
-                error="Invalid OTP",
+                error="Invalid data",
                 count=len(data),
             )
             return response
             
-           
+
+
+
+class GetDishViews(APIView):
+
+    def get(self, request, *args, **kwargs):
+
+        calories = self.request.query_params.get('cal')
+        carbs = self.request.query_params.get('carbs')
+        calcium = self.request.query_params.get('calcium')
+        ingredients = self.request.query_params.get('ingredients')
+        # print(calories,)
+
+        queryset = DailySnacks.objects.all()
+        if calories:
+            queryset = queryset.filter(calories=calories)
+        if carbs:
+            queryset = queryset.filter(carbs=carbs)
+        if calcium:
+            queryset = queryset.filter(calcium=calcium)
+        if ingredients:
+            queryset = queryset.filter(ingredients__icontains=ingredients)
+       
+
+        serializer = DailySnacksSerializer(queryset, many=True)
+        serializer_data_list = serializer.data
+
+        response_data = []
+
+        for data in serializer_data_list:
+            input_string = data['ingredients']
+            ingredients = input_string.split(",")
+            results = []
+
+            for ingredient in ingredients:
+                results.append({
+                    "caloriesUsed": 650,
+                    "totalCalory": 516.43,
+                    "calorieBreakdown": [
+                        {
+                            "calories": ingredient['cals'],
+                            "carbs": ingredient['carbs'],
+                            "calcium": ingredient['calcium']
+                        }
+                    ],
+                    "breakfast": [
+                        {
+                            "id": 1,
+                            "food": ingredient['jalewi'],  
+                            "ingredients": "4",
+                            "cals": ingredient['cals']  # Replace with the actual field name
+                        }
+                    ]
+                })
+
+            response_data.append(results)
+        response_data = {
+            "data": response_data,
+            "status": True,
+            "code": 200
+        }
+
+        return Response(response_data)
