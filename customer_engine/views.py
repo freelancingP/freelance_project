@@ -1,6 +1,8 @@
 from .serializers import *
 from .models import *
 from django.shortcuts import render
+from datetime import date
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
 import random
@@ -570,7 +572,7 @@ class AddCaloryViews(APIView):
 
 
         # Retrieve existing UserSnacks objects for the customer
-        existing_dish_ids = set(UserSnacks.objects.filter(customer=customer).values_list('dish_id', flat=True))
+        existing_dish_ids = set(UserSnacks.objects.filter(customer=customer, updated_at__date=date.today()).values_list('dish_id', flat=True))
 
         # Calculate dish IDs to add (those in given_dish_ids but not in existing_dish_ids)
         dish_ids_to_add = given_dish_ids - existing_dish_ids
@@ -681,3 +683,4 @@ class CustomerDailyCaloriesView(APIView):
                 count=len(data),
             )
         return data
+    
