@@ -35,12 +35,6 @@ class DailySnacksSerializer(serializers.ModelSerializer):
         model = DailySnacks
         fields = ['id','food','ingredients','cals']
 
-class GetDailySnacksSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = DailySnacks
-        fields = ['id','food','ingredients','cals','calcium']
-
 
 class CalorySerializer(serializers.ModelSerializer):
 

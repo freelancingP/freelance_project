@@ -70,7 +70,7 @@ class DailySnacks(models.Model):
         ('evening_snacks', 'Evening Snacks'),
 
     )
-    meal_type = models.CharField(max_length=15, choices=TYPE_CHOICES)
+    meal_type = models.CharField(max_length=15, choices=TYPE_CHOICES, null=False, blank=False)
     food = models.CharField(max_length=200,null=True,blank=True)
     quantity = models.CharField(max_length=10, null=True)
     ingredients = models.CharField(max_length=255,null=True,blank=True)

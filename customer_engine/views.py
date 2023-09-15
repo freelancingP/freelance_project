@@ -615,43 +615,69 @@ class AddCaloryViews(APIView):
             return response
             
 
+class CustomerDailyCaloriesView(APIView):
+    authentication_classes=[JWTAuthentication]
+    permission_classes=[IsAuthenticated]
 
+    def get(self, request, date, *args, **kwargs):
+        customer = request.user.id
+        date_obj = datetime.strptime(date, "%Y-%m-%d").date()  # Convert the date string to a date object
 
-class GetDishViews(APIView):
-    def get(self, request, *args,**kwargs):
+        dish_ids_list = UserSnacks.objects.filter(customer=customer, updated_at__date=date_obj).values_list('dish_id', flat=True)
         
-        try:
-            id = kwargs.get('id')
-        
-            queryset = DailySnacks.objects.filter(
-                id=id
+        daily_snacks = DailySnacks.objects.filter(id__in=dish_ids_list)
+
+        calories_used = 0
+        total_calory = 0
+        total_carbs = 0
+        total_calcium = 0
+
+        data = {
+            'calories_used':0,
+            'total_calory':0,
+            'calorie_breakdown':None,
+            'breakfast':[],
+            'lunch':[],
+            'dinner':[],
+            'evening_snacks':[],
+        }
+
+        for instance in daily_snacks:
+            data[instance.meal_type].append({
+                        "id": instance.id,
+                        "food": instance.food,
+                        "ingredients": instance.ingredients,
+                        "cals": instance.cals,
+                    })
+            if instance.cals:
+                total_calory += instance.cals
+
+            if instance.carbs:
+                total_carbs += instance.carbs
+
+            if instance.calcium:
+                total_calcium += instance.calcium
+
+        # update data
+        calorie_breakdown = {
+            "calories": total_calory,
+            "carbs": total_carbs,
+            "calcium": total_calcium
+        }
+
+        calories_used = total_calory
+        data['calorie_breakdown'] = calorie_breakdown
+        data['calories_used'] = calories_used
+        data['total_calory'] = total_calory
+
+        status_code = status.HTTP_200_OK
+        message = "successful"
+        data = JsonResponse(
+                status=status_code,
+                msg=message,
+                data=data,
+                success=True,
+                error={},
+                count=len(data),
             )
-
-            response_data = []
-
-            for ingred in queryset:
-                results = {
-                    "results": {
-                        "caloriesUsed": 650,
-                        "totalCalory": 516.43,
-                        "calorieBreakdown": {
-                            "calories": ingred.cals,  
-                            "carbs": ingred.carbs,        
-                            "calcium": ingred.calcium     
-                        },
-                        "meal_type":[
-                            {
-                                "id": ingred.id,
-                                "food": ingred.food,
-                                "ingredients": ingred.ingredients,
-                                "cals": ingred.cals  # Assuming you want to include this field
-                            }
-                        ]
-                    }
-                }
-                response_data.append(results)
-
-                return Response(results)
-        except Exception as e:
-            return Response({"error": str(e)}, status=400)
-        
+        return data
