@@ -618,62 +618,40 @@ class AddCaloryViews(APIView):
 
 
 class GetDishViews(APIView):
+    def get(self, request, *args,**kwargs):
+        
+        try:
+            id = kwargs.get('id')
+        
+            queryset = DailySnacks.objects.filter(
+                id=id
+            )
 
-    def get(self, request, *args, **kwargs):
+            response_data = []
 
-        calories = self.request.query_params.get('cal')
-        carbs = self.request.query_params.get('carbs')
-        calcium = self.request.query_params.get('calcium')
-        ingredients = self.request.query_params.get('ingredients')
-        # print(calories,)
+            for ingred in queryset:
+                results = {
+                    "results": {
+                        "caloriesUsed": 650,
+                        "totalCalory": 516.43,
+                        "calorieBreakdown": {
+                            "calories": ingred.cals,  
+                            "carbs": ingred.carbs,        
+                            "calcium": ingred.calcium     
+                        },
+                        "meal_type":[
+                            {
+                                "id": ingred.id,
+                                "food": ingred.food,
+                                "ingredients": ingred.ingredients,
+                                "cals": ingred.cals  # Assuming you want to include this field
+                            }
+                        ]
+                    }
+                }
+                response_data.append(results)
 
-        queryset = DailySnacks.objects.all()
-        if calories:
-            queryset = queryset.filter(calories=calories)
-        if carbs:
-            queryset = queryset.filter(carbs=carbs)
-        if calcium:
-            queryset = queryset.filter(calcium=calcium)
-        if ingredients:
-            queryset = queryset.filter(ingredients__icontains=ingredients)
-       
-
-        serializer = DailySnacksSerializer(queryset, many=True)
-        serializer_data_list = serializer.data
-
-        response_data = []
-
-        for data in serializer_data_list:
-            input_string = data['ingredients']
-            ingredients = input_string.split(",")
-            results = []
-
-            for ingredient in ingredients:
-                results.append({
-                    "caloriesUsed": 650,
-                    "totalCalory": 516.43,
-                    "calorieBreakdown": [
-                        {
-                            "calories": ingredient['cals'],
-                            "carbs": ingredient['carbs'],
-                            "calcium": ingredient['calcium']
-                        }
-                    ],
-                    "breakfast": [
-                        {
-                            "id": 1,
-                            "food": ingredient['jalewi'],  
-                            "ingredients": "4",
-                            "cals": ingredient['cals']  # Replace with the actual field name
-                        }
-                    ]
-                })
-
-            response_data.append(results)
-        response_data = {
-            "data": response_data,
-            "status": True,
-            "code": 200
-        }
-
-        return Response(response_data)
+                return Response(results)
+        except Exception as e:
+            return Response({"error": str(e)}, status=400)
+        

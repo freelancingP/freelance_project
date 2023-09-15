@@ -20,7 +20,7 @@ urlpatterns = [
     path('upload/image/',views.UploadImageView.as_view()),
     path('daily_calories/', DailyCaloryView.as_view(), name='daily_calories'),
     path('add/calory/', AddCaloryViews.as_view(), name='daily_calories'),
-    path('get/dish/', GetDishViews.as_view(), name='get_dish'),
+    path('get/dish/<int:id>', GetDishViews.as_view(), name='get_dish'),
 
 
 
