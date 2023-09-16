@@ -663,9 +663,21 @@ class CustomerDailyCaloriesView(APIView):
 
         # update data
         calorie_breakdown = {
-            "calories": total_calory,
-            "carbs": total_carbs,
-            "calcium": total_calcium
+            "calories": {
+                    'value':total_calory,
+                    'color':'#2CA3FA',
+                    'percentage': 10
+                },
+            "carbs": {
+                    'value':total_carbs,
+                    'color':'#FF7326',
+                    'percentage': 20
+                },
+            "calcium": {
+                    'value':total_calcium,
+                    'color':'#81BE00',
+                    'percentage': 30
+                }
         }
 
         calories_used = total_calory
