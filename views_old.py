@@ -1,10 +1,10 @@
 from django.shortcuts import render
-from ..models_old import *
+from .models_old import *
 from rest_framework.views import APIView
 from rest_framework.response import Response
 import random
 import json
-from .serializers_old import *
+from .customer_engine.serializers_old import *
 from django.http import Http404
 from rest_framework.generics import GenericAPIView
 from datetime import datetime, timedelta
@@ -12,7 +12,7 @@ import jwt
 import boto3
 from rest_framework.parsers import MultiPartParser, FileUploadParser
 import io
-from .decorators import *
+from .customer_engine.decorators import *
 from django.db.models import Q
 # Create your views here.
 

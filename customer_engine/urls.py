@@ -20,13 +20,7 @@ urlpatterns = [
     path('upload/image/',views.UploadImageView.as_view()),
     path('daily_calories/', DailyCaloryView.as_view(), name='daily_calories'),
     path('add/calory/', AddCaloryViews.as_view(), name='daily_calories'),
-    # path('get/dish/<int:id>', GetDishViews.as_view(), name='get_dish'),
     path('customer-daily-calories/<str:date>/', CustomerDailyCaloriesView.as_view(), name='customer_daily_calories'),
     path('calorigram/<int:id>/', CalorigramView.as_view(), name='calorigram'),
-
-
-
-
-
 
 ]
