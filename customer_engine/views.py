@@ -34,6 +34,7 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from .common_responce import JsonResponse
+import json
 
 # Create your views here.
 class SendOtpViews(GenericAPIView):
@@ -689,3 +690,53 @@ class CustomerDailyCaloriesView(APIView):
 class CalorigramView(APIView):
     authentication_classes=[JWTAuthentication]
     permission_classes=[IsAuthenticated]
+
+    def get(self,request, id, *args,**kwargs):
+
+        try:
+            daily_snacks = DailySnacks.objects.get(id=id)
+        except DailySnacks.DoesNotExist:
+
+            status_code = status.HTTP_404_NOT_FOUND
+            message = "Daily snacks not found"
+            response = JsonResponse(
+                status=status_code,
+                message=message,
+                data=[],
+                success=True,
+                error="Daily snacks not found",
+                count=len(""),
+            )
+            return response
+        
+        data_is = DailySnacksSerializer(daily_snacks).data
+
+        nutrition_value = [
+            {"label": "calories", "value": data_is['cals'], "percentage": 25, "color_code": "#01BA91"},
+            {"label": 'glycemic load', "value": data_is['gl'], "percentage": 66, "color_code": "#00AE4D"},
+            {"label": "carbs", "value": data_is['carbs'], "percentage": 33, "color_code": "#29B6C7"},
+            {"label": "protein", "value": data_is['pral'], "percentage": 25, "color_code": "#98C71C"},
+            {"label": "fats", "value": data_is['total_fat'], "percentage": 25, "color_code": "#E35F11"},
+            {"label": "oil", "value": data_is['oil'], "percentage": 25, "color_code": "#E3B523"},
+        ]
+
+        data = {
+            "dish_name": data_is['food'],
+            "calories": data_is['cals'],
+            "recipes": [ingredient.strip() for ingredient in data_is['ingredients'].split(',')] if data_is['ingredients'] else [],
+            "nutrition_value": nutrition_value,
+        }
+      
+        status_code = status.HTTP_200_OK
+        message = "successful"
+        response = JsonResponse(
+            status=status_code,
+            message=message,
+            data=data,
+            success=True,
+            error={},
+            count=len(data),
+        )
+        return response
+
+
