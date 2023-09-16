@@ -33,7 +33,7 @@ class DailySnacksSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = DailySnacks
-        fields = ['id','food','ingredients','cals']
+        fields = '__all__'
 
 
 class CalorySerializer(serializers.ModelSerializer):

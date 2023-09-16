@@ -580,7 +580,7 @@ class AddCaloryViews(APIView):
         # Calculate dish IDs to remove (those in existing_dish_ids but not in given_dish_ids)
         dish_ids_to_remove = existing_dish_ids - given_dish_ids
         # Remove UserSnacks objects for dish_ids_to_remove
-        UserSnacks.objects.filter(customer=customer, dish_id__in=dish_ids_to_remove).delete()
+        UserSnacks.objects.filter(customer=customer, dish_id__in=dish_ids_to_remove, updated_at__date=date.today()).delete()
 
         save_calories = []
         for row in dish_ids_to_add:
@@ -684,3 +684,8 @@ class CustomerDailyCaloriesView(APIView):
             )
         return data
     
+
+
+class CalorigramView(APIView):
+    authentication_classes=[JWTAuthentication]
+    permission_classes=[IsAuthenticated]
