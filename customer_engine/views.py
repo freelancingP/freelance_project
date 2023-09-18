@@ -468,7 +468,7 @@ class AllDishesViewSet(viewsets.ModelViewSet):
     authentication_classes=[JWTAuthentication]
     permission_classes=[IsAuthenticated]
     
-    def get(self, request): 
+    def list(self, request): 
         queryset = self.filter_queryset(self.get_queryset())
             
         page = self.paginate_queryset(queryset)
@@ -529,6 +529,9 @@ class DailyCaloryView(APIView):
                 'proteins': total_proteins,
             }
             status_code = status.HTTP_200_OK
+            serializer = DailySnacksSerializer(data=daily_totals, many=True)
+            if serializer.is_valid():
+                serializer.save()
             message = "successful"
             data = {"daily_calories": daily_totals}
             response = JsonResponse(
@@ -752,60 +755,68 @@ class CalorigramView(APIView):
         )
         return response
 
-class  UploadRecipeView(APIView):
+
+class UploadRecipeView(APIView):
     authentication_classes=[JWTAuthentication]
     permission_classes=[IsAuthenticated]
 
     def post(self, request, format=None):
-        recipe_name = request.data.get('food')
-        category = request.data.get('meal_type')
-        serving_size = request.data.get('quantity')
+        food = request.data.get('food')
+        quantity = request.data.get('quantity')
         ingredients = request.data.get('ingredients')
-        print(ingredients, '-------------------')
-        data_queryset = DailySnacks.objects.filter(food=recipe_name, meal_type=category, quantity=serving_size, ingredients=ingredients)
-        print(data_queryset, '------------------')
 
-        if data_queryset.exists():
+        data_queryset = DailySnacks.objects.filter(food=food, quantity=quantity,  ingredients=ingredients)
+        
+        if not data_queryset:
+            return Response({
+                'status': status.HTTP_400_BAD_REQUEST,
+                'message': "Invalid data",
+                'data': {},
+                'success': False,
+                'error': {},
+                'count': 0,
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        serializer = DailySnacksSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+
+            response_data = {
+                "image_url": "",
+                "dish_name": serializer.validated_data['food'],
+                "category": serializer.validated_data['meal_type'],
+                "serving_size": serializer.validated_data['quantity'],
+                "ingredients": [
+                    {
+                        "name": serializer.validated_data['ingredients'],
+                        "quantity": serializer.validated_data['quantity']
+                    }
+                ]
+            }
+
+            status_code = status.HTTP_201_CREATED
+            message = "Recipe uploaded successfully"
+            data = serializer.data
+            return Response({
+                'status': status_code,
+                'message': message,
+                'data': response_data,
+                'success': True,
+                'error': {},
+                'count': 1,
+            }, status=status_code)
+        else:
             status_code = status.HTTP_400_BAD_REQUEST
-            message = "Recipe already exists"
+            message = "Invalid data"
             data = {}
             return Response({
                 'status': status_code,
                 'message': message,
                 'data': data,
                 'success': False,
-                'error': "Invalid data",
-                'count': len(data_queryset),
+                'error': serializer.errors,
+                'count': 0,
             }, status=status_code)
-        else:
-            # Create a new recipe instance
-            serializer = DailySnacksSerializer(data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                status_code = status.HTTP_201_CREATED
-                message = "Recipe created successfully"
-                data = serializer.data
-                return Response({
-                    'status': status_code,
-                    'message': message,
-                    'data': data,
-                    'success': True,
-                    'error': {},
-                    'count': 1,
-                }, status=status_code)
-            else:
-                # Invalid data, return a 400 Bad Request response with validation errors
-                status_code = status.HTTP_400_BAD_REQUEST
-                message = "Invalid data"
-                data = {}
-                return Response({
-                    'status': status_code,
-                    'message': message,
-                    'data': data,
-                    'success': False,
-                    'error': serializer.errors,
-                    'count': 0,
-                }, status=status_code)
             
 
 
