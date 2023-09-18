@@ -643,6 +643,7 @@ class CustomerDailyCaloriesView(APIView):
             'lunch':[],
             'dinner':[],
             'evening_snacks':[],
+            'added_dish':dish_ids_list
         }
 
         for instance in daily_snacks:
@@ -750,5 +751,61 @@ class CalorigramView(APIView):
             count=len(data),
         )
         return response
+
+class  UploadRecipeView(APIView):
+    authentication_classes=[JWTAuthentication]
+    permission_classes=[IsAuthenticated]
+
+    def post(self, request, format=None):
+        recipe_name = request.data.get('food')
+        category = request.data.get('meal_type')
+        serving_size = request.data.get('quantity')
+        ingredients = request.data.get('ingredients')
+        print(ingredients, '-------------------')
+        data_queryset = DailySnacks.objects.filter(food=recipe_name, meal_type=category, quantity=serving_size, ingredients=ingredients)
+        print(data_queryset, '------------------')
+
+        if data_queryset.exists():
+            status_code = status.HTTP_400_BAD_REQUEST
+            message = "Recipe already exists"
+            data = {}
+            return Response({
+                'status': status_code,
+                'message': message,
+                'data': data,
+                'success': False,
+                'error': "Invalid data",
+                'count': len(data_queryset),
+            }, status=status_code)
+        else:
+            # Create a new recipe instance
+            serializer = DailySnacksSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                status_code = status.HTTP_201_CREATED
+                message = "Recipe created successfully"
+                data = serializer.data
+                return Response({
+                    'status': status_code,
+                    'message': message,
+                    'data': data,
+                    'success': True,
+                    'error': {},
+                    'count': 1,
+                }, status=status_code)
+            else:
+                # Invalid data, return a 400 Bad Request response with validation errors
+                status_code = status.HTTP_400_BAD_REQUEST
+                message = "Invalid data"
+                data = {}
+                return Response({
+                    'status': status_code,
+                    'message': message,
+                    'data': data,
+                    'success': False,
+                    'error': serializer.errors,
+                    'count': 0,
+                }, status=status_code)
+            
 
 
