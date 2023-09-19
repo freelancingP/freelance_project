@@ -861,22 +861,22 @@ class DailyCalorigramView(APIView):
         data_is = DailySnacksSerializer(all_data, many=True).data
         
         eaten_calories = 0
-        remaining_calories = 0
+        remaining_calories = 1
 
         eaten_gl = 0
-        remaining_gl = 0
+        remaining_gl = 1
 
         eaten_carbs = 0
-        remaining_carbs = 0
+        remaining_carbs = 1
 
         eaten_pral = 0
-        remaining_pral = 0
+        remaining_pral = 1
 
         eaten_total_fat = 0
-        remaining_total_fat = 0
+        remaining_total_fat = 1
 
         eaten_oil = 0
-        remaining_oil= 0
+        remaining_oil= 1
 
 
         for item in data_is:

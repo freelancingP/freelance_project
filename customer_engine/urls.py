@@ -4,7 +4,6 @@ from django.urls import path,include
 from . import views
 from .views import  OTPVerifyAPI, DailyCaloryView, AddCaloryViews, LoginAPIView, CustomerDailyCaloriesView, CalorigramView, UploadRecipeView, DailyCalorigramView
 
-
 router = DefaultRouter()
 router.register(r'all/dishes', AllDishesViewSet, basename ="all dishes")
 
@@ -13,7 +12,6 @@ urlpatterns = [
     path('', include(router.urls)),
     path('login/', LoginAPIView.as_view(), name='login'),
     path('verify-otp/', OTPVerifyAPI.as_view(), name='verify-otp'),
-
     path('send/otp/',views.SendOtpViews.as_view()),
     path('verify/otp/',views.VerifyOtpViews.as_view()),
     path('update/user/details/',views.UpdateUserDetailViews.as_view()),
