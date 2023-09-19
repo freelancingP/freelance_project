@@ -761,62 +761,166 @@ class UploadRecipeView(APIView):
     permission_classes=[IsAuthenticated]
 
     def post(self, request, format=None):
-        food = request.data.get('food')
-        quantity = request.data.get('quantity')
-        ingredients = request.data.get('ingredients')
 
-        data_queryset = DailySnacks.objects.filter(food=food, quantity=quantity,  ingredients=ingredients)
-        
-        if not data_queryset:
-            return Response({
-                'status': status.HTTP_400_BAD_REQUEST,
-                'message': "Invalid data",
-                'data': {},
-                'success': False,
-                'error': {},
-                'count': 0,
-            }, status=status.HTTP_400_BAD_REQUEST)
+        """ "image_url": "",
+            "dishName": "Idli",
+            "category": "breakfast",
+            "servingSize": "gm/ml/quantity",
+            "ingredients": [
+                {
+                "name": "Bajra",
+                "quantity": 10.2
+                }
+            ]
+            }"""
 
-        serializer = DailySnacksSerializer(data=request.data)
-        if serializer.is_valid(raise_exception=True):
-            serializer.save()
+        dish_name = request.data.get('dish_name')
+        serving_size = request.data.get('serving_size')
+        ingredients = request.data.get('ingredients', [])
 
-            response_data = {
-                "image_url": "",
-                "dish_name": serializer.validated_data['food'],
-                "category": serializer.validated_data['meal_type'],
-                "serving_size": serializer.validated_data['quantity'],
-                "ingredients": [
-                    {
-                        "name": serializer.validated_data['ingredients'],
-                        "quantity": serializer.validated_data['quantity']
-                    }
-                ]
-            }
+        quantity = request.data.get('servingSize')
+        if serving_size == quantity:
+            
+            # Handle the equality case here
+            data_queryset = DailySnacks.objects.filter(food=dish_name, quantity=serving_size,  ingredients=ingredients)
+            
+            if not data_queryset:
+                return Response({
+                    'status': status.HTTP_400_BAD_REQUEST,
+                    'message': "Invalid data",
+                    'data': {},
+                    'success': False,
+                    'error': {},
+                    'count': 0,
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
 
-            status_code = status.HTTP_201_CREATED
-            message = "Recipe uploaded successfully"
-            data = serializer.data
-            return Response({
-                'status': status_code,
-                'message': message,
-                'data': response_data,
-                'success': True,
-                'error': {},
-                'count': 1,
-            }, status=status_code)
-        else:
-            status_code = status.HTTP_400_BAD_REQUEST
-            message = "Invalid data"
-            data = {}
-            return Response({
-                'status': status_code,
-                'message': message,
-                'data': data,
-                'success': False,
-                'error': serializer.errors,
-                'count': 0,
-            }, status=status_code)
+            serializer = DailySnacksSerializer(data=request.data)
+            if serializer.is_valid(raise_exception=True):
+                serializer.save()
+
+                response_data = {
+                    "image_url": "",
+                    "dish_name": serializer.validated_data['food'],
+                    "category": serializer.validated_data['meal_type'],
+                    "serving_size": serializer.validated_data['quantity'],
+                    "ingredients": [
+                        {
+                            "name": serializer.validated_data['ingredients'],
+                            "quantity": serializer.validated_data['quantity']
+                        }
+                    ]
+                }
+
+                status_code = status.HTTP_201_CREATED
+                message = "Recipe uploaded successfully"
+                data = serializer.data
+                return Response({
+                    'status': status_code,
+                    'message': message,
+                    'data': response_data,
+                    'success': True,
+                    'error': {},
+                    'count': 1,
+                }, status=status_code)
+            else:
+                status_code = status.HTTP_400_BAD_REQUEST
+                message = "Invalid data"
+                data = {}
+                return Response({
+                    'status': status_code,
+                    'message': message,
+                    'data': data,
+                    'success': False,
+                    'error': serializer.errors,
+                    'count': 0,
+                }, status=status_code)
             
 
 
+class DailyCalorigramView(APIView):
+    authentication_classes=[JWTAuthentication]
+    permission_classes=[IsAuthenticated]
+
+    def get(self, request, date, *args, **kwargs):
+        customer = request.user.id
+        meal_type = request.query_params.get('meal_type')
+
+        date_obj = datetime.strptime(date, "%Y-%m-%d").date() 
+
+        user_snacks_filter = {'customer': customer, 'updated_at__date': date_obj}
+
+        all_data = []
+        if meal_type:
+            all_data = DailySnacks.objects.filter(meal_type=meal_type)
+        else:
+            all_data = DailySnacks.objects.filter(meal_type=meal_type)
+            
+        dish_ids_list = UserSnacks.objects.filter(**user_snacks_filter).values_list('dish_id', flat=True)
+
+        data_is = DailySnacksSerializer(all_data, many=True).data
+        
+        eaten_calories = 0
+        remaining_calories = 0
+
+        eaten_gl = 0
+        remaining_gl = 0
+
+        eaten_carbs = 0
+        remaining_carbs = 0
+
+        eaten_pral = 0
+        remaining_pral = 0
+
+        eaten_total_fat = 0
+        remaining_total_fat = 0
+
+        eaten_oil = 0
+        remaining_oil= 0
+
+
+        for item in data_is:
+            if item['id'] in dish_ids_list:
+                # consume
+                eaten_calories += item['cals']
+                eaten_gl += item['gl']
+                eaten_carbs += item['carbs']
+                eaten_pral += item['pral']
+                eaten_total_fat += item['total_fat']
+                eaten_oil += item['oil']
+
+            else:
+                # not consume
+                remaining_calories += item['cals']
+                remaining_gl += item['gl']
+                remaining_carbs += item['carbs']
+                remaining_pral += item['pral']
+                remaining_total_fat += item['total_fat']
+                remaining_oil += item['oil'] 
+
+        nutrition_value = [
+            {"label": "calories", "value": eaten_calories, "percentage": (eaten_calories / (eaten_calories + remaining_calories)) * 100, "color_code": "#01BA91"},
+            {"label": 'glycemic load', "value": eaten_gl, "percentage": (eaten_gl/ (eaten_gl + remaining_gl)) * 100, "color_code": "#00AE4D"},
+            {"label": "carbs", "value": eaten_carbs, "percentage": (eaten_carbs/ (eaten_carbs + remaining_carbs)) * 100, "color_code": "#29B6C7"},
+            {"label": "protein", "value": eaten_pral, "percentage": (eaten_pral/ (eaten_pral + remaining_pral))* 100, "color_code": "#98C71C"},
+            {"label": "fats", "value": eaten_total_fat, "percentage": (eaten_total_fat/ (eaten_total_fat + remaining_total_fat)) * 100, "color_code": "#E35F11"},
+            {"label": "oil", "value": eaten_oil, "percentage": (eaten_oil / (eaten_oil + remaining_oil)) * 100, "color_code": "#E3B523"},
+        ]
+
+        data = {
+            'eaten_calories': eaten_calories,
+            'remaining_calories': remaining_calories,
+            'nutrition_value': nutrition_value
+        }
+      
+        status_code = status.HTTP_200_OK
+        message = "successful"
+        response = JsonResponse(
+            status=status_code,
+            message=message,
+            data=data,
+            success=True,
+            error={},
+            count=len(data),
+        )
+        return response
