@@ -23,6 +23,4 @@ urlpatterns = [
     path('upload-recipe/', UploadRecipeView.as_view(), name='upload_recipe'),
     path('daily-calorigram/<str:date>/', DailyCalorigramView.as_view(), name='daily_calorigram'),
     path('get-dishes/', GetDishesView.as_view(), name='get_dishes'),
-
-
 ]
