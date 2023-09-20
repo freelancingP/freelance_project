@@ -145,7 +145,7 @@ def import_csv_data(csv_file_path):
 
 
 
-csv_file_path = '/home/sh-root/Documents/Appstack/freelance_project/Ingredients List (3).csv'
+csv_file_path = 'Ingredients List (3).csv'
 import_csv_data(csv_file_path)
 
 # csv_file_path = '/home/sh-root/Documents/Appstack/freelance_project/Ingredients List (3)/dals.csv'
