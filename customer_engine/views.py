@@ -778,7 +778,7 @@ class UploadRecipeView(APIView):
         serving_size = request.data.get('serving_size')
         ingredients = request.data.get('ingredients', [])
 
-        quantity = request.data.get('servingSize')
+        quantity = request.data.get('serving_size')
         if serving_size == quantity:
             
             # Handle the equality case here
@@ -837,90 +837,97 @@ class UploadRecipeView(APIView):
                 }, status=status_code)
             
 
-
 class DailyCalorigramView(APIView):
     authentication_classes=[JWTAuthentication]
     permission_classes=[IsAuthenticated]
 
     def get(self, request, date, *args, **kwargs):
-        customer = request.user.id
-        meal_type = request.query_params.get('meal_type')
+        try:
+            customer = request.user.id
+            meal_type = request.query_params.get('meal_type')
+            date_obj = datetime.strptime(date, "%Y-%m-%d").date() 
+            user_snacks_filter = {'customer': customer, 'updated_at__date': date_obj}
 
-        date_obj = datetime.strptime(date, "%Y-%m-%d").date() 
-
-        user_snacks_filter = {'customer': customer, 'updated_at__date': date_obj}
-
-        all_data = []
-        if meal_type:
-            all_data = DailySnacks.objects.filter(meal_type=meal_type)
-        else:
-            all_data = DailySnacks.objects.filter(meal_type=meal_type)
-            
-        dish_ids_list = UserSnacks.objects.filter(**user_snacks_filter).values_list('dish_id', flat=True)
-
-        data_is = DailySnacksSerializer(all_data, many=True).data
-        
-        eaten_calories = 0
-        remaining_calories = 1
-
-        eaten_gl = 0
-        remaining_gl = 1
-
-        eaten_carbs = 0
-        remaining_carbs = 1
-
-        eaten_pral = 0
-        remaining_pral = 1
-
-        eaten_total_fat = 0
-        remaining_total_fat = 1
-
-        eaten_oil = 0
-        remaining_oil= 1
-
-
-        for item in data_is:
-            if item['id'] in dish_ids_list:
-                # consume
-                eaten_calories += item['cals']
-                eaten_gl += item['gl']
-                eaten_carbs += item['carbs']
-                eaten_pral += item['pral']
-                eaten_total_fat += item['total_fat']
-                eaten_oil += item['oil']
-
+            all_data = []
+            if meal_type:
+                all_data = DailySnacks.objects.filter(meal_type=meal_type)
             else:
-                # not consume
-                remaining_calories += item['cals']
-                remaining_gl += item['gl']
-                remaining_carbs += item['carbs']
-                remaining_pral += item['pral']
-                remaining_total_fat += item['total_fat']
-                remaining_oil += item['oil'] 
+                all_data = DailySnacks.objects.filter(meal_type=meal_type)
+                
+            dish_ids_list = UserSnacks.objects.filter(**user_snacks_filter).values_list('dish_id', flat=True)
+            data_is = DailySnacksSerializer(all_data, many=True).data
+            
+            eaten_calories = 0
+            remaining_calories = 1
 
-        nutrition_value = [
-            {"label": "calories", "value": eaten_calories, "percentage": (eaten_calories / (eaten_calories + remaining_calories)) * 100, "color_code": "#01BA91"},
-            {"label": 'glycemic load', "value": eaten_gl, "percentage": (eaten_gl/ (eaten_gl + remaining_gl)) * 100, "color_code": "#00AE4D"},
-            {"label": "carbs", "value": eaten_carbs, "percentage": (eaten_carbs/ (eaten_carbs + remaining_carbs)) * 100, "color_code": "#29B6C7"},
-            {"label": "protein", "value": eaten_pral, "percentage": (eaten_pral/ (eaten_pral + remaining_pral))* 100, "color_code": "#98C71C"},
-            {"label": "fats", "value": eaten_total_fat, "percentage": (eaten_total_fat/ (eaten_total_fat + remaining_total_fat)) * 100, "color_code": "#E35F11"},
-            {"label": "oil", "value": eaten_oil, "percentage": (eaten_oil / (eaten_oil + remaining_oil)) * 100, "color_code": "#E3B523"},
-        ]
+            eaten_gl = 0
+            remaining_gl = 1
 
-        data = {
-            'eaten_calories': eaten_calories,
-            'remaining_calories': remaining_calories,
-            'nutrition_value': nutrition_value
-        }
-      
-        status_code = status.HTTP_200_OK
-        message = "successful"
-        response = JsonResponse(
-            status=status_code,
-            message=message,
-            data=data,
-            success=True,
-            error={},
-            count=len(data),
-        )
-        return response
+            eaten_carbs = 0
+            remaining_carbs = 1
+
+            eaten_pral = 0
+            remaining_pral = 1
+
+            eaten_total_fat = 0
+            remaining_total_fat = 1
+
+            eaten_oil = 0
+            remaining_oil= 1
+
+
+            for item in data_is:
+                if item['id'] in dish_ids_list:
+                    if item['gl'] != None : 
+                        eaten_calories += item['cals']
+                        eaten_gl += item['gl']
+                        eaten_carbs += item['carbs']
+                        eaten_pral += item['pral']
+                        eaten_total_fat += item['total_fat']
+                        eaten_oil += item['oil']
+
+                else:
+                    remaining_calories += item['cals']
+                    remaining_gl += item['gl']
+                    remaining_carbs += item['carbs']
+                    remaining_pral += item['pral']
+                    remaining_total_fat += item['total_fat']
+                    remaining_oil += item['oil'] 
+
+            nutrition_value = [
+                {"label": "calories", "value": eaten_calories, "percentage": (eaten_calories / (eaten_calories + remaining_calories)) * 100, "color_code": "#01BA91"},
+                {"label": 'glycemic load', "value": eaten_gl, "percentage": (eaten_gl/ (eaten_gl + remaining_gl)) * 100, "color_code": "#00AE4D"},
+                {"label": "carbs", "value": eaten_carbs, "percentage": (eaten_carbs/ (eaten_carbs + remaining_carbs)) * 100, "color_code": "#29B6C7"},
+                {"label": "protein", "value": eaten_pral, "percentage": (eaten_pral/ (eaten_pral + remaining_pral))* 100, "color_code": "#98C71C"},
+                {"label": "fats", "value": eaten_total_fat, "percentage": (eaten_total_fat/ (eaten_total_fat + remaining_total_fat)) * 100, "color_code": "#E35F11"},
+                {"label": "oil", "value": eaten_oil, "percentage": (eaten_oil / (eaten_oil + remaining_oil)) * 100, "color_code": "#E3B523"},
+            ]
+
+            data = {
+                'eaten_calories': eaten_calories,
+                'remaining_calories': remaining_calories,
+                'nutrition_value': nutrition_value
+            }
+            status_code = status.HTTP_200_OK
+            message = "successful"
+            response = JsonResponse(
+                status=status_code,
+                message=message,
+                data=data,
+                success=True,
+                error={},
+                count=len(data),
+            )
+            return response
+        except ValueError:
+            status_code = status.HTTP_400_BAD_REQUEST
+            message = "Invalid date format"
+            response = JsonResponse(
+                status=status_code,
+                message=message,
+                data=None,
+                success=False,
+                error={},
+                count=0,
+            )
+            return response
