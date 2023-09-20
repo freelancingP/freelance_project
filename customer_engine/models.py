@@ -147,13 +147,10 @@ class DailyRecipe(models.Model):
 
 class Dishes(models.Model):
     food = models.CharField(max_length=200,null=True,blank=True)
-    quantity = models.CharField(max_length=10, null=True)
-    ingredients = models.CharField(max_length=255,null=True,blank=True)
-    veg_nonveg_egg = models.CharField(max_length=255,null=True,blank=True)
-    pral = models.FloatField(null=True)
+    price = models.CharField(max_length=10, null=True)
     oil = models.FloatField(null=True)
     gl = models.FloatField(null=True)
-    cals = models.FloatField(null=True)
+    useble_cals = models.FloatField(null=True)
     aaf_adj_prot = models.FloatField(null=True)
     carbs = models.FloatField(null=True)
     total_fat = models.FloatField(null=True)
@@ -167,8 +164,7 @@ class Dishes(models.Model):
     lysine = models.FloatField(null=True)
     gross_protine = models.FloatField(null=True)
     free_suger = models.FloatField(null=True)
-    aa_factor = models.FloatField(null=True)
-    glucose = models.FloatField(null=True)
+
 
     def __str__(self):
         return self.food

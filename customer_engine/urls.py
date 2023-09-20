@@ -2,7 +2,7 @@ from rest_framework.routers import DefaultRouter
 from  .views import AllDishesViewSet
 from django.urls import path,include
 from . import views
-from .views import  OTPVerifyAPI, DailyCaloryView, AddCaloryViews, LoginAPIView, CustomerDailyCaloriesView, CalorigramView, UploadRecipeView, DailyCalorigramView
+from .views import  OTPVerifyAPI, DailyCaloryView, AddCaloryViews, LoginAPIView, CustomerDailyCaloriesView, CalorigramView, UploadRecipeView, DailyCalorigramView, GetDishesView
 
 router = DefaultRouter()
 router.register(r'all/dishes', AllDishesViewSet, basename ="all dishes")
@@ -21,5 +21,8 @@ urlpatterns = [
     path('customer-daily-calories/<str:date>/', CustomerDailyCaloriesView.as_view(), name='customer_daily_calories'),
     path('calorigram/<int:id>/', CalorigramView.as_view(), name='calorigram'),
     path('upload-recipe/', UploadRecipeView.as_view(), name='upload_recipe'),
-    path('daily-calorigram/<str:date>/', DailyCalorigramView.as_view(), name='daily_calorigram')
+    path('daily-calorigram/<str:date>/', DailyCalorigramView.as_view(), name='daily_calorigram'),
+    path('get-dishes/', GetDishesView.as_view(), name='get_dishes'),
+
+
 ]

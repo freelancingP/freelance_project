@@ -932,3 +932,59 @@ class DailyCalorigramView(APIView):
                 count=0,
             )
             return response
+
+
+
+class GetDishesView(APIView):
+    authentication_classes=[JWTAuthentication]
+    permission_classes=[IsAuthenticated]
+
+    def get(self, request, id=None, *args, **kwargs):
+        if id is not None:
+            try:
+                dish= Dishes.objects.get(id=id)
+                data = {"dish_name": dish.food}
+                status_code = status.HTTP_200_OK
+                message = "successful"
+                response = JsonResponse(
+                    status=status_code,
+                    message=message,
+                    data=data,
+                    success=True,
+                    error={},
+                    count=len(data),
+                )
+                return response
+            except Dishes.DoesNotExist:
+                status_code = status.HTTP_400_BAD_REQUEST
+                message = "Invalid date format"
+                response = JsonResponse(
+                    status=status_code,
+                    message=message,
+                    data=None,
+                    success=False,
+                    error={},
+                    count=0,
+                )
+                return response
+        else:
+            dishes = Dishes.objects.all()
+            data = {"dish_name": [dish.food for dish in dishes]}
+            status_code = status.HTTP_200_OK
+            message = "successful"
+            response = JsonResponse(
+                status=status_code,
+                message=message,
+                data=data,
+                success=True,
+                error={},
+                count=len(data),
+            )
+            return response
+
+
+
+
+
+
+

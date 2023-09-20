@@ -54,3 +54,10 @@ class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer
         fields = '__all__'
+
+
+
+class DishesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Dishes
+        fields = '__all__'
