@@ -7,7 +7,7 @@ def import_json_data_from_file(json_file_path):
         json_data = json.load(json_file)
         for item in json_data:
             DailySnacks.objects.create(**item)
-
+            
 # Usage
 json_file_path = ['breakfast.json', 'lunch.json', 'dinner.json', 'evening_snacks.json']
 for file_path in json_file_path:

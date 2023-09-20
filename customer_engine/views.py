@@ -467,8 +467,9 @@ class AllDishesViewSet(viewsets.ModelViewSet):
     search_fields = ['meal_type','food']   
     authentication_classes=[JWTAuthentication]
     permission_classes=[IsAuthenticated]
+
     
-    def list(self, request): 
+    def get(self, request): 
         queryset = self.filter_queryset(self.get_queryset())
             
         page = self.paginate_queryset(queryset)
@@ -670,17 +671,17 @@ class CustomerDailyCaloriesView(APIView):
             "calories": {
                     'value':total_calory,
                     'color':'#2CA3FA',
-                    'percentage': 10
+                    'percentage': 1                
                 },
             "carbs": {
                     'value':total_carbs,
                     'color':'#FF7326',
-                    'percentage': 20
+                    'percentage': 2
                 },
             "calcium": {
                     'value':total_calcium,
                     'color':'#81BE00',
-                    'percentage': 30
+                    'percentage': 3
                 }
         }
 
@@ -728,12 +729,12 @@ class CalorigramView(APIView):
         data_is = DailySnacksSerializer(daily_snacks).data
 
         nutrition_value = [
-            {"label": "calories", "value": data_is['cals'], "percentage": 25, "color_code": "#01BA91"},
-            {"label": 'glycemic load', "value": data_is['gl'], "percentage": 66, "color_code": "#00AE4D"},
-            {"label": "carbs", "value": data_is['carbs'], "percentage": 33, "color_code": "#29B6C7"},
-            {"label": "protein", "value": data_is['pral'], "percentage": 25, "color_code": "#98C71C"},
-            {"label": "fats", "value": data_is['total_fat'], "percentage": 25, "color_code": "#E35F11"},
-            {"label": "oil", "value": data_is['oil'], "percentage": 25, "color_code": "#E3B523"},
+            {"label": "calories", "value": data_is['cals'], "percentage": 5, "color_code": "#01BA91"},
+            {"label": 'glycemic load', "value": data_is['gl'], "percentage": 6, "color_code": "#00AE4D"},
+            {"label": "carbs", "value": data_is['carbs'], "percentage": 3, "color_code": "#29B6C7"},
+            {"label": "protein", "value": data_is['pral'], "percentage": 5, "color_code": "#98C71C"},
+            {"label": "fats", "value": data_is['total_fat'], "percentage": 5, "color_code": "#E35F11"},
+            {"label": "oil", "value": data_is['oil'], "percentage": 5, "color_code": "#E3B523"},
         ]
 
         data = {
