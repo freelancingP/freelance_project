@@ -114,9 +114,9 @@ def import_csv_data(csv_file_path):
     with open(csv_file_path, mode='r') as csv_file:
         csv_reader = csv.DictReader(csv_file)
         for row in csv_reader:
-            print(row,'--')
+            
             oil_value = row['Oil']
-
+            
             if len(row["Food"]) > 0:
                 # Map CSV columns to model fields
                 data = {
@@ -141,11 +141,13 @@ def import_csv_data(csv_file_path):
                     'free_suger': row['Free Sugar'],
             
                 }
-                Dishes.objects.create(**data)
+                try:
+                    Dishes.objects.create(**data)
+                except:
+                    pass
 
 
-
-csv_file_path = 'Ingredients List (3).csv'
+csv_file_path = 'data.csv'
 import_csv_data(csv_file_path)
 
 # csv_file_path = '/home/sh-root/Documents/Appstack/freelance_project/Ingredients List (3)/dals.csv'

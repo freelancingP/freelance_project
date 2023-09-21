@@ -756,87 +756,59 @@ class CalorigramView(APIView):
         )
         return response
 
-
-class UploadRecipeView(APIView):
+class CreateRecipe(APIView):
     authentication_classes=[JWTAuthentication]
     permission_classes=[IsAuthenticated]
 
     def post(self, request, format=None):
+        serializer = RecipeSerializer(data=request.data)
 
-        """ "image_url": "",
-            "dishName": "Idli",
-            "category": "breakfast",
-            "servingSize": "gm/ml/quantity",
-            "ingredients": [
-                {
-                "name": "Bajra",
-                "quantity": 10.2
-                }
-            ]
-            }"""
+        if serializer.is_valid():
+            recipe = serializer.save()
 
-        dish_name = request.data.get('dish_name')
-        serving_size = request.data.get('serving_size')
-        ingredients = request.data.get('ingredients', [])
+            ingredients_data = request.data.get('ingredients', [])
+            for ingredient_data in ingredients_data:
+                ingredient_data['recipe'] = recipe.id
+                ingredient_serializer = RecipeIngridientSerializer(data=ingredient_data)
+                if ingredient_serializer.is_valid():
+                    ingredient_serializer.save()
+                else:
+                    status_code = status.HTTP_404_NOT_FOUND
+                    message = "Recipe not found"
+                    response = JsonResponse(
+                        status=status_code,
+                        message=message,
+                        data=[],
+                        success=True,
+                        error="Recipe not found",
+                        count=len(""),
+                    )
+                    return response
+                    # Handle errors if needed
+            status_code = status.HTTP_201_CREATED
+            message = "successful"
+            data = JsonResponse(
+                    status=status_code,
+                    msg=message,
+                    data=serializer.data,
+                    success=True,
+                    error={},
+                    count=len("data"),
+                )
+            return data
+        status_code = status.HTTP_400_BAD_REQUEST
+        message = "Bad request"
+        response = JsonResponse(
+            status=status_code,
+            message=message,
+            data=[],
+            success=True,
+            error="Bad request",
+            count=len(""),
+        )
+        return response
+    
 
-        quantity = request.data.get('serving_size')
-        if serving_size == quantity:
-            
-            # Handle the equality case here
-            data_queryset = DailySnacks.objects.filter(food=dish_name, quantity=serving_size,  ingredients=ingredients)
-            
-            if not data_queryset:
-                return Response({
-                    'status': status.HTTP_400_BAD_REQUEST,
-                    'message': "Invalid data",
-                    'data': {},
-                    'success': False,
-                    'error': {},
-                    'count': 0,
-                }, status=status.HTTP_400_BAD_REQUEST)
-            
-
-            serializer = DailySnacksSerializer(data=request.data)
-            if serializer.is_valid(raise_exception=True):
-                serializer.save()
-
-                response_data = {
-                    "image_url": "",
-                    "dish_name": serializer.validated_data['food'],
-                    "category": serializer.validated_data['meal_type'],
-                    "serving_size": serializer.validated_data['quantity'],
-                    "ingredients": [
-                        {
-                            "name": serializer.validated_data['ingredients'],
-                            "quantity": serializer.validated_data['quantity']
-                        }
-                    ]
-                }
-
-                status_code = status.HTTP_201_CREATED
-                message = "Recipe uploaded successfully"
-                data = serializer.data
-                return Response({
-                    'status': status_code,
-                    'message': message,
-                    'data': response_data,
-                    'success': True,
-                    'error': {},
-                    'count': 1,
-                }, status=status_code)
-            else:
-                status_code = status.HTTP_400_BAD_REQUEST
-                message = "Invalid data"
-                data = {}
-                return Response({
-                    'status': status_code,
-                    'message': message,
-                    'data': data,
-                    'success': False,
-                    'error': serializer.errors,
-                    'count': 0,
-                }, status=status_code)
-            
 
 class DailyCalorigramView(APIView):
     authentication_classes=[JWTAuthentication]
@@ -935,7 +907,7 @@ class DailyCalorigramView(APIView):
 
 
 
-class GetDishesView(APIView):
+class GetIngridientView(APIView):
     authentication_classes=[JWTAuthentication]
     permission_classes=[IsAuthenticated]
 
@@ -943,7 +915,7 @@ class GetDishesView(APIView):
         if id is not None:
             try:
                 dish= Dishes.objects.get(id=id)
-                data = {"dish_name": dish.food}
+                data = {"name": dish.food}
                 status_code = status.HTTP_200_OK
                 message = "successful"
                 response = JsonResponse(
@@ -969,7 +941,7 @@ class GetDishesView(APIView):
                 return response
         else:
             dishes = Dishes.objects.all()
-            data = {"dish_name": [dish.food for dish in dishes]}
+            data = [{"id": dish.id, "name": dish.food} for dish in dishes]
             status_code = status.HTTP_200_OK
             message = "successful"
             response = JsonResponse(

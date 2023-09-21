@@ -146,6 +146,7 @@ class DailyRecipe(models.Model):
         return self.food
 
 class Dishes(models.Model):
+    # id = models.AutoField(primary_key=True)
     food = models.CharField(max_length=200,null=True,blank=True)
     price = models.CharField(max_length=10, null=True)
     oil = models.FloatField(null=True)
@@ -170,4 +171,27 @@ class Dishes(models.Model):
         return self.food
 
 
+
+class Recipe(models.Model):
+    image = models.TextField(null=True, blank=True)  # Requires Pillow library
+    dish_name = models.CharField(max_length=255)
+    TYPE_CHOICES = (
+            ('breakfast', 'Breakfast'),
+            ('lunch', 'Lunch'),
+            ('dinner', 'Dinner'),
+            ('evening_snacks', 'Evening Snacks'),
+        )
+    category = models.CharField(max_length=15, choices=TYPE_CHOICES, null=False, blank=False)
+    TYPE_CHOICES = (
+            ('gms', 'Breakfast'),
+            ('ml', 'Lunch'),
+            ('quantity', 'quantity'),
+        )
+    serving_size = models.CharField(max_length=15, choices=TYPE_CHOICES, null=False, blank=False)
+  
+
+class RecipeIngridient(models.Model):
+    dishes = models.ForeignKey(Dishes, on_delete=models.CASCADE )
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE )
+    quantity = models.FloatField(null=True,blank=True)
 

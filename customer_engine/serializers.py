@@ -61,3 +61,18 @@ class DishesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Dishes
         fields = '__all__'
+
+
+
+class RecipeSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Recipe
+        fields = '__all__'
+
+
+class RecipeIngridientSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = RecipeIngridient
+        fields = '__all__'
