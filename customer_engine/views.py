@@ -2,6 +2,7 @@ from .serializers import *
 from .models import *
 from django.shortcuts import render
 from datetime import date
+from collections import defaultdict
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -756,6 +757,7 @@ class CalorigramView(APIView):
         )
         return response
 
+
 class CreateRecipe(APIView):
     authentication_classes=[JWTAuthentication]
     permission_classes=[IsAuthenticated]
@@ -955,8 +957,114 @@ class GetIngridientView(APIView):
             return response
 
 
+    
+class UserProfile(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    
+    def get(self, request, *args, **kwargs):
+        customer = request.user
+
+        try:
+            user_profile = Customer.objects.get(id=customer.id)
+        except Customer.DoesNotExist:
+            return Response({"detail": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        start_date_str = request.query_params.get('start_date')
+        end_date_str = request.query_params.get('end_date')
+
+        if not start_date_str or not end_date_str:
+            return Response({"detail": "Missing start_date or end_date query parameters"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            start_date = datetime.strptime(start_date_str, "%Y-%m-%d").date()
+            end_date = datetime.strptime(end_date_str, "%Y-%m-%d").date()
+        except ValueError:
+            return Response({"detail": "Invalid date format"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        dish_ids_list = UserSnacks.objects.filter(
+                customer=customer,
+                updated_at__date__range=(start_date, end_date)
+            )
+
+        daily_calorie_data_points = []
+
+        date_dish_dict = {}
+
+        for user_snack in dish_ids_list:
+            updated_at = str(user_snack.updated_at.date())
+            dish_id = user_snack.dish_id
+
+            if updated_at in date_dish_dict:
+                date_dish_dict[updated_at].append(dish_id)
+            else:
+                date_dish_dict[updated_at] = [dish_id]
+
+        date_calories_sodium_dict = {}
+        total_calories = 0
+        total_sodium = 0
+
+        for date, dish_ids in date_dish_dict.items():
+
+            data_queryset = DailySnacks.objects.filter(id__in=dish_ids).values('cals', 'sodium')
+
+            for user_snack in data_queryset:
+
+                calories = user_snack['cals']
+                sodium = user_snack['sodium']
+
+                if date in date_calories_sodium_dict:
+                    date_calories_sodium_dict[date]['calories'] += calories
+                    date_calories_sodium_dict[date]['sodium'] += sodium
+                else:
+                    date_calories_sodium_dict[date] = {
+                        'calories': calories,
+                        'sodium': sodium
+                    }
+
+                total_calories += calories
+                total_sodium += sodium
 
 
+        for date, data in date_calories_sodium_dict.items():
+            daily_calorie_data_points.append({
+                "date": date,
+                "calories": data['calories'],
+            })
 
+        if len(daily_calorie_data_points) > 0:
+            average_calorie = total_calories / len(daily_calorie_data_points)
+        else:
+            average_calorie = 0
 
+        response_data = {
+            "user_image": user_profile.image_url,
+            "name": f"{user_profile.first_name} {user_profile.last_name}",
+            "age": user_profile.age,
+            "calories": total_calories,
+            "calorie_intake": {
+                "averageCalorie": average_calorie,
+                "data_points": daily_calorie_data_points,
+            },
+            "nutrition_intake": {
+                "data_points": [
+                    {
+                        "name": "Sodium",
+                        "values": total_sodium,
+                    }
+                ]
+            }
+        }
 
+        status_code = status.HTTP_200_OK
+        message = "successful"
+        response = JsonResponse(
+            status=status_code,
+            message=message,
+            data=response_data,
+            success=True,
+            error={},
+            count=len(response_data),
+        )
+        return response
