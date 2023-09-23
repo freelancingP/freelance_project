@@ -381,6 +381,9 @@ def get_tokens_for_user(user):
         'access': str(refresh.access_token),
     }
 
+
+
+
 class OTPVerifyAPI(APIView):
     def post(self, request):
 
@@ -1059,7 +1062,7 @@ class UserProfile(APIView):
             average_calorie = total_calories / len(daily_calorie_data_points)
         else:
             average_calorie = 0
-
+        
         for date, data in date_calories_sodium_dict.items():
          daily_sodium_data_points.append(data['sodium'])
 
@@ -1072,9 +1075,9 @@ class UserProfile(APIView):
             "user_image": user_profile.image_url,
             "name": f"{user_profile.first_name} {user_profile.last_name}",
             "age": user_profile.age,
-            "calories": total_calories,
+            "calories": round(total_calories, 2),
             "calorie_intake": {
-                "averageCalorie": average_calorie,
+                "average_calorie": round(average_calorie, 2),
                 "data_points": daily_calorie_data_points,
             },
             "nutrition_intake": {
