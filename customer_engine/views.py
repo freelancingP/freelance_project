@@ -965,23 +965,49 @@ class UserProfile(APIView):
     
     def get(self, request, *args, **kwargs):
         customer = request.user
-
         try:
             user_profile = Customer.objects.get(id=customer.id)
         except Customer.DoesNotExist:
-            return Response({"detail": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+            response = JsonResponse(
+                {"detail": "Missing start_date or end_date query parameters"},
+                status=status.HTTP_400_BAD_REQUEST,
+                message="Invalid date format",
+                data=None,
+                success=False,
+                error={},
+                count=0,
+            )
+            return response
 
         start_date_str = request.query_params.get('start_date')
         end_date_str = request.query_params.get('end_date')
 
         if not start_date_str or not end_date_str:
-            return Response({"detail": "Missing start_date or end_date query parameters"}, status=status.HTTP_400_BAD_REQUEST)
+            response = JsonResponse(
+                {"detail": "Missing start_date or end_date query parameters"},
+                status=status.HTTP_400_BAD_REQUEST,
+                message="Invalid date format",
+                data=None,
+                success=False,
+                error={},
+                count=0,
+            )
+            return response
 
         try:
             start_date = datetime.strptime(start_date_str, "%Y-%m-%d").date()
             end_date = datetime.strptime(end_date_str, "%Y-%m-%d").date()
         except ValueError:
-            return Response({"detail": "Invalid date format"}, status=status.HTTP_400_BAD_REQUEST)
+            response = JsonResponse(
+                {"detail": "Missing start_date or end_date query parameters"},
+                status=status.HTTP_400_BAD_REQUEST,
+                message="Invalid date format",
+                data=None,
+                success=False,
+                error={},
+                count=0,
+            )
+            return response
         
         dish_ids_list = UserSnacks.objects.filter(
                 customer=customer,
@@ -989,7 +1015,7 @@ class UserProfile(APIView):
             )
 
         daily_calorie_data_points = []
-
+        daily_sodium_data_points = []
         date_dish_dict = {}
 
         for user_snack in dish_ids_list:
@@ -1000,7 +1026,7 @@ class UserProfile(APIView):
                 date_dish_dict[updated_at].append(dish_id)
             else:
                 date_dish_dict[updated_at] = [dish_id]
-
+    
         date_calories_sodium_dict = {}
         total_calories = 0
         total_sodium = 0
@@ -1026,15 +1052,19 @@ class UserProfile(APIView):
                 total_calories += calories
                 total_sodium += sodium
 
-
         for date, data in date_calories_sodium_dict.items():
-            daily_calorie_data_points.append({
-                "date": date,
-                "calories": data['calories'],
-            })
+         daily_calorie_data_points.append(data['calories'])
 
         if len(daily_calorie_data_points) > 0:
             average_calorie = total_calories / len(daily_calorie_data_points)
+        else:
+            average_calorie = 0
+
+        for date, data in date_calories_sodium_dict.items():
+         daily_sodium_data_points.append(data['sodium'])
+
+        if len(daily_sodium_data_points) > 0:
+            average_calorie = total_calories / len(daily_sodium_data_points)
         else:
             average_calorie = 0
 
@@ -1051,7 +1081,7 @@ class UserProfile(APIView):
                 "data_points": [
                     {
                         "name": "Sodium",
-                        "values": total_sodium,
+                        "values": daily_sodium_data_points,
                     }
                 ]
             }
