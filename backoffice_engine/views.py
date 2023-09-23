@@ -14,6 +14,7 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 from openpyxl import load_workbook
 import boto3
 import math
+from customer_engine.models import *
 # Create your views here.
 
 def login(request):

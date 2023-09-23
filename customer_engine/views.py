@@ -873,7 +873,7 @@ class DailyCalorigramView(APIView):
                     remaining_oil += item['oil'] 
 
             nutrition_value = [
-                {"label": "calories", "value": eaten_calories, "percentage": (eaten_calories / (eaten_calories + remaining_calories)) * 100, "color_code": "#01BA91"},
+                {"label": "calories", "value": eaten_calories, "percentage": round(eaten_calories / (eaten_calories + remaining_calories)) * 100, "color_code": "#01BA91"},
                 {"label": 'glycemic load', "value": eaten_gl, "percentage": (eaten_gl/ (eaten_gl + remaining_gl)) * 100, "color_code": "#00AE4D"},
                 {"label": "carbs", "value": eaten_carbs, "percentage": (eaten_carbs/ (eaten_carbs + remaining_carbs)) * 100, "color_code": "#29B6C7"},
                 {"label": "protein", "value": eaten_pral, "percentage": (eaten_pral/ (eaten_pral + remaining_pral))* 100, "color_code": "#98C71C"},
