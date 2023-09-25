@@ -1033,6 +1033,7 @@ class UserProfile(APIView):
         date_calories_sodium_dict = {}
         total_calories = 0
         total_sodium = 0
+        
 
         for date, dish_ids in date_dish_dict.items():
 
@@ -1066,11 +1067,13 @@ class UserProfile(APIView):
         for date, data in date_calories_sodium_dict.items():
          daily_sodium_data_points.append(data['sodium'])
 
-        if len(daily_sodium_data_points) > 0:
-            average_calorie = total_calories / len(daily_sodium_data_points)
-        else:
-            average_calorie = 0
+        # if len(daily_sodium_data_points) > 0:
+        #     average_sodium = total_sodium / len(daily_sodium_data_points)
+        # else:
+        #     average_sodium = 0
+        
 
+        
         response_data = {
             "user_image": user_profile.image_url,
             "name": f"{user_profile.first_name} {user_profile.last_name}",

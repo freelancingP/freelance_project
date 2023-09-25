@@ -25,53 +25,247 @@
                                 <div class="table-responsive">
                                     <table id="example5" class="display min-w850">
                                         <thead>
-                                            <tr>
+                                            <tr style="text-align:center;">
                                                 <th>ID</th>
                                                 <th>Date</th>
                                                 <th>Name</th>
                                                 <th>Age</th>
                                                 <th>Gender</th>
-                                                <th>Profession</th>
+												   <th>Goal</th> 
+                                                <th>Status</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {% for d in data %}
                                             <tr>
                                                
-                                                <td>{{d.id}}</td>
-                                                <td>{{d.date}}</td>
-                                                <td>{{d.first_name}}&nbsp;{{d.last_name}}</td>
-                                                <td>{{d.age}}</td>
-                                                <td>{{d.gender}}</td>
+                                                <td>1</td>
+                                                <td>26/02/2020</td>
+                                                <td>Ramu</td>
+                                                <td>23</td>
+                                                <td>Male</td>
+                                                <td>Weight</td>
 												<td>
-                                                    {{d.profession}}
-                                                    {% comment %} {% if d.status == "new_customer" %}
-                                                        <span class="badge light badge-danger">
-                                                            <i class="fa fa-circle text-danger mr-1"></i>
-                                                            New Customer
-                                                        </span>
-                                                    {% elif d.status == "in_customer" %}
-                                                        <span class="badge light badge-warning">
-                                                            <i class="fa fa-circle text-warning mr-1"></i>
-                                                            In Customer
-                                                        </span>
-                                                    {% else %}
-                                                        <span class="badge light badge-success">
-                                                            <i class="fa fa-circle text-success mr-1"></i>
-                                                            Recovered
-                                                        </span>
-                                                    {% endif %} {% endcomment %}
-                                                </td>
-                                                
+													<span class="badge light badge-danger">
+														<i class="fa fa-circle text-danger mr-1"></i>
+														New Customer
+													</span>
+												</td>
                                                 <td>
-													<div class="d-flex">
-														<a href="{% url 'customers_detail' d.id %}" class="btn btn-primary shadow btn-xs sharp mr-1"><i class="fa fa-eye"></i></a>
+													<div class="">
+														<a href="view-customer-detail.html" class="btn btn-primary shadow btn-xs sharp mr-1"><i class="fa fa-eye"></i></a>
 													</div>
 												</td>												
                                             </tr>
-                                            {% endfor %}
-                                            
+                                            <tr>
+												
+                                                <td>2</td>
+                                                <td>28/02/2020</td>
+												<td>Ravi</td>
+                                                <td>32</td>
+												<td>Male</td>
+												<td>Weight</td>
+                                                <td>
+													<span class="badge light badge-warning">
+														<i class="fa fa-circle text-warning mr-1"></i>
+														In Customer
+													</span>
+												</td>
+                                                
+                                                <td>
+													<div class="">
+														<a href="view-customer-detail.html" class="btn btn-primary shadow btn-xs sharp mr-1"><i class="fa fa-eye"></i></a>
+													</div>
+												</td>
+                                            </tr>
+                                            <tr>
+												
+                                                <td>3</td>
+                                                <td>26/02/2020</td>
+												<td>Gopi</td>
+                                                <td>24</td>
+												<td>Male</td>
+												<td>Weight</td>
+                                                <td>
+													<span class="badge light badge-success">
+														<i class="fa fa-circle text-success mr-1"></i>
+														Recovered
+													</span>
+												</td>
+                                              
+												<td>
+													<div class="">
+														<a href="view-customer-detail.html" class="btn btn-primary shadow btn-xs sharp mr-1"><i class="fa fa-eye"></i></a>
+													</div>
+												</td>
+                                            </tr>
+                                            <tr>
+												
+                                                <td>4</td>
+                                                <td>29/02/2020</td>
+												<td>Chandu</td>
+                                                <td>23</td>
+                                                <td>Male</td>
+												<td>Weight</td>
+                                                <td>
+													<span class="badge light badge-warning">
+														<i class="fa fa-circle text-warning mr-1"></i>
+														In Customer
+													</span>
+												</td>
+                                                
+                                                <td>
+													<div class="">
+														<a href="view-customer-detail.html" class="btn btn-primary shadow btn-xs sharp mr-1"><i class="fa fa-eye"></i></a>
+													</div>
+												</td>
+                                            </tr>
+                                            <tr>
+                                                <td>5</td>
+                                                <td>28/02/2020</td>
+												<td>Ganapathi</td>
+                                                <td>27</td>
+                                                <td>Male</td>
+												<td>Weight</td>
+                                                <td>
+													<span class="badge light badge-warning">
+														<i class="fa fa-circle text-warning mr-1"></i>
+														In Customer
+													</span>
+												</td>
+                                              
+                                                <td>
+													<div class="">
+														<a href="view-customer-detail.html" class="btn btn-primary shadow btn-xs sharp mr-1"><i class="fa fa-eye"></i></a>
+													</div>
+												</td>
+                                            </tr>
+                                            <tr>
+												
+                                                <td>6</td>
+                                                <td>28/02/2020</td>
+												<td>Vamsi</td>
+                                                <td>22</td>
+                                                <td>Male</td>
+												<td>Weight</td>
+												<td>
+													<span class="badge light badge-warning">
+														<i class="fa fa-circle text-warning mr-1"></i>
+														In Customer
+													</span>
+												</td>
+                                               
+												<td>
+													<div class="">
+														<a href="view-customer-detail.html" class="btn btn-primary shadow btn-xs sharp mr-1"><i class="fa fa-eye"></i></a>
+													</div>
+												</td>
+                                            </tr>
+                                            <tr>
+												
+                                                <td>7</td>
+                                                <td>26/02/2020</td>
+												<td>Sai</td>
+                                                <td>29</td>
+                                                <td>Male</td>
+												<td>Weight</td>
+                                                <td>
+													<span class="badge light badge-danger">
+														<i class="fa fa-circle text-danger mr-1"></i>
+														New Customer
+													</span>
+												</td>
+                                                
+                                                <td>
+													<div class="">
+														<a href="view-customer-detail.html" class="btn btn-primary shadow btn-xs sharp mr-1"><i class="fa fa-eye"></i></a>
+													</div>
+												</td>
+                                            </tr>
+                                            <tr>
+												
+                                                <td>8</td>
+                                                <td>29/02/2020</td>
+												<td>Venky</td>
+                                                <td>32</td>
+                                                <td>Male</td>
+												<td>Weight</td>
+                                                <td>
+													<span class="badge light badge-warning">
+														<i class="fa fa-circle text-warning mr-1"></i>
+														In Customer
+													</span>
+												</td>
+                                              
+                                                <td>
+													<div class="">
+														<a href="view-customer-detail.html" class="btn btn-primary shadow btn-xs sharp mr-1"><i class="fa fa-eye"></i></a>
+													</div>
+												</td>
+                                            </tr>
+                                            <tr>
+												
+                                                <td>9</td>
+                                                <td>25/02/2020</td>
+												<td>Pawan</td>
+                                                <td>45</td>
+                                                <td>Male</td>
+												<td>Weight</td>
+                                                <td>
+													<span class="badge light badge-danger">
+														<i class="fa fa-circle text-danger mr-1"></i>
+														New Customer
+													</span>
+												</td>
+                                               
+                                                <td>
+													<div class="">
+														<a href="view-customer-detail.html" class="btn btn-primary shadow btn-xs sharp mr-1"><i class="fa fa-eye"></i></a>
+													</div>
+												</td>
+                                            </tr>
+                                            <tr>
+												
+                                                <td>10</td>
+                                                <td>26/02/2020</td>
+												<td>Kalyan</td>
+                                                <td>54</td>
+                                                <td>Male</td>
+												<td>Weight</td>
+                                                <td>
+													<span class="badge light badge-danger">
+														<i class="fa fa-circle text-danger mr-1"></i>
+														New Customer
+													</span>
+												</td>
+                                             
+                                                <td>
+													<div class="">
+														<a href="view-customer-detail.html" class="btn btn-primary shadow btn-xs sharp mr-1"><i class="fa fa-eye"></i></a>
+													</div>
+												</td>
+                                            </tr>
+                                            <tr>
+												
+                                                <td>11</td>
+                                                <td>28/02/2020</td>
+												<td>Raghu</td>
+                                                <td>38</td>
+                                                <td>Male</td>
+												<td>Weight</td> 
+												<td>
+													<span class="badge light badge-warning">
+														<i class="fa fa-circle text-warning mr-1"></i>
+														In Customer
+													</span>
+												</td>
+                                               
+                                                <td>
+													<div class="">
+														<a href="view-customer-detail.html" class="btn btn-primary shadow btn-xs sharp mr-1"><i class="fa fa-eye"></i></a>
+													</div>
+												</td>
+                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>

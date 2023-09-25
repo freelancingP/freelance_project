@@ -371,6 +371,8 @@ img {
   vertical-align: middle;
   border-style: none; }
 
+  
+
 svg {
   overflow: hidden;
   vertical-align: middle; }
@@ -391,8 +393,10 @@ th {
 
 label {
   display: inline-block;
-  margin-bottom: 0.5rem; }
-
+  margin-bottom: 0.5rem;
+ color:#000;
+  }
+ 
 button {
   border-radius: 0; }
 
@@ -22230,7 +22234,7 @@ svg text {
   border-radius: 1.25rem;
   background: #fff;
   border: 1px solid #f0f1f5;
-  color: #B1B1B1;
+  color: #000;
   height: 56px; }
   @media only screen and (max-width: 1400px) {
     .form-control {
@@ -22238,7 +22242,7 @@ svg text {
   .form-control:hover, .form-control:focus, .form-control.active {
     box-shadow: none;
     background: #fff;
-    color: #B1B1B1; }
+    color: #000; }
 
 .input-rounded {
   border-radius: 100px; }
@@ -25393,7 +25397,7 @@ button {
       .card-body {
         padding: 1rem; } }
   .card-title {
-    font-size: 20px;
+    font-size: 16px;
     font-weight: 500;
     color: #000;
     text-transform: capitalize; }
@@ -27518,7 +27522,8 @@ table.dataTable.display.white-border td {
   border-color: #fff; }
 
 table.dataTable.row-border tbody th, table.dataTable.row-border tbody td, table.dataTable.display tbody th, table.dataTable.display tbody td {
-  border-color: #EEEEEE; }
+  border-color: #EEEEEE;
+text-align: center; }
   [data-theme-version="dark"] table.dataTable.row-border tbody th,
   [data-theme-version="dark"] table.dataTable.row-border tbody td,
   [data-theme-version="dark"] table.dataTable.display tbody th,

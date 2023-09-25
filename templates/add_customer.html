@@ -19,169 +19,254 @@
                     </div>
                 {% endif %}
                 {% endif %} 
-                <h2>Customer Add Form</h2>
-                <form method="post">
-                    {% csrf_token %}
-                    <div class="my-2">
-                        <div class="d-flex justify-content-center mb-4">
-                            <img id="previewImage" src="https://mdbootstrap.com/img/Photos/Others/placeholder-avatar.jpg"
-                                 class="rounded-circle" alt="example placeholder" style="width: 200px;" />
-                        </div>
-                        <div class="d-flex justify-content-center">
-                            <div class="btn btn-primary btn-rounded">
-                                <label class="form-label text-white m-1" for="customFile2">Upload Profile Picture</label>
-                                <input type="file" class="form-control d-none" name="picture" id="customFile2" onchange="previewFile(event)"/>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col">
-                            <label for="name">First Name:</label>
-                            <input type="text" class="form-control" id="fname" name="fname" required>
-                        </div>
-                        <div class="form-group col">
-                          <label for="name">Last Name:</label>
-                          <input type="text" class="form-control" id="lname" name="lname" required>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col">
-                            <label for="status">Gender:</label>
-                            <select class="form-control" id="gender" name="gender" required>
-                              <option value="Male">Male</option>
-                              <option value="Female">Female</option>
-                              <option value="Other">Other</option>
-                              
-                            </select>
-                        </div>
-                        
-                        <div class="form-group col">
-                            <label for="location">Location:</label>
-                            <input type="text" class="form-control" id="location" name="location" required>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col">
-                          <label for="address">Address:</label>
-                          <input type="text" class="form-control" id="address" name="address" required>
-                        </div>
-                        
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col">
-                          <label for="mobile">Mobile No:</label>
-                          <input type="number" class="form-control" id="mobile" name="mobile" required>
-                        </div>
-                        <div class="form-group col">
-                          <label for="email">Email Id:</label>
-                          <input type="email" step="0.1" class="form-control" id="email" name="email" required>
-                        </div>
-                        
-                    </div>
+            <!-- <div class="content-body">
+            <form method="post" class="container-fluid full-screen">
+                {% csrf_token %}
+              <div class="container-fluid">
+                  <div class="page-titles">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="javascript:void(0)">Form</a></li>
+              <li class="breadcrumb-item active"><a href="javascript:void(0)">Add Customer</a></li>
+            </ol>
+                  </div>
+                 <div class="content-body">
+            <div class="container-fluid">
+                <div class="page-titles">
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item"><a href="javascript:void(0)">Form</a></li>
+						<li class="breadcrumb-item active"><a href="javascript:void(0)">Add Customer</a></li>
+					</ol>
+                </div>
+                  <-- row -->
+                  <div class="row">
+                      <div class="col-12">
+                          <div class="card">
+                              <div class="card-header">
+                                  <ol class="breadcrumb">
+                                  <li class="breadcrumb-item"><a href="javascript:void(0)">Form</a></li>
+                                    <li class="breadcrumb-item active"><a href="javascript:void(0)"  style="color: blue ;">Add Customer</a></li>
+                                  </ol>
+                              </div>
+                              <div class="card-body">
+                                  <div class="row form-material">
+                                      <div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
+                                          <label style="color: black;">First Name</label>
+                                          <input type="text" class="form-control" placeholder="First Name" required>
+                                      </div>
+                                      <div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
+                                          <label style="color: black;">Last Name</label>
+                                          <input type="text" class="form-control" placeholder="Last Name" required>
+                                      </div>
+                    <div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
+                                          <label style="color: black;">Gender</label>
+                      <select style="color: black;" class="form-control" required>
+                        <option style="color: black;">select the gendeer</option>
+                        <option style="color: black;">Male</option>
+                        <option style="color: black;">Female</option>
+                        <option style="color: black;">Other</option>
+                      </select>
+                                      </div>
+                                      <div class="col-xl-3 col-xxl-6 col-md-6">
+                                          <label style="color: black;">Address</label>
+                                            <input type="text" class="form-control" placeholder="Addess" required>
+                                      </div>
+                                      <div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
+                                          <label style="color: black;">City</label>
+                                          <input type="text" class="form-control" placeholder="Hyderabad" required>
+                                      </div>
+                                      <div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
+                                          <label style="color: black;">Pincode</label>
+                                          <input type="number" class="form-control" placeholder="50032" required>
+                                      </div>
+                    <div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
+                                          <label style="color: black;">Mobile Number</label>
+                                          <input type="text" class="form-control" placeholder="9876543210" required>
+                                      </div>
+                                      <div class="col-xl-3 col-xxl-6 col-md-6">
+                                          <label style="color: black;">E-mail</label>
+                                            <input type="emial" class="form-control" placeholder="email@gmail.com" required>
+                                      </div>
+                    <div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
+                                          <label style="color: black;">Date of Birth</label>
+                                          <input type="date" class="form-control" required>
+                                      </div>
+                                      <div class="col-xl-3 col-xxl-6 col-md-6">
+                                          <label style="color: black;">Age</label>
+                                            <input type="number" class="form-control" placeholder="21"required >
+                                      </div>
+                    <div class="col-xl-3 col-xxl-6 col-md-6">
+                                          <label style="color: black;">Height</label>
+                                            <input type="number" class="form-control" placeholder="167"required>
+                                      </div>
+                                      
+                                      <div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
+                                          <label style="color: black;">Weight</label>
+                                          <input type="number" class="form-control" placeholder="67"required>
+                                      </div>
+                                      <div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
+                                          <label style="color: black;">Health Issues</label>
+                                            <input type="text" class="form-control" placeholder="Diabetes"required>
+                                      </div>
+                    <div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
+                                          <label style="color: black;">Any Other Issues</label>
+                                          <input type="text" class="form-control" placeholder="yes Hypertension"required>
+                                      </div>
                     
-                    <div class="form-row">
-                        <div class="form-group col">
-                          <label for="dob">Date Of Birth:</label>
-                          <input type="date" class="form-control" id="dob" name="dob" required>
-                        </div>
-                        <div class="form-group col">
-                          <label for="age">Age:</label>
-                          <input type="number" step="0.1" class="form-control" id="age" name="age" required>
-                        </div>                       
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col">
-                          <label for="height">Height:</label>
-                          <input type="text" class="form-control" id="height" name="height" required>
-                        </div>
-                        <div class="form-group col">
-                          <label for="weight">Height Unit:</label>
-                          <select class="form-control" id="height_unit" name="height_unit" required>
-                            <option value="feet">feet</option>
-                            <option value="cm">cm</option>
-                          </select>
-                        </div>                       
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col">
-                          <label for="weight">Weight:</label>
-                          <input type="text" class="form-control" id="weight" name="weight" required>
-                        </div> 
-                        <div class="form-group col">
-                            <label for="height">Weight Unit:</label>
-                            <select class="form-control" id="weight_unit" name="weight_unit" required>
-                              <option value="kg">kg</option>
-                              <option value="pound">pound</option>
-                            </select>
-                          </div>                      
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col">
-                            <label for="hissue">Health Issues:</label>
-                            <select class="form-control" id="hissue" name="hissue" required>
-                                <option value="None">None</option>
-                                <option value="Diabetic">Diabetic</option>
-                                <option value="Pre-Diabetic">Pre-Diabetic</option>
-                                <option value="Cholesterol">Cholesterol</option>
-                                <option value="Hypertension">Hypertension</option>
-                                <option value="PCOS">PCOS</option>
-                                <option value="Thyroid">Thyroid</option>
-                                <option value="Physical Injury">Physical Injury</option>
-                                <option value="Excessive stress/anxiety">Excessive stress/anxiety</option>
-                                <option value="Sleep Issues">Sleep Issues</option>
-                                <option value="Depression">Depression</option>
-                                <option value="Anger Issues">Anger Issues</option>
-                                <option value="Loneliness">Loneliness</option>
-                                <option value="Relationship stress">Relationship stress</option>
-                              </select>
-                        </div>
-                        <div class="form-group col">
-                          <label for="oissue">Any Other Issues:</label>
-                          <input type="text" class="form-control" id="oissue" name="oissue" required>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                      <div class="form-group col">
-                        <label for="any-medication">Used Any Medication Earlier:</label>
-                        <input type="text" class="form-control" id="any-medication" name="any-medication" required>
+                                      <div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
+                                          <label style="color: black;">Used Any Medication Earlier</label>
+                                          <select style="color: black;" class="form-control" required>
+                                            <option style="color: black;">select..</option>
+                                            <option style="color: black;">Yes</option>
+                                            <option style="color: black;">No</option>
+                                          </select>
+                                      </div>
+                                      <div class="col-xl-3 col-xxl-6 col-md-6">
+                                          <label style="color: black;">Food</label>
+                                            <select  style="color: black;"class="form-control" required>
+                        <option style="color: black;">select..</option>
+                        <option style="color: black;">Vegetarian</option>
+                        <option style="color: black;">Non Vegetarian</option>
+                      </select>
+                                      </div>
+                    <div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
+                                          <label style="color: black;">Profession</label>
+                                          <input type="text" class="form-control" placeholder="Software"required>
+                                      </div>
+                                      <div class="col-xl-3 col-xxl-6 col-md-6">
+                                          <label style="color: black;" >What Help You are Looking fron us?</label>
+                                          <input type="text" class="form-control" placeholder="write....."required>
+                                      </div>                                    
+                    <div class="col-xl-12 col-xxl-12 col-md-12 mt-3">
+                                          <button type="submit" class="btn btn-primary"><a href="customers-datatable.html" style="color:#fff;">Submit</a></button>
+                                      </div>
+                    
+                                  </div>
+                              </div>
+                          </div>
                       </div>
-                      <div class="form-group col">
-                        <label for="veg-nonveg">VEG/NON VEGETARIAN:</label>
-                        <select class="form-control" id="veg-nonveg" name="veg-nonveg" required>
-                            <option value="Vegitarian">Vegitarian</option>
-                            <option value="None Vegitarian">None Vegitarian</option>
-                            
-                          </select>
-                      </div>
-                      
-                    </div>
-                
-                    <!-- Continue with the rest of the fields using the same pattern -->
-                    <div class="form-row">
-                        <div class="form-group col">
-                            <label for="profession">Profession:</label>
-                            <select class="form-control" id="profession" name="profession" required>
-                                <option value="Individual">Individual</option>
-                                <option value="Nutritionist">Nutritionist</option>
-                                <option value="Business Owner">Business Owner</option>                               
-                            </select>
-                        </div>
-                        
-                        <div class="form-group col">
-                            <label for="help">What Help You Are Looking From US:</label>
-                            <input type="text" class="form-control" id="help" name="help" required>
-                        </div>
-                    </div>
-                        
-                        <div class="form-group text-center">
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                        </div> 
-                    </div>
+                  </div>
                 </form>
-            </div>
-        </div>
-{% endblock  %}
-{% block js %}     
+              </div>
+          </div> 
+      
+<!-- {% endblock  %}
+{% block js %}   -->
+<div class="content-body">
+  <div class="container-fluid">
+      <div class="page-titles">
+<ol class="breadcrumb">
+  <li class="breadcrumb-item"><a href="javascript:void(0)">Form</a></li>
+  <li class="breadcrumb-item active"><a href="javascript:void(0)">Add Customer</a></li>
+</ol>
+      </div>
+      <!-- row -->
+      <div class="row">
+          <div class="col-12">
+              <div class="card">
+                  <div class="card-header">
+                      <h4 class="card-title">Add Customer</h4>
+                  </div>
+                  <div class="card-body">
+                      <div class="row form-material">
+                          <div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
+                              <label>First Name</label>
+                             <input type="text" class="form-control" placeholder="First Name" required>
+                          </div>
+                          <div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
+                              <label>Last Name</label>
+                              <input type="text" class="form-control" placeholder="Last Name" required>
+                          </div>
+        <div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
+                              <label>Gender</label>
+          <select class="form-control" required>
+            <option>select the gendeer</option>
+            <option>Male</option>
+            <option>Female</option>
+            <option>Other</option>
+          </select>
+                          </div>
+                          <div class="col-xl-3 col-xxl-6 col-md-6">
+                              <label>Address</label>
+                               <input type="text" class="form-control" placeholder="Addess" required>
+                          </div>
+                          <div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
+                              <label>City</label>
+                             <input type="text" class="form-control" placeholder="Hyderabad" required>
+                          </div>
+                          <div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
+                              <label>Pincode</label>
+                             <input type="number" class="form-control" placeholder="50032" required>
+                          </div>
+        <div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
+                              <label>Mobile Number</label>
+                             <input type="text" class="form-control" placeholder="9876543210" required>
+                          </div>
+                          <div class="col-xl-3 col-xxl-6 col-md-6">
+                              <label>E-mail</label>
+                               <input type="emial" class="form-control" placeholder="email@gmail.com" required>
+                          </div>
+        <div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
+                              <label>Date of Birth</label>
+                             <input type="date" class="form-control" required>
+                          </div>
+                          <div class="col-xl-3 col-xxl-6 col-md-6">
+                              <label>Age</label>
+                               <input type="number" class="form-control" placeholder="21"required >
+                          </div>
+        <div class="col-xl-3 col-xxl-6 col-md-6">
+                              <label>Height</label>
+                               <input type="number" class="form-control" placeholder="167"required>
+                          </div>
+                          
+                          <div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
+                              <label>Weight</label>
+                              <input type="number" class="form-control" placeholder="67"required>
+                          </div>
+                          <div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
+                              <label>Health Issues</label>
+                               <input type="text" class="form-control" placeholder="Diabetes"required>
+                          </div>
+        <div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
+                              <label>Any Other Issues</label>
+                              <input type="text" class="form-control" placeholder="yes Hypertension"required>
+                          </div>
+        
+                          <div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
+                              <label>Used Any Medication Earlier</label>
+                              <select class="form-control" required>
+                               <option>select..</option>
+                               <option>Yes</option>
+                               <option>No</option>
+                             </select>
+                          </div>
+                          <div class="col-xl-3 col-xxl-6 col-md-6">
+                              <label>Food</label>
+                               <select class="form-control" required>
+            <option>select..</option>
+            <option>Vegetarian</option>
+            <option>Non Vegetarian</option>
+          </select>
+                          </div>
+        <div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
+                              <label>Profession</label>
+                              <input type="text" class="form-control" placeholder="Software"required>
+                          </div>
+                          <div class="col-xl-3 col-xxl-6 col-md-6">
+                              <label>What Help You are Looking fron us?</label>
+                              <input type="text" class="form-control" placeholder="write....."required>
+                          </div>                                    
+        <div class="col-xl-12 col-xxl-12 col-md-12 mt-3">
+                              <button type="submit" class="btn btn-primary"><a href="customers-datatable.html" style="color:#fff;">Submit</a></button>
+                          </div>
+        
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div> 
+  
    
 <script>
     function previewFile(event) {
