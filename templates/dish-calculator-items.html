@@ -17,7 +17,7 @@
                     <div class="card-header">
                         <h4 class="card-title">Dish Calculator Items</h4>
 						<div class="">
-						   <a href="add-ingredient.html"><button type="submit" class="btn btn-primary">Add New Item</button></a>
+						   <a href=""><button type="submit" class="btn btn-primary">Add New Item</button></a>
 						</div>
                     </div>
                     <div class="card-body">
@@ -52,13 +52,12 @@
                                     
                                     {% for dish in dishes %}
                                     <tr>
-                                       
                                         <td>{{dish.id}}</td>
                                         <td>{{dish.food}}</td>
                                         <td>{{dish.quantity}}</td>
-                                        <td>{{dish.pral}}</td>
                                         <td>{{dish.oil}}</td>
                                         <td>{{dish.glycemicload}}</td>
+                                        <td>{{dish.pral}}</td>
                                         <td>{{dish.calories}}</td>
                                         <td>{{dish.aaf_adj_prot}}</td>
                                         <td>{{dish.carbohydtrates}}</td>

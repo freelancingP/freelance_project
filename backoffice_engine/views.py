@@ -396,3 +396,12 @@ def recipe_details(request,recipe_id):
         "user":user,
         "ingredients":ingredients
     })
+
+
+def add_ingredient(request):
+    user = AdminUser.objects.get(id = request.session["user"])
+    print("hi/hello")
+    print(user.image_url)
+    return render(request,"add-ingredient.html",{
+        "user":user
+    })

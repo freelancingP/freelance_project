@@ -873,12 +873,12 @@ class DailyCalorigramView(APIView):
                     remaining_oil += item['oil'] 
 
             nutrition_value = [
-                {"label": "calories", "value": eaten_calories, "percentage": round(eaten_calories / (eaten_calories + remaining_calories)) * 100, "color_code": "#01BA91"},
-                {"label": 'glycemic load', "value": eaten_gl, "percentage": (eaten_gl/ (eaten_gl + remaining_gl)) * 100, "color_code": "#00AE4D"},
-                {"label": "carbs", "value": eaten_carbs, "percentage": (eaten_carbs/ (eaten_carbs + remaining_carbs)) * 100, "color_code": "#29B6C7"},
-                {"label": "protein", "value": eaten_pral, "percentage": (eaten_pral/ (eaten_pral + remaining_pral))* 100, "color_code": "#98C71C"},
-                {"label": "fats", "value": eaten_total_fat, "percentage": (eaten_total_fat/ (eaten_total_fat + remaining_total_fat)) * 100, "color_code": "#E35F11"},
-                {"label": "oil", "value": eaten_oil, "percentage": (eaten_oil / (eaten_oil + remaining_oil)) * 100, "color_code": "#E3B523"},
+                {"label": "calories", "value": eaten_calories, "percentage": round(eaten_calories / (eaten_calories + remaining_calories)) * 100, "color_code": "#01BA91", "unit": "cals"},
+                {"label": 'glycemic load', "value": eaten_gl, "percentage": (eaten_gl/ (eaten_gl + remaining_gl)) * 100, "color_code": "#00AE4D","unit": "gl"},
+                {"label": "carbs", "value": eaten_carbs, "percentage": (eaten_carbs/ (eaten_carbs + remaining_carbs)) * 100, "color_code": "#29B6C7","unit": "carbs"},
+                {"label": "protein", "value": eaten_pral, "percentage": (eaten_pral/ (eaten_pral + remaining_pral))* 100, "color_code": "#98C71C","unit": "pral"},
+                {"label": "fats", "value": eaten_total_fat, "percentage": (eaten_total_fat/ (eaten_total_fat + remaining_total_fat)) * 100, "color_code": "#E35F11","unit":"fats"},
+                {"label": "oil", "value": eaten_oil, "percentage": (eaten_oil / (eaten_oil + remaining_oil)) * 100, "color_code": "#E3B523","unit":"oil"},
             ]
 
             data = {
@@ -1067,11 +1067,7 @@ class UserProfile(APIView):
         for date, data in date_calories_sodium_dict.items():
          daily_sodium_data_points.append(data['sodium'])
 
-        # if len(daily_sodium_data_points) > 0:
-        #     average_sodium = total_sodium / len(daily_sodium_data_points)
-        # else:
-        #     average_sodium = 0
-        
+
 
         
         response_data = {

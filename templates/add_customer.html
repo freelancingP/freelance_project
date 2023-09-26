@@ -19,7 +19,7 @@
                     </div>
                 {% endif %}
                 {% endif %} 
-            <!-- <div class="content-body">
+            <!-- -- <div class="content-body">
             <form method="post" class="container-fluid full-screen">
                 {% csrf_token %}
               <div class="container-fluid">
@@ -37,16 +37,26 @@
 						<li class="breadcrumb-item active"><a href="javascript:void(0)">Add Customer</a></li>
 					</ol>
                 </div>
-                  <-- row -->
+                
+                  <-- row --> 
+                  
+                  
                   <div class="row">
+                    <div class="card-header">
+                        <ol class="" style="display: flex;">
+                        <li class="breadcrumb-item"><a href="javascript:void(0)"  style=" color: #656773;">Form</a></li>
+                          <li class="breadcrumb-item active"><a href="javascript:void(0)"  style=" color: #0B2A97;
+                            font-weight: 600;">Add Customer</a></li>
+                        </ol>
+                    </div>
                       <div class="col-12">
                           <div class="card">
-                              <div class="card-header">
-                                  <ol class="breadcrumb">
-                                  <li class="breadcrumb-item"><a href="javascript:void(0)">Form</a></li>
-                                    <li class="breadcrumb-item active"><a href="javascript:void(0)"  style="color: blue ;">Add Customer</a></li>
-                                  </ol>
-                              </div>
+                            <div class="card-header">
+                                <ol class="" style="display: flex;">
+                        
+                                  <li class="breadcrumb-item active"><a href="javascript:void(0)"  style="color: black;font-size: 16px;">Add Customer</a></li>
+                                </ol>
+                            </div>
                               <div class="card-body">
                                   <div class="row form-material">
                                       <div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
@@ -149,124 +159,6 @@
               </div>
           </div> 
       
-<!-- {% endblock  %}
-{% block js %}   -->
-<div class="content-body">
-  <div class="container-fluid">
-      <div class="page-titles">
-<ol class="breadcrumb">
-  <li class="breadcrumb-item"><a href="javascript:void(0)">Form</a></li>
-  <li class="breadcrumb-item active"><a href="javascript:void(0)">Add Customer</a></li>
-</ol>
-      </div>
-      <!-- row -->
-      <div class="row">
-          <div class="col-12">
-              <div class="card">
-                  <div class="card-header">
-                      <h4 class="card-title">Add Customer</h4>
-                  </div>
-                  <div class="card-body">
-                      <div class="row form-material">
-                          <div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
-                              <label>First Name</label>
-                             <input type="text" class="form-control" placeholder="First Name" required>
-                          </div>
-                          <div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
-                              <label>Last Name</label>
-                              <input type="text" class="form-control" placeholder="Last Name" required>
-                          </div>
-        <div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
-                              <label>Gender</label>
-          <select class="form-control" required>
-            <option>select the gendeer</option>
-            <option>Male</option>
-            <option>Female</option>
-            <option>Other</option>
-          </select>
-                          </div>
-                          <div class="col-xl-3 col-xxl-6 col-md-6">
-                              <label>Address</label>
-                               <input type="text" class="form-control" placeholder="Addess" required>
-                          </div>
-                          <div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
-                              <label>City</label>
-                             <input type="text" class="form-control" placeholder="Hyderabad" required>
-                          </div>
-                          <div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
-                              <label>Pincode</label>
-                             <input type="number" class="form-control" placeholder="50032" required>
-                          </div>
-        <div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
-                              <label>Mobile Number</label>
-                             <input type="text" class="form-control" placeholder="9876543210" required>
-                          </div>
-                          <div class="col-xl-3 col-xxl-6 col-md-6">
-                              <label>E-mail</label>
-                               <input type="emial" class="form-control" placeholder="email@gmail.com" required>
-                          </div>
-        <div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
-                              <label>Date of Birth</label>
-                             <input type="date" class="form-control" required>
-                          </div>
-                          <div class="col-xl-3 col-xxl-6 col-md-6">
-                              <label>Age</label>
-                               <input type="number" class="form-control" placeholder="21"required >
-                          </div>
-        <div class="col-xl-3 col-xxl-6 col-md-6">
-                              <label>Height</label>
-                               <input type="number" class="form-control" placeholder="167"required>
-                          </div>
-                          
-                          <div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
-                              <label>Weight</label>
-                              <input type="number" class="form-control" placeholder="67"required>
-                          </div>
-                          <div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
-                              <label>Health Issues</label>
-                               <input type="text" class="form-control" placeholder="Diabetes"required>
-                          </div>
-        <div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
-                              <label>Any Other Issues</label>
-                              <input type="text" class="form-control" placeholder="yes Hypertension"required>
-                          </div>
-        
-                          <div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
-                              <label>Used Any Medication Earlier</label>
-                              <select class="form-control" required>
-                               <option>select..</option>
-                               <option>Yes</option>
-                               <option>No</option>
-                             </select>
-                          </div>
-                          <div class="col-xl-3 col-xxl-6 col-md-6">
-                              <label>Food</label>
-                               <select class="form-control" required>
-            <option>select..</option>
-            <option>Vegetarian</option>
-            <option>Non Vegetarian</option>
-          </select>
-                          </div>
-        <div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
-                              <label>Profession</label>
-                              <input type="text" class="form-control" placeholder="Software"required>
-                          </div>
-                          <div class="col-xl-3 col-xxl-6 col-md-6">
-                              <label>What Help You are Looking fron us?</label>
-                              <input type="text" class="form-control" placeholder="write....."required>
-                          </div>                                    
-        <div class="col-xl-12 col-xxl-12 col-md-12 mt-3">
-                              <button type="submit" class="btn btn-primary"><a href="customers-datatable.html" style="color:#fff;">Submit</a></button>
-                          </div>
-        
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </div>
-  </div>
-</div> 
-  
    
 <script>
     function previewFile(event) {
@@ -286,4 +178,6 @@
         }
     }
 </script>
-{% endblock  %}  
+{% endblock  %} 
+
+
