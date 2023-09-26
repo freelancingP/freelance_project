@@ -402,6 +402,4 @@ def add_ingredient(request):
     user = AdminUser.objects.get(id = request.session["user"])
     print("hi/hello")
     print(user.image_url)
-    return render(request,"add-ingredient.html",{
-        "user":user
-    })
+    return render(request,"add_ingredient.html")

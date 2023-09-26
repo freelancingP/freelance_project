@@ -2,7 +2,6 @@
 {% block css %}{% endblock %}
 
 {% block content %}
-
 <div class="content-body" style="min-height: 1113px;">
     <div class="container-fluid">
         <div class="page-titles">
@@ -17,7 +16,8 @@
                     <div class="card-header">
                         <h4 class="card-title">Dish Calculator Items</h4>
 						<div class="">
-						   <a href=""><button type="submit" class="btn btn-primary">Add New Item</button></a>
+						   <!-- <a href="{% url 'add_ingredient' %}"><button type="submit" class="btn btn-primary">Add New Item</button></a> -->
+						   <a href="{% url 'add_ingredient' %}"><button type="submit" class="btn btn-primary">Add New Item</button></a>
 						</div>
                     </div>
                     <div class="card-body">

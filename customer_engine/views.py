@@ -733,12 +733,12 @@ class CalorigramView(APIView):
         data_is = DailySnacksSerializer(daily_snacks).data
 
         nutrition_value = [
-            {"label": "calories", "value": data_is['cals'], "percentage": 5, "color_code": "#01BA91"},
-            {"label": 'glycemic load', "value": data_is['gl'], "percentage": 6, "color_code": "#00AE4D"},
-            {"label": "carbs", "value": data_is['carbs'], "percentage": 3, "color_code": "#29B6C7"},
-            {"label": "protein", "value": data_is['pral'], "percentage": 5, "color_code": "#98C71C"},
-            {"label": "fats", "value": data_is['total_fat'], "percentage": 5, "color_code": "#E35F11"},
-            {"label": "oil", "value": data_is['oil'], "percentage": 5, "color_code": "#E3B523"},
+            {"label": "calories", "value": data_is['cals'], "percentage": 5, "color_code": "#01BA91","unit":"cals"},
+            {"label": 'glycemic load', "value": data_is['gl'], "percentage": 6, "color_code": "#00AE4D","unit":"gl"},
+            {"label": "carbs", "value": data_is['carbs'], "percentage": 3, "color_code": "#29B6C7","unit":"carbs"},
+            {"label": "protein", "value": data_is['pral'], "percentage": 5, "color_code": "#98C71C","unit":"pral"},
+            {"label": "fats", "value": data_is['total_fat'], "percentage": 5, "color_code": "#E35F11","unit":"fats"},
+            {"label": "oil", "value": data_is['oil'], "percentage": 5, "color_code": "#E3B523","unit":"oil"},
         ]
 
         data = {
