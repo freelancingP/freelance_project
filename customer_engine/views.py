@@ -3,7 +3,6 @@ from .models import *
 from django.shortcuts import render
 from datetime import date
 from collections import defaultdict
-
 from rest_framework.views import APIView
 from rest_framework.response import Response
 import random
@@ -36,6 +35,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from .common_responce import JsonResponse
 import json
+from django.core.mail import send_mail
+
 
 # Create your views here.
 class SendOtpViews(GenericAPIView):
@@ -128,6 +129,7 @@ class SendOtpViews(GenericAPIView):
                       "code": 400,
                   }
                   return Response(response_data)
+
 
 class VerifyOtpViews(GenericAPIView):
     serializer_class = VerifyOtpSerializer
@@ -307,8 +309,9 @@ class UpdateUserDetailViews(APIView):
             return Response(response_data)
       
 
+
 class LoginAPIView(APIView):
-    
+
     def post(self, request):
 
         serializer_class = SendOtpSerializer
@@ -380,8 +383,6 @@ def get_tokens_for_user(user):
     return {
         'access': str(refresh.access_token),
     }
-
-
 
 
 class OTPVerifyAPI(APIView):
