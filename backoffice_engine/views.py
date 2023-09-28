@@ -387,19 +387,13 @@ def add_recipe(request):
     return redirect("add_dish")
 
 
-def recipe_details(request,recipe_id):
+def recipe_details(request):
     user = AdminUser.objects.get(id=request.session["user"])
-    recipe = AddRecipe.objects.get(id=recipe_id)
+    recipe = AddRecipe.objects.first()
     ingredients = AddIngridient.objects.filter(item=recipe)
-    return render(request,"recipe_details.html",{
-        "recipe":recipe,
-        "user":user,
-        "ingredients":ingredients
-    })
+    return render(request, "recipe_details.html")
 
 
 def add_ingredient(request):
     user = AdminUser.objects.get(id = request.session["user"])
-    print("hi/hello")
-    print(user.image_url)
     return render(request,"add_ingredient.html")

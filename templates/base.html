@@ -136,12 +136,13 @@
 							<span class="nav-text">Recipe Management</span>
 						</a>
 					</li>
-					<li class="mm-active"><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+					<li class="mm">
+						<a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
                         <i class="flaticon-381-calculator"></i>
                         <span class="nav-text">Dish Calculator</span>
                         </a>
                         <ul aria-expanded="false" class="mm-collapse mm-show" style="">
-                            <li class="mm-active"><a href="{% url 'recipe_list' %}" class="mm-active">Recipe</a></li>
+                            <li class="mm"><a href="{% url 'recipe_list' %}" class="mm">Recipe</a></li>
                             <li><a href="{% url 'dish_calculator' %}">Ingredients</a></li>
                         </ul>
                     </li>

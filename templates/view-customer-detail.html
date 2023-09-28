@@ -19,24 +19,33 @@
                         <div class="card">
                             <div class="card-body">
                                 <div class="row">
-                                    
                                     <!--Tab slider End-->
                                     <div class="col-xl-9 col-lg-6  col-md-6 col-xxl-12 col-sm-12">
                                         <div class="product-detail-content">
                                             <!--Product details-->
-											
                                             <div class="new-arrival-content pr">
 												<div class="container">
 													<div class="row mb-2">
 														<div class="col-md-4 col-sm-4">
 															{% if customer.image_url %}
 																<img src="{{ customer.image_url }}" alt="Profile Image" width="100" height="100">
+																<img	
 															{% else %}
 																<p>No profile image available.</p>
 															{% endif %}
 														</div>
-														<div class="col-md-4 col-sm-4 mt-5">
-															<h4>{{ customer.first_name }} {{ customer.last_name }}</h4>
+														{% comment %} <div class="col-md-4 col-sm-4 mt-5">
+															<h4>{{ customer.first_name }} {{ customer.last_name }}</h4> {% endcomment %}
+														<div class="row">
+															<div class="col-md-4 col-sm-4 mt-5">
+																<p>Name: <span class="item">{{ customer.first_name }} {{ customer.last_name }}</span></p>
+															</div>
+															<div class="col-md-4">
+																<p>Mobile Number: <span class="item">{{ customer.contact_number }}</span></p>
+															</div>
+															<div class="col-md-4">
+																<p>Email: <span class="item">{{ customer.email }}</span></p>
+															</div>
 														</div>
 														<div class="col-md-4 col-sm-4 mt-5">
 															<button type="button" class="btn btn-toggle" data-toggle="button" aria-pressed="false" autocomplete="off">
@@ -45,24 +54,109 @@
 														</div>
 													</div>
 												</div>
-												
-												
+												<div class="row">
+													<div class="col-md-4">
+														<div class="profile-name px-3 pt-2">
+																  <p>Gender</p>
+														  <h4 class="text-primary mb-0">Male</h4>
+														</div>
+													</div>
+													<div class="col-md-4">
+													   <div class="profile-name px-3 pt-2">
+														  <p>Date of Birth</p>
+														  <h4 class="text-primary mb-0">14-06-2000</h4>
+													  </div>
+														  </div>
+														   <div class="col-md-4">
+															   <div class="profile-name px-3 pt-2">
+																	  <p>Age</p>
+																  <h4 class="text-primary mb-0">22</h4>
+															  </div>
+															</div>
+												  </div>
+												  
+												  <div class="row">
+													
+													<div class="col-md-4">
+														<div class="profile-name px-3 pt-2">
+																  <p>Address</p>
+														  <h4 class="text-primary mb-0">Gachibowli near bank</h4>
+													  </div>
+													</div>
+												   <div class="col-md-4">
+												   <div class="profile-name px-3 pt-2">
+																  <p>City</p>
+														  <h4 class="text-primary mb-0">Hyderabad</h4>
+													  </div>
+													</div>
+													<div class="col-md-4">
+													 <div class="profile-name px-3 pt-2">
+																  <p>Pincode</p>
+														  <h4 class="text-primary mb-0">500032</h4>
+													  </div>
+													</div>
+												  </div>
+												  <div class="row">
+													  <div class="col-md-4">
+													   <div class="profile-name px-3 pt-2">
+																  <p>Height</p>
+														  <h4 class="text-primary mb-0">160</h4>
+													  </div>
+													</div>
+													  <div class="col-md-4">
+															<div class="profile-name px-3 pt-2">
+																	  <p>Weight</p>
+															  <h4 class="text-primary mb-0">34</h4>
+														  </div> 
+													  </div>
+														  <div class="col-md-4">
+															<div class="profile-name px-3 pt-2">
+																  <p>Food</p>
+																 <h4 class="text-primary mb-0">Vegetarian</h4>
+															  </div>
+														 </div>
+												  </div>
+												  <div class="row">
+													  <div class="col-md-4">
+															  <div class="profile-name px-3 pt-2">
+																  <p>Used Any Medication Earlier</p>
+																 <h4 class="text-primary mb-0">Yes</h4>
+															  </div>
+													  </div>
+													<div class="col-md-4">
+													  <div class="profile-name px-3 pt-2">
+															  <p>Profession</p>
+															 <h4 class="text-primary mb-0">Software</h4>
+														  </div>
+													</div>
+													<div class="col-md-4">
+													  <div class="profile-name px-3 pt-2">
+														  <p>Other Issues</p>
+														 <h4 class="text-primary mb-0">None</h4>
+													  </div>
+													</div>
+												  </div>
+
 												<div class="row">
 												 <div class="col-md-4">
-												  <p>Email: <span class="item">{{customer.email}}</span></p>
-												 </div>
-												 <div class="col-md-4">
-												  <p>Number: <span class="item">{{customer.contact_number}}</span></p>
-												  </div>
+												<p>Gender: <span class="item">{{customer.gender}}</span></p>
+												</div>
+												</div>
+												<div class="row">
+												  <div class="col-md-4">
+												<p>Address: <span class="item">{{customer.address}}</span> </p>
+												</div>
+												<div class="col-md-4">
+												<p>Date Of Birth: <span class="item">{{customer.date_of_birth}}</span> </p>
+												</div>
+												<div class="row">
+												<div class="col-md-4">
+												<p>Age: <span class="item">{{customer.age}}</span> </p>
+												</div>
 												  <div class="col-md-4">
 													<p>Profession: <span class="item">{{customer.profession}}</span></p>
 												   </div>
 												</div>
-												<div class="row">
-												  <div class="col-md-4">
-												  <p>Age: <span class="item">{{customer.age}}</span> </p>
-												  </div>
-												  
 												  <div class="col-md-4">
 												  <p>Height: <span class="item">{{customer.height}}</span></p>
 												  </div>
@@ -71,15 +165,15 @@
 												  </div>
 												</div>
 												<div class="row">
-													<div class="col-md-4">
-													<p>Any Health Issues?: <span class="item">{{customer.health_issue}}</span></p>
-													</div>
-												  <div class="col-md-4">
-													<p>Any Other Issues?: <span class="item">{{customer.other_issue}}</span></p>
-												  </div>
-												  <div class="col-md-4">
-												  <p>Used Any Medication Earlier: <span class="item">{{customer.any_medication}}</span></p>
-												  </div>
+												<div class="col-md-4">
+												<p>Any Health Issues?: <span class="item">{{customer.health_issue}}</span></p>
+												</div>
+												<div class="col-md-4">
+												<p>Any Other Issues?: <span class="item">{{customer.other_issue}}</span></p>
+												</div>
+												<div class="col-md-4">
+												<p>Used Any Medication Earlier: <span class="item">{{customer.any_medication}}</span></p>
+												</div>
 												
 												</div>
 												<div class="row">
@@ -88,16 +182,7 @@
 												  </div>
 												  <div class="col-md-4">
 												  <p>VEG/NON VEGETARIAN: <span class="item">{{customer.veg_nonveg}}</span></p>
-												  </div>
-												  <div class="col-md-4">
-												  <p>Gender: <span class="item">{{customer.gender}}</span></p>
-												  </div>
-												
-												</div>
-												<div class="row">
-												  <div class="col-md-4">
-												  <p>Address: <span class="item">{{customer.address}}</span> </p>
-												  </div>
+												  </div>						
 												  <div class="col-md-4">
 												  <p>Date: <span class="item">{{customer.date}}</span></p>
 												  </div>
@@ -105,10 +190,7 @@
 												  <p>ID: <span class="item">{{customer.id}}</span></p>
 												  </div>
 												</div>
-												<div class="row">
-													<div class="col-md-4">
-													<p>Date Of Birth: <span class="item">{{customer.date_of_birth}}</span> </p>
-													</div>
+												
 													<div class="col-md-4">
 													<p>Any Help?: <span class="item">{{customer.help}}</span></p>
 													</div>
@@ -351,3 +433,7 @@
 {% endblock  %}
 {% block js %} 
 {% endblock  %}
+
+
+
+
