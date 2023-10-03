@@ -14,8 +14,8 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 from openpyxl import load_workbook
 import boto3
 import math
-from customer_engine.models import *
 # Create your views here.
+from customer_engine.models import *
 
 def login(request):
     if request.method == "POST":
@@ -158,57 +158,118 @@ def new_password(request):
 @custom_login_required
 def index(request):
     user = AdminUser.objects.get(id = request.session["user"])
-    print("hi/hello")
-    print(user.image_url)
+    total_customer = Customer.objects.all().count()
+    total_dishes = DailySnacks.objects.all().count()
+    print(total_dishes,"---------------")
     return render(request,"index.html",{
-        "user":user
+        "user":user,
+        "total_customer":total_customer,
+        "total_dishes":total_dishes
     })
+
+# @custom_login_required
+# def add_customer(request):
+#     user = AdminUser.objects.get(id = request.session["user"])
+#     if request.method == "POST":
+#         print(request.POST)
+#         # customer_type = request.POST["customer_type"]
+#         firstname = request.POST["fname"]
+#         lastname = request.POST["lname"]
+#         gender = request.POST["gender"]
+#         location = request.POST["location"]
+#         address = request.POST["address"]
+#         contact = request.POST["mobile"]
+#         email = request.POST["email"]
+#         dob = request.POST["dob"]
+#         age = request.POST["age"]
+#         height = request.POST["height"]
+#         weight = request.POST["weight"]
+#         height_unit = request.POST["height_unit"]
+#         weight_unit = request.POST["weight_unit"]
+#         health_issue = request.POST["hissue"]
+#         other_issue = request.POST["oissue"]
+#         any_medication = request.POST["any-medication"]
+#         veg_nonveg = request.POST["veg-nonveg"]
+#         profession = request.POST["profession"]
+#         help = request.POST["help"]
+#         try:
+#             uploaded_image = request.POST["picture"]
+#             if uploaded_image:
+#                 aws_access_key_id = 'AKIAU62W7KNUZ4DKGRU3'
+#                 aws_secret_access_key = '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'
+#                 aws_region = 'us-east-2'
+#                 bucket_name = 'appstacklabs'
+#                 s3 = boto3.client('s3', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key, region_name=aws_region)
+#                 object_key = f"images/{uploaded_image}"  # Adjust the path in the bucket as needed
+#                 image_data = uploaded_image
+#                 # Upload the image data to S3 using put_object
+#                 s3.put_object(Body=image_data, Bucket=bucket_name, Key=object_key)
+#                 s3_image_url = f"https://{bucket_name}.s3.{aws_region}.amazonaws.com/{object_key}"
+#             else:
+#                 s3_image_url = None
+#         except Exception as e:
+#             s3_image_url = None
+#         print(s3_image_url)
+#         data = Customer(image_url = s3_image_url, first_name = firstname, last_name = lastname ,gender = gender,location = location, address = address, contact_number = contact,email = email, date_of_birth = dob, age = age , height = height,height_unit=height_unit, weight = weight,weight_unit=weight_unit, health_issue = health_issue, other_issue = other_issue, any_medication = any_medication, veg_nonveg = veg_nonveg, profession = profession , help=help)
+#         print(data)
+#         customer_exists = Customer.objects.filter(Q(contact_number=contact) | Q(email=email)).exists()
+#         if customer_exists:
+#             return render(request,"add_customer.html",{
+#                 "user":user,
+#                 "tag":"danger",
+#                 "message": "Email or Phone Number already exists."
+#             })
+#         else:
+#             data.save()
+#             if gender == "Male":
+#                 calory = 88.362+(float(weight)*13.37)+(float(height)*4.799)-(float(age)*5.677)
+#                 total_calory = round((calory * 0.702050619834711),2)
+#             else:
+#                 calory = 447.593+(float(weight)*9.247)+(float(height)*3.098)-(float(age)*4.33)
+#                 total_calory = round((calory * 0.702050619834711),2)
+#             print(total_calory)
+#             calory_data = CaloryCount(customer=data,total_calory=total_calory)
+#             calory_data.save()
+#             return render(request,"add_customer.html",{
+#                 "user":user,
+#                 "tag":"success",
+#                 "message": "Customer Added Successfully."
+#             })
+#     return render(request,"add_customer.html",{
+#         "user":user,
+#     })
 
 @custom_login_required
 def add_customer(request):
     user = AdminUser.objects.get(id = request.session["user"])
+    print(request.method ,"-------------------01")
     if request.method == "POST":
-        print(request.POST)
-        # customer_type = request.POST["customer_type"]
+        print(request.POST,"=============02")
+        
         firstname = request.POST["fname"]
         lastname = request.POST["lname"]
         gender = request.POST["gender"]
-        location = request.POST["location"]
         address = request.POST["address"]
+        location = request.POST["city"] +" "+  request.POST["pincode"]
         contact = request.POST["mobile"]
         email = request.POST["email"]
         dob = request.POST["dob"]
         age = request.POST["age"]
         height = request.POST["height"]
         weight = request.POST["weight"]
-        height_unit = request.POST["height_unit"]
-        weight_unit = request.POST["weight_unit"]
         health_issue = request.POST["hissue"]
         other_issue = request.POST["oissue"]
         any_medication = request.POST["any-medication"]
         veg_nonveg = request.POST["veg-nonveg"]
         profession = request.POST["profession"]
         help = request.POST["help"]
-        try:
-            uploaded_image = request.POST["picture"]
-            if uploaded_image:
-                aws_access_key_id = 'AKIAU62W7KNUZ4DKGRU3'
-                aws_secret_access_key = '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'
-                aws_region = 'us-east-2'
-                bucket_name = 'appstacklabs'
-                s3 = boto3.client('s3', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key, region_name=aws_region)
-                object_key = f"images/{uploaded_image}"  # Adjust the path in the bucket as needed
-                image_data = uploaded_image
-                # Upload the image data to S3 using put_object
-                s3.put_object(Body=image_data, Bucket=bucket_name, Key=object_key)
-                s3_image_url = f"https://{bucket_name}.s3.{aws_region}.amazonaws.com/{object_key}"
-            else:
-                s3_image_url = None
-        except Exception as e:
-            s3_image_url = None
-        print(s3_image_url)
-        data = Customer(image_url = s3_image_url, first_name = firstname, last_name = lastname ,gender = gender,location = location, address = address, contact_number = contact,email = email, date_of_birth = dob, age = age , height = height,height_unit=height_unit, weight = weight,weight_unit=weight_unit, health_issue = health_issue, other_issue = other_issue, any_medication = any_medication, veg_nonveg = veg_nonveg, profession = profession , help=help)
-        print(data)
+        
+        data = Customer(username = email, first_name = firstname, last_name = lastname ,gender = gender,address = address,
+                        location = location, contact_number = contact, email = email, date_of_birth = dob, age = age ,
+                        height = height, weight = weight, health_issue = health_issue, other_issue = other_issue, 
+                        any_medication = any_medication, veg_nonveg = veg_nonveg, profession = profession , help=help)
+        
+        print(data,"==================")
         customer_exists = Customer.objects.filter(Q(contact_number=contact) | Q(email=email)).exists()
         if customer_exists:
             return render(request,"add_customer.html",{
@@ -218,15 +279,6 @@ def add_customer(request):
             })
         else:
             data.save()
-            if gender == "Male":
-                calory = 88.362+(float(weight)*13.37)+(float(height)*4.799)-(float(age)*5.677)
-                total_calory = round((calory * 0.702050619834711),2)
-            else:
-                calory = 447.593+(float(weight)*9.247)+(float(height)*3.098)-(float(age)*4.33)
-                total_calory = round((calory * 0.702050619834711),2)
-            print(total_calory)
-            calory_data = CaloryCount(customer=data,total_calory=total_calory)
-            calory_data.save()
             return render(request,"add_customer.html",{
                 "user":user,
                 "tag":"success",
@@ -234,7 +286,7 @@ def add_customer(request):
             })
     return render(request,"add_customer.html",{
         "user":user,
-    })
+})
 
 @custom_login_required
 def customers(request):
@@ -248,14 +300,21 @@ def customers(request):
 @custom_login_required
 def recipe_management(request):
     user = AdminUser.objects.get(id = request.session["user"])
+    filter_criteria = ['breakfast', 'lunch', 'dinner', 'evening_snacks'] 
+    
+    data = DailySnacks.objects.filter(meal_type__in=filter_criteria)   
     return render(request,"recipe-management.html",{
-        "user":user
+        "user":user,
+        "data": data
     })
+
 
 @custom_login_required
 def dish_calculator(request):
     user = AdminUser.objects.get(id = request.session["user"])
-    all_dishes = Dishes.objects.all()
+    print(user,"-----------")
+    all_dishes = AddIngridient.objects.all()
+    print(all_dishes,"********")
     return render(request,"dish-calculator-items.html",{
         "user":user,
         "dishes":all_dishes
@@ -269,15 +328,40 @@ def recipe_list(request):
         "user":user,
         "all_recipe":all_recipe
     })
+    
+@custom_login_required
+def recipe_calculator(request, id):
+    user = AdminUser.objects.get(id = request.session["user"])
+    data = AddRecipe.objects.get(id=id)
+    ingridients = AddIngridient.objects.filter(item=data.id)
+    print(data,"-------------")
+    return render(request,"recipe-calculator-details.html",{
+        "user":user,
+        "recipe":data,
+        "ingridients":ingridients
+    })    
 
 @custom_login_required
 def customers_detail(request,user_id):
     user = AdminUser.objects.get(id = request.session["user"])
-    customer = Customer.objects.get(id= user_id)
+    data = UserSnacks.objects.get(customer = user_id)
     return render(request,"view-customer-detail.html",{
         "user":user,
-        "customer":customer
+        "data":data
     })
+@custom_login_required
+def view_more(request):
+    user = AdminUser.objects.get(id = request.session["user"])
+    return render(request,"view-more.html",{
+        "user":user,
+    })    
+    
+@custom_login_required
+def customers_datatable(request):
+    user = AdminUser.objects.get(id = request.session["user"])
+    return render(request,"customers-datatable.html",{
+        "user":user,
+    })    
 
 @custom_login_required
 def add_dish(request):
@@ -358,7 +442,7 @@ def add_recipe(request):
             sodium = request.POST.getlist("sodium")
             fiber = request.POST.getlist("fiber")
             
-            recipe_data = AddRecipe(item_name=item, sub_name=sub_item, quantity=quantity, quantity_help=quantity_help,type_of_meal=meal_type,type_of_food=food_type,health_condition=health_condition)
+            recipe_data = AddRecipe(item_name=item, sub_name=sub_item,quantity_type = quantity_type, quantity=quantity, quantity_help=quantity_help,type_of_meal=meal_type,type_of_food=food_type,health_condition=health_condition)
             recipe_data.save()
             recipe = AddRecipe.objects.get(id=recipe_data.id)
             
@@ -387,13 +471,133 @@ def add_recipe(request):
     return redirect("add_dish")
 
 
-def recipe_details(request):
-    user = AdminUser.objects.get(id=request.session["user"])
-    recipe = AddRecipe.objects.first()
-    ingredients = AddIngridient.objects.filter(item=recipe)
-    return render(request, "recipe_details.html")
+# def recipe_details(request,recipe_id):
+#     user = AdminUser.objects.get(id=request.session["user"])
+#     recipe = AddRecipe.objects.get(id=recipe_id)
+#     ingredients = AddIngridient.objects.filter(item=recipe)
+#     return render(request,"recipe_details.html",{
+#         "recipe":recipe,
+#         "user":user,
+#         "ingredients":ingredients
+#     })
 
-
+def recipe_details(request, recipe_id):
+    print(recipe_id,'')
+    user = AdminUser.objects.get(id = request.session["user"])
+    data = DailySnacks.objects.get(id=recipe_id)
+    
+    return render(request,"recipe_details.html",{
+        "user":user,
+        "data":data
+    })
+    
+# def add_ingredient(request):
+#     user = AdminUser.objects.get(id = request.session["user"])
+#     print("hi/hello")
+#     print(user.image_url)
+#     return render(request,"add-ingredient.html",{
+#         "user":user
+#     })
 def add_ingredient(request):
     user = AdminUser.objects.get(id = request.session["user"])
-    return render(request,"add_ingredient.html")
+    print(request.method ,"-------------------01")
+    if request.method == "POST":
+        print(request.POST,"=============02")
+        ingridient_name = request.POST["ingridient_name"]
+        quantity_type = request.POST["ingridient_type"]
+        ingridient_quantity = request.POST["ingridient_quantity"]
+        protein = request.POST["protein"]
+        calories = request.POST["calories"]
+        fat = request.POST["fat"]
+        carbs = request.POST["carbs"]
+        sugars = request.POST["sugars"]
+        sodium = request.POST["sodium"]
+        fiber = request.POST["fiber"]
+        
+        data = AddIngridient(
+            ingridient_name=ingridient_name,
+            quantity_type=quantity_type,
+            ingridient_quantity=ingridient_quantity,
+            protein=protein,
+            calories=calories,
+            fat=fat,
+            carps=carbs,  
+            sugars=sugars,
+            sodium=sodium,
+            fiber=fiber,
+        )
+        
+        print(data,"==================")
+        
+        data.save()
+        return render(request,"add_ingredient.html",{
+            "user":user,
+            "tag":"success",
+            "message": "Ingridient Added Successfully."
+        })
+    return render(request,"add_ingredient.html",{
+        "user":user,
+    })
+
+def ingredients_items(request):
+    user = AdminUser.objects.get(id = request.session["user"])
+    data = DailySnacks.objects.all()
+    print(data,"*************")
+    return render(request,"ingredients-items.html",{
+        "user":user,
+        "data":data
+    })
+    
+def add_dish_calculator(request):
+    user = AdminUser.objects.get(id = request.session["user"])
+    print(request.method ,"-------------------01")
+    if request.method == "POST":
+        print(request.POST,"=============02")
+        item = request.POST["item_name"]
+        sub_item = request.POST["sub_name"]
+        quantity_type = request.POST["quantity_type"]
+        quantity = request.POST["quantity"]
+        quantity_help = request.POST.get("quantity_help")
+        meal_type = request.POST["meal_type"]
+        food_type = request.POST["food_type"]
+        ingridient_name = request.POST["ingridient_name"]
+        quantity_type = request.POST["ingridient_type"]
+        ingridient_quantity = request.POST["ingridient_quantity"]
+        protein = request.POST["protein"]
+        calories = request.POST["calories"]
+        fat = request.POST["fat"]
+        carbs = request.POST["carbs"]
+        sugars = request.POST["sugars"]
+        sodium = request.POST["sodium"]
+        fiber = request.POST["fiber"]
+        
+        data = AddIngridient(
+            item_name = item,
+            sub_name = sub_item,
+            quantity_type = quantity_type,
+            quantity = quantity,
+            quantity_help = quantity_help,
+            meal_type = meal_type,
+            food_type = food_type,
+            ingridient_name = ingridient_name,
+            ingridient_quantity = ingridient_quantity,
+            protein = protein,
+            calories = calories,
+            fat = fat,
+            carps = carbs,  
+            sugars = sugars,
+            sodium = sodium,
+            fiber = fiber,
+        )
+        
+        print(data,"==================")
+        
+        data.save()
+        return render(request,"add-dish-calculator.html",{
+            "user":user,
+            "tag":"success",
+            "message": "Added Successfully."
+        })
+    return render(request,"add-dish-calculator.html",{
+        "user":user,
+})

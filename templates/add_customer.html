@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 {% block css %}{% endblock %}
-
 {% block content %}
 
         <!--**********************************
@@ -8,176 +7,131 @@
         ***********************************-->
         <div class="content-body">
             <div class="container-fluid">
-                {% if message %}
-                {% if tag == "danger" %}
-                    <div class="text-center bg-danger text-white py-3">
-                    <span>{{ message }}</span>
-                    </div>
-                {% elif tag == "success" %}
-                    <div class="text-center bg-success text-white py-3">
-                    <span>{{ message }}</span>
-                    </div>
-                {% endif %}
-                {% endif %} 
-            <!-- -- <div class="content-body">
-            <form method="post" class="container-fluid full-screen">
-                {% csrf_token %}
-              <div class="container-fluid">
-                  <div class="page-titles">
-            <ol class="breadcrumb">
-              <li class="breadcrumb-item"><a href="javascript:void(0)">Form</a></li>
-              <li class="breadcrumb-item active"><a href="javascript:void(0)">Add Customer</a></li>
-            </ol>
-                  </div>
-                 <div class="content-body">
-            <div class="container-fluid">
                 <div class="page-titles">
 					<ol class="breadcrumb">
 						<li class="breadcrumb-item"><a href="javascript:void(0)">Form</a></li>
 						<li class="breadcrumb-item active"><a href="javascript:void(0)">Add Customer</a></li>
 					</ol>
                 </div>
-                
-                  <-- row --> 
-                  
-                  
-                  <div class="row">
-                    <div class="card-header">
-                        <ol class="" style="display: flex;">
-                        <li class="breadcrumb-item"><a href="javascript:void(0)"  style=" color: #656773;">Form</a></li>
-                          <li class="breadcrumb-item active"><a href="javascript:void(0)"  style=" color: #0B2A97;
-                            font-weight: 600;">Add Customer</a></li>
-                        </ol>
-                    </div>
-                      <div class="col-12">
-                          <div class="card">
+                <!-- row -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
                             <div class="card-header">
-                                <ol class="" style="display: flex;">
-                        
-                                  <li class="breadcrumb-item active"><a href="javascript:void(0)"  style="color: black;font-size: 16px;">Add Customer</a></li>
-                                </ol>
+                                <h4 class="card-title">Add Customer</h4>
+                                {{message}}
                             </div>
-                              <div class="card-body">
-                                  <div class="row form-material">
-                                      <div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
-                                          <label style="color: black;">First Name</label>
-                                          <input type="text" class="form-control" placeholder="First Name" required>
-                                      </div>
-                                      <div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
-                                          <label style="color: black;">Last Name</label>
-                                          <input type="text" class="form-control" placeholder="Last Name" required>
-                                      </div>
-                    <div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
-                                          <label style="color: black;">Gender</label>
-                      <select style="color: black;" class="form-control" required>
-                        <option style="color: black;">select the gendeer</option>
-                        <option style="color: black;">Male</option>
-                        <option style="color: black;">Female</option>
-                        <option style="color: black;">Other</option>
-                      </select>
-                                      </div>
-                                      <div class="col-xl-3 col-xxl-6 col-md-6">
-                                          <label style="color: black;">Address</label>
-                                            <input type="text" class="form-control" placeholder="Addess" required>
-                                      </div>
-                                      <div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
-                                          <label style="color: black;">City</label>
-                                          <input type="text" class="form-control" placeholder="Hyderabad" required>
-                                      </div>
-                                      <div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
-                                          <label style="color: black;">Pincode</label>
-                                          <input type="number" class="form-control" placeholder="50032" required>
-                                      </div>
-                    <div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
-                                          <label style="color: black;">Mobile Number</label>
-                                          <input type="text" class="form-control" placeholder="9876543210" required>
-                                      </div>
-                                      <div class="col-xl-3 col-xxl-6 col-md-6">
-                                          <label style="color: black;">E-mail</label>
-                                            <input type="emial" class="form-control" placeholder="email@gmail.com" required>
-                                      </div>
-                    <div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
-                                          <label style="color: black;">Date of Birth</label>
-                                          <input type="date" class="form-control" required>
-                                      </div>
-                                      <div class="col-xl-3 col-xxl-6 col-md-6">
-                                          <label style="color: black;">Age</label>
-                                            <input type="number" class="form-control" placeholder="21"required >
-                                      </div>
-                    <div class="col-xl-3 col-xxl-6 col-md-6">
-                                          <label style="color: black;">Height</label>
-                                            <input type="number" class="form-control" placeholder="167"required>
-                                      </div>
-                                      
-                                      <div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
-                                          <label style="color: black;">Weight</label>
-                                          <input type="number" class="form-control" placeholder="67"required>
-                                      </div>
-                                      <div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
-                                          <label style="color: black;">Health Issues</label>
-                                            <input type="text" class="form-control" placeholder="Diabetes"required>
-                                      </div>
-                    <div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
-                                          <label style="color: black;">Any Other Issues</label>
-                                          <input type="text" class="form-control" placeholder="yes Hypertension"required>
-                                      </div>
-                    
-                                      <div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
-                                          <label style="color: black;">Used Any Medication Earlier</label>
-                                          <select style="color: black;" class="form-control" required>
-                                            <option style="color: black;">select..</option>
-                                            <option style="color: black;">Yes</option>
-                                            <option style="color: black;">No</option>
-                                          </select>
-                                      </div>
-                                      <div class="col-xl-3 col-xxl-6 col-md-6">
-                                          <label style="color: black;">Food</label>
-                                            <select  style="color: black;"class="form-control" required>
-                        <option style="color: black;">select..</option>
-                        <option style="color: black;">Vegetarian</option>
-                        <option style="color: black;">Non Vegetarian</option>
-                      </select>
-                                      </div>
-                    <div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
-                                          <label style="color: black;">Profession</label>
-                                          <input type="text" class="form-control" placeholder="Software"required>
-                                      </div>
-                                      <div class="col-xl-3 col-xxl-6 col-md-6">
-                                          <label style="color: black;" >What Help You are Looking fron us?</label>
-                                          <input type="text" class="form-control" placeholder="write....."required>
-                                      </div>                                    
-                    <div class="col-xl-12 col-xxl-12 col-md-12 mt-3">
-                                          <button type="submit" class="btn btn-primary"><a href="customers-datatable.html" style="color:#fff;">Submit</a></button>
-                                      </div>
-                    
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-                </form>
-              </div>
-          </div> 
-      
-   
-<script>
-    function previewFile(event) {
-        const fileInput = event.target;
-        const previewImage = document.getElementById('previewImage');
+                            <div class="card-body">
+                                <form action="{% url 'add_customer' %}" method="POST">
+                                {% csrf_token %}
 
-        if (fileInput.files && fileInput.files[0]) {
-            const reader = new FileReader();
-
-            reader.onload = function (e) {
-                previewImage.src = e.target.result;
-            };
-
-            reader.readAsDataURL(fileInput.files[0]);
-        } else {
-            previewImage.src = 'https://mdbootstrap.com/img/Photos/Others/placeholder-avatar.jpg';
-        }
-    }
-</script>
-{% endblock  %} 
+                                <div class="row form-material">
+                                    <div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
+                                        <label style= "color: black;">First Name</label>
+                                       <input type="text" class="form-control text-black" name="fname" placeholder="First Name" required>
+                                    </div>
+                                    <div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
+                                        <label style= "color: black;">Last Name</label>
+                                        <input type="text" class="form-control text-black" name="lname" placeholder="Last Name" required>
+                                    </div>
+									<div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
+                                        <label style= "color: black;">Gender</label>
+										<select class="form-control text-black" name="gender" required>
+										  <option>select the gendeer</option>
+										  <option>Male</option>
+										  <option>Female</option>
+										  <option>Other</option>
+										</select>
+                                    </div>
+                                    <div class="col-xl-3 col-xxl-6 col-md-6">
+                                        <label style= "color: black;">Address</label>
+                                         <input type="text" class="form-control text-black" name="address" placeholder="Addess" required>
+                                    </div>
+                                    <div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
+                                        <label style= "color: black;">City</label>
+                                       <input type="text" class="form-control text-black" name="city" placeholder="City Name" required>
+                                    </div>
+                                    <div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
+                                        <label style= "color: black;">Pincode</label>
+                                       <input type="number" class="form-control text-black" name="pincode" placeholder="Enter Pincode" required>
+                                    </div>
+									<div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
+                                        <label style= "color: black;">Mobile Number</label>
+                                       <input type="number" class="form-control text-black" name="mobile" placeholder="Enter Mobile Number" required>
+                                    </div>
+                                    <div class="col-xl-3 col-xxl-6 col-md-6">
+                                        <label style= "color: black;">E-mail</label>
+                                         <input type="emial" class="form-control text-black" name="email" placeholder="Enter Email" required>
+                                    </div>
+									<div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
+                                        <label style= "color: black;">Date of Birth</label>
+                                       <input type="date" class="form-control text-black" name="dob" required>
+                                    </div>
+                                    <div class="col-xl-3 col-xxl-6 col-md-6">
+                                        <label style= "color: black;">Age</label>
+                                         <input type="number" class="form-control text-black" name="age" placeholder="Enter Age"required >
+                                    </div>
+									<div class="col-xl-3 col-xxl-6 col-md-6">
+                                        <label style= "color: black;">Height</label>
+                                         <input type="number" class="form-control text-black" name="height" placeholder="Enter Height"required>
+                                    </div>
+                                    
+                                    <div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
+                                        <label style= "color: black;">Weight</label>
+                                        <input type="number" class="form-control text-black" name="weight" placeholder="Enter Weight"required>
+                                    </div>
+                                    <div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
+                                        <label style= "color: black;">Health Issues</label>
+                                         <input type="text" class="form-control text-black" name="hissue" placeholder="Diabetes"required>
+                                    </div>
+									<div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
+                                        <label style= "color: black;">Any Other Issues</label>
+                                        <input type="text" class="form-control text-black" name="oissue" placeholder="yes Hypertension"required>
+                                    </div>
+									
+                                    <div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
+                                        <label style= "color: black;">Used Any Medication Earlier</label>
+                                        <select class="form-control text-black" name="any-medication" required>
+                                         <option>select..</option>
+                                         <option>Yes</option>
+                                         <option>No</option>
+                                       </select>
+                                    </div>
+                                    <div class="col-xl-3 col-xxl-6 col-md-6">
+                                        <label style= "color: black;">Food</label>
+                                         <select class="form-control text-black" name="veg-nonveg" required>
+										  <option>select..</option>
+										  <option>Vegetarian</option>
+										  <option>Non Vegetarian</option>
+										</select>
+                                    </div>
+									<div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
+                                        <label style= "color: black;">Profession</label>
+                                        <input type="text" class="form-control text-black" name="profession" placeholder="Software"required>
+                                    </div>
+                                    <div class="col-xl-3 col-xxl-6 col-md-6">
+                                        <label style= "color: black;">What Help You are Looking fron us?</label>
+                                        <input type="text" class="form-control text-black" name="help" placeholder="write....."required>
+                                    </div>                                    
+									<div class="col-xl-12 col-xxl-12 col-md-12 mt-3">
+                                        <button type="submit" class="btn btn-primary">
+                                            Submit
+                                        </button>
+                                    </div>
+									
+                                </div>
+                            </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--**********************************
+            Content body end
+        ***********************************-->
 
 
+{% endblock  %}
+{% block js %} 
+{% endblock  %}

@@ -16,10 +16,14 @@ urlpatterns = [
     path('customers/detail/<int:user_id>/', views.customers_detail, name='customers_detail'),
     path('logout/', views.logout, name='logout'),
     path('add/customer/', views.add_customer, name='add_customer'),
+    path('customer', views.customers, name='customer'),
     path('add/dish/', views.add_dish, name='add_dish'),
     path('add/recipe/', views.add_recipe, name='add_recipe'),
     path('recipe/list/', views.recipe_list, name='recipe_list'),
     # path('recipe/details/<int:recipe_id>/', views.recipe_details, name='recipe_details'),
-    path('recipe_details', views.recipe_details, name='recipe_details'),
+    path('recipe-detail/', views.recipe_details, name='recipe_details'),
+    path('recipe-detail/<int:recipe_id>', views.recipe_details, name='recipe_details'),
     path('add_ingredient', views.add_ingredient, name='add_ingredient'),
+
+    
 ]
