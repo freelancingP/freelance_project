@@ -836,6 +836,9 @@ class DailyCalorigramView(APIView):
             dish_ids_list = UserSnacks.objects.filter(**user_snacks_filter).values_list('dish_id', flat=True)
             data_is = DailySnacksSerializer(all_data, many=True).data
             
+            meal_types = ["breakfast", "lunch", "evening_snacks", "dinner"]
+            eaten_calories_breakdown = {meal_type: 0 for meal_type in meal_types}
+
             eaten_calories = 0
             remaining_calories = 1
 
@@ -852,41 +855,46 @@ class DailyCalorigramView(APIView):
             remaining_total_fat = 1
 
             eaten_oil = 0
-            remaining_oil= 1
-
+            remaining_oil = 1
 
             for item in data_is:
                 if item['id'] in dish_ids_list:
-                    if item['gl'] != None : 
-                        eaten_calories += item['cals']
-                        eaten_gl += item['gl']
-                        eaten_carbs += item['carbs']
-                        eaten_pral += item['pral']
-                        eaten_total_fat += item['total_fat']
-                        eaten_oil += item['oil']
+                    meal_type = item['meal_type'].lower()
+                    eaten_calories_breakdown[meal_type] += item['cals']
 
+                    if item['gl'] is not None:
+                        eaten_gl += item['gl']
+
+                    eaten_carbs += item['carbs']
+                    eaten_pral += item['pral']
+                    eaten_total_fat += item['total_fat']
+                    eaten_oil += item['oil']
+
+                    eaten_calories += item['cals']
                 else:
                     remaining_calories += item['cals']
                     remaining_gl += item['gl']
                     remaining_carbs += item['carbs']
                     remaining_pral += item['pral']
                     remaining_total_fat += item['total_fat']
-                    remaining_oil += item['oil'] 
+                    remaining_oil += item['oil']
 
             nutrition_value = [
-                {"label": "calories", "value": eaten_calories, "percentage": round(eaten_calories / (eaten_calories + remaining_calories)) * 100, "color_code": "#01BA91", "unit": "cals"},
-                {"label": 'glycemic load', "value": eaten_gl, "percentage": (eaten_gl/ (eaten_gl + remaining_gl)) * 100, "color_code": "#00AE4D","unit": "gl"},
-                {"label": "carbs", "value": eaten_carbs, "percentage": (eaten_carbs/ (eaten_carbs + remaining_carbs)) * 100, "color_code": "#29B6C7","unit": "carbs"},
-                {"label": "protein", "value": eaten_pral, "percentage": (eaten_pral/ (eaten_pral + remaining_pral))* 100, "color_code": "#98C71C","unit": "pral"},
-                {"label": "fats", "value": eaten_total_fat, "percentage": (eaten_total_fat/ (eaten_total_fat + remaining_total_fat)) * 100, "color_code": "#E35F11","unit":"fats"},
-                {"label": "oil", "value": eaten_oil, "percentage": (eaten_oil / (eaten_oil + remaining_oil)) * 100, "color_code": "#E3B523","unit":"oil"},
+                {"label": "calories", "value": eaten_calories, "percentage": round(eaten_calories / (eaten_calories + remaining_calories) * 100) if eaten_calories + remaining_calories > 0 else 0, "color_code": "#01BA91", "unit": "cals"},
+                {"label": 'glycemic load', "value": eaten_gl, "percentage": round(eaten_gl / (eaten_gl + remaining_gl) * 100) if eaten_gl + remaining_gl > 0 else 0, "color_code": "#00AE4D", "unit": "gl"},
+                {"label": "carbs", "value": eaten_carbs, "percentage": round(eaten_carbs / (eaten_carbs + remaining_carbs) * 100) if eaten_carbs + remaining_carbs > 0 else 0, "color_code": "#29B6C7", "unit": "carbs"},
+                {"label": "protein", "value": eaten_pral, "percentage": round(eaten_pral / (eaten_pral + remaining_pral) * 100) if eaten_pral + remaining_pral > 0 else 0, "color_code": "#98C71C", "unit": "pral"},
+                {"label": "fats", "value": eaten_total_fat, "percentage": round(eaten_total_fat / (eaten_total_fat + remaining_total_fat) * 100) if eaten_total_fat + remaining_total_fat > 0 else 0, "color_code": "#E35F11", "unit": "fats"},
+                {"label": "oil", "value": eaten_oil, "percentage": round(eaten_oil / (eaten_oil + remaining_oil) * 100) if eaten_oil + remaining_oil > 0 else 0, "color_code": "#E3B523", "unit": "oil"},
             ]
 
             data = {
                 'eaten_calories': eaten_calories,
                 'remaining_calories': remaining_calories,
+                'eaten_calories_breakdown': eaten_calories_breakdown,
                 'nutrition_value': nutrition_value
             }
+
             status_code = status.HTTP_200_OK
             message = "successful"
             response = JsonResponse(
