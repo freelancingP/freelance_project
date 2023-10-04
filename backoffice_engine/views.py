@@ -300,9 +300,9 @@ def customers(request):
 @custom_login_required
 def recipe_management(request):
     user = AdminUser.objects.get(id = request.session["user"])
-    filter_criteria = ['breakfast', 'lunch', 'dinner', 'evening_snacks'] 
+    # filter_criteria = ['breakfast', 'lunch', 'dinner', 'evening_snacks'] 
     
-    data = DailySnacks.objects.filter(meal_type__in=filter_criteria)   
+    data = DailySnacks.objects.all()  
     return render(request,"recipe-management.html",{
         "user":user,
         "data": data
@@ -374,16 +374,14 @@ def add_dish(request):
                 xls = pd.ExcelFile(file)
                 sheet_names = xls.sheet_names
 
-                # 'sheet_names' will now contain a list of all the sheet names in the Excel file
                 print(sheet_names)
-                df = pd.read_excel(file, engine='openpyxl')  # Explicitly specify the engine
-                data = df.to_dict(orient='records')
+                df = pd.read_excel(file, engine='openpyxl')
                 print(data)
                 for d in data:
                     for sheet in sheet_names:
                         dishes_data = None
                         if sheet == "Dishes":
-                            dishes_data = Dishes(food=d["Food"], quantity=d["Quantity"],ingredients=d["Ingredients "],veg_nonveg_egg = d["Veg/Non Veg/Egg"],pral=d["PRAL"],gl=d["GL"], oil=d["Oil"],cals=d["Cals\nNet of  TDF"], aaf_adj_prot=d["AAF \nadj Prot"], carbs=d["Carbs          (Net of TDF)"], total_fat=d["Total Fat"], tdf=d["TDF"],sodium=d["Sodium"], potassium=d["Pota-ssium"], phasphorous=d["Phosphorus"], calcium=d["Calcium"], magnecium=d["Magnecium"], total_eaa=d["Total EAA"], lysine=d["Lysine"], gross_protine=d["Gross Protein"], free_suger=d["Free Sugars"],aa_factor=d["AA\nFactor"],glucose=d["GI       (Glu-cose)"])
+                            dishes_data = AddIngridient(food=d["Food"], quantity=d["Quantity"],ingredients=d["Ingredients "],veg_nonveg_egg = d["Veg/Non Veg/Egg"],pral=d["PRAL"],gl=d["GL"], oil=d["Oil"],cals=d["Cals\nNet of  TDF"], aaf_adj_prot=d["AAF \nadj Prot"], carbs=d["Carbs          (Net of TDF)"], total_fat=d["Total Fat"], tdf=d["TDF"],sodium=d["Sodium"], potassium=d["Pota-ssium"], phasphorous=d["Phosphorus"], calcium=d["Calcium"], magnecium=d["Magnecium"], total_eaa=d["Total EAA"], lysine=d["Lysine"], gross_protine=d["Gross Protein"], free_suger=d["Free Sugars"],aa_factor=d["AA\nFactor"],glucose=d["GI       (Glu-cose)"])
                         elif sheet == "Breakfast":
                             dishes_data = Breakfast(food=d["Food"], quantity=d["Quantity"],ingredients=d["Ingredients "],veg_nonveg_egg = d["Veg/Non Veg/Egg"],pral=d["PRAL"],gl=d["GL"], oil=d["Oil"],cals=d["Cals\nNet of  TDF"], aaf_adj_prot=d["AAF \nadj Prot"], carbs=d["Carbs          (Net of TDF)"], total_fat=d["Total Fat"], tdf=d["TDF"],sodium=d["Sodium"], potassium=d["Pota-ssium"], phasphorous=d["Phosphorus"], calcium=d["Calcium"], magnecium=d["Magnecium"], total_eaa=d["Total EAA"], lysine=d["Lysine"], gross_protine=d["Gross Protein"], free_suger=d["Free Sugars"],aa_factor=d["AA\nFactor"],glucose=d["GI       (Glu-cose)"])
                         elif sheet == "Lunch":
@@ -498,6 +496,7 @@ def recipe_details(request, recipe_id):
 #     return render(request,"add-ingredient.html",{
 #         "user":user
 #     })
+
 def add_ingredient(request):
     user = AdminUser.objects.get(id = request.session["user"])
     print(request.method ,"-------------------01")

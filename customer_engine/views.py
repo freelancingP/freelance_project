@@ -846,7 +846,7 @@ class DailyCalorigramView(APIView):
             remaining_gl = 1
 
             eaten_carbs = 0
-            remaining_carbs = 1
+            remaining_carbs = 1 
 
             eaten_pral = 0
             remaining_pral = 1
