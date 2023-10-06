@@ -328,22 +328,24 @@ th {
 								
 								</div>
 								<div class="popup" id="popup">
-									<button id="closePopup" class="close-button">X</button>
-									<h2>Select a Category and Upload an CSV File</h2>
-									<label for="category">Select Category:</label>
-									<select id="category">
-										<option value="category1">Breakfast</option>
-										<option value="category2">Lunck</option>
-										<option value="category3">Evening snaks</option>
-										<option value="category3">dinner</option>
-									</select>
-									<br>
-									<label for="file">Upload CSV File:</label>
-									<input type="file" id="file" accept=".csv">
-									
-									<br>
-									<button id="closePopup">Submit</button>
-								</div>
+                                    <button id="closePopup" class="close-button">X</button>
+                                    <h2>Select a Category and Upload an Excel File</h2>
+                                    <form action="{% url 'upload_csv' %}" method="post" enctype="multipart/form-data">
+                                        {% csrf_token %}
+                                        <label for="category">Select Category:</label>
+                                        <select id="category" name="category">
+                                            <option value="category1">Breakfast</option>
+                                            <option value="category2">Lunch</option>
+                                            <option value="category3">Evening Snacks</option>
+                                            <option value="category4">Dinner</option>
+                                        </select>
+                                        <br>
+                                        <label for="file">Upload CSV File:</label>
+                                        <input type="file" id="file" name="file" accept=".csv, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                                        <br>
+                                        <button type="submit">Submit</button>
+                                    </form>
+                                </div>
                                 <div class="tab-content">
                                     <div id="navpills2-1" class="tab-pane active">
                                         <div class="row">
@@ -378,6 +380,8 @@ th {
 														<th>GI (Glucose)</th>
 													</tr>
                                                     {% for d in data %}
+                                                    {% if d.meal_type == 'breakfast' %}
+
 													<tr>
 														<td>{{d.food}}</td>
 														<td>{{d.quantity}}</td>
@@ -405,6 +409,8 @@ th {
 														<td>{{d.aa_factor}}</td>
 														<td>{{d.glucose}}</td>
 													</tr>
+                                                    {% endif %}
+
                                                     {% endfor %}
 													<!-- Add more rows with dummy data as needed -->
 												</table>
@@ -413,7 +419,218 @@ th {
 									
                                         </div>
                                     </div>
-                                    
+                                    <div id="navpills2-2" class="tab-pane">
+                                        <div class="row">
+                                            <div class="col-md-12 table-container"> 
+												<h4>Lunch</h4>
+												<table>
+													<tr>
+														<th>Food</th>
+														<th>Quantity</th>
+														<th>Ingredients</th>
+														<th>Veg/Non-Veg/Egg</th>
+														<th>PRAL</th>
+														<th>Oil</th>
+														<th>GL</th>
+														<th>Cals</th>
+														<th>Net of TDF</th>
+														<th>AAF</th>
+														<th>adj Prot</th>
+														<th>Carbs (Net of TDF)</th>
+														<th>Total Fat</th>
+														<th>TDF</th>
+														<th>Sodium</th>
+														<th>Potassium</th>
+														<th>Phosphorus</th>
+														<th>Calcium</th>
+														<th>Magnesium</th>
+														<th>Total EAA</th>
+														<th>Lysine</th>
+														<th>Gross Protein</th>
+														<th>Free Sugars</th>
+														<th>AA Factor</th>
+														<th>GI (Glucose)</th>
+													</tr>
+													{% for d in data %}
+                                                    {% if d.meal_type == 'lunch' %}
+													<tr>
+                                                        <td>{{d.meal_type}}</td>
+														<td>{{d.food}}</td>
+														<td>{{d.quantity}}</td>
+														<td>{{d.ingredients}}</td>
+														<td>{{d.veg_nonveg_egg}}</td>
+														<td>{{d.pral}}</td>
+														<td>{{d.oil}}</td>
+														<td>{{d.gl}}</td>
+														<td>{{d.cals}}</td>
+														<td>{{d.tdf}}</td>
+                                                        <td>{{d.aaf_adj_prot}}</td>
+                                                        <td>{{d.aaf_adj_prot}}</td>
+                                                        <td>{{d.carbs}}</td>
+                                                        <td>{{d.total_fat}}</td>
+                                                        <td>{{d.tdf}}</td>
+														<td>{{d.sodium}}</td>
+														<td>{{d.potassium}}</td>
+														<td>{{d.phasphorous}}</td>
+														<td>{{d.calcium}}</td>
+														<td>{{d.magnecium}}</td>
+														<td>{{d.total_eaa}}</td>
+														<td>{{d.lysine}}</td>
+														<td>{{d.gross_protine}}</td>
+														<td>{{d.free_suger}}</td>
+														<td>{{d.aa_factor}}</td>
+														<td>{{d.glucose}}</td>
+													</tr>
+                                                    {% endif %}
+                                                    {% endfor %}
+                                                
+                                                </table>
+                                            </div>
+											
+                                        </div>
+                                    </div>
+                                    <div id="navpills2-3" class="tab-pane">
+                                        <div class="row">
+                                           
+												<div class="col-md-12 table-container"> 
+													<h4>Evening snaks</h4>
+													<table>
+														<tr>
+                                                            <th>Food</th>
+                                                            <th>Quantity</th>
+                                                            <th>Ingredients</th>
+                                                            <th>Veg/Non-Veg/Egg</th>
+                                                            <th>PRAL</th>
+                                                            <th>Oil</th>
+                                                            <th>GL</th>
+                                                            <th>Cals</th>
+                                                            <th>Net of TDF</th>
+                                                            <th>AAF</th>
+                                                            <th>adj Prot</th>
+                                                            <th>Carbs (Net of TDF)</th>
+                                                            <th>Total Fat</th>
+                                                            <th>TDF</th>
+                                                            <th>Sodium</th>
+                                                            <th>Potassium</th>
+                                                            <th>Phosphorus</th>
+                                                            <th>Calcium</th>
+                                                            <th>Magnesium</th>
+                                                            <th>Total EAA</th>
+                                                            <th>Lysine</th>
+                                                            <th>Gross Protein</th>
+                                                            <th>Free Sugars</th>
+                                                            <th>AA Factor</th>
+                                                            <th>GI (Glucose)</th>
+                                                        </tr>
+														{% for d in data %}
+                                                    {% if d.meal_type == 'evening_snacks' %}
+
+													<tr>
+														<td>{{d.food}}</td>
+														<td>{{d.quantity}}</td>
+														<td>{{d.ingredients}}</td>
+														<td>{{d.veg_nonveg_egg}}</td>
+														<td>{{d.pral}}</td>
+														<td>{{d.oil}}</td>
+														<td>{{d.gl}}</td>
+														<td>{{d.cals}}</td>
+														<td>{{d.tdf}}</td>
+                                                        <td>{{d.aaf_adj_prot}}</td>
+                                                        <td>{{d.aaf_adj_prot}}</td>
+                                                        <td>{{d.carbs}}</td>
+                                                        <td>{{d.total_fat}}</td>
+                                                        <td>{{d.tdf}}</td>
+														<td>{{d.sodium}}</td>
+														<td>{{d.potassium}}</td>
+														<td>{{d.phasphorous}}</td>
+														<td>{{d.calcium}}</td>
+														<td>{{d.magnecium}}</td>
+														<td>{{d.total_eaa}}</td>
+														<td>{{d.lysine}}</td>
+														<td>{{d.gross_protine}}</td>
+														<td>{{d.free_suger}}</td>
+														<td>{{d.aa_factor}}</td>
+														<td>{{d.glucose}}</td>
+													</tr>
+                                                    {% endif %}
+
+                                                    {% endfor %}
+                                                    </table>
+												</div>
+                                        </div>
+                                    </div>
+                                    <div id="navpills2-4" class="tab-pane">
+                                        <div class="row">
+                                            <div class="col-md-12 table-container"> 
+												<h4>Dinner</h4>
+												<table>
+													<tr>
+                                                        
+														<th>Food</th>
+														<th>Quantity</th>
+														<th>Ingredients</th>
+														<th>Veg/Non-Veg/Egg</th>
+														<th>PRAL</th>
+														<th>Oil</th>
+														<th>GL</th>
+														<th>Cals</th>
+														<th>Net of TDF</th>
+														<th>AAF</th>
+														<th>adj Prot</th>
+														<th>Carbs (Net of TDF)</th>
+														<th>Total Fat</th>
+														<th>TDF</th>
+														<th>Sodium</th>
+														<th>Potassium</th>
+														<th>Phosphorus</th>
+														<th>Calcium</th>
+														<th>Magnesium</th>
+														<th>Total EAA</th>
+														<th>Lysine</th>
+														<th>Gross Protein</th>
+														<th>Free Sugars</th>
+														<th>AA Factor</th>
+														<th>GI (Glucose)</th>
+													</tr>
+													{% for d in data %}
+                                                    {% if d.meal_type == 'dinner' %}
+
+													<tr>
+                                                        <td>{{d.meal_type}}</td>
+														<td>{{d.food}}</td>
+														<td>{{d.quantity}}</td>
+														<td>{{d.ingredients}}</td>
+														<td>{{d.veg_nonveg_egg}}</td>
+														<td>{{d.pral}}</td>
+														<td>{{d.oil}}</td>
+														<td>{{d.gl}}</td>
+														<td>{{d.cals}}</td>
+														<td>{{d.tdf}}</td>
+                                                        <td>{{d.aaf_adj_prot}}</td>
+                                                        <td>{{d.aaf_adj_prot}}</td>
+                                                        <td>{{d.carbs}}</td>
+                                                        <td>{{d.total_fat}}</td>
+                                                        <td>{{d.tdf}}</td>
+														<td>{{d.sodium}}</td>
+														<td>{{d.potassium}}</td>
+														<td>{{d.phasphorous}}</td>
+														<td>{{d.calcium}}</td>
+														<td>{{d.magnecium}}</td>
+														<td>{{d.total_eaa}}</td>
+														<td>{{d.lysine}}</td>
+														<td>{{d.gross_protine}}</td>
+														<td>{{d.free_suger}}</td>
+														<td>{{d.aa_factor}}</td>
+														<td>{{d.glucose}}</td>
+													</tr>
+                                                    {% endif %}
+
+                                                    {% endfor %}
+                                                </table>
+                                            </div>
+											
+                                        </div>
+                                    </div>    
                                   
 									
                                 </div>
@@ -426,6 +643,7 @@ th {
 				</div>
             </div>
         </div>
+
         <!--**********************************
             Content body end
         ***********************************-->

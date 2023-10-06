@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% block css %}{% endblock %}
+{% block content %}
+
+
+        <!--**********************************
+            Content body start
+        ***********************************-->
+        <div class="content-body">
+            <div class="container-fluid">
+                <div class="page-titles">
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item"><a href="javascript:void(0)">Dish Calculator Items</a></li>
+						<li class="breadcrumb-item active"><a href="javascript:void(0)">Table</a></li>
+					</ol>
+                </div>
+                <!-- row -->
+
+
+                <div class="row">
+					<div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">Dish Calculator Items</h4>
+								<div class="">
+								   <a href="{% url 'add_ingredient' %}"><button type="submit" class="btn btn-primary">Add New Item</button></a>
+								</div>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table id="example5" class="display min-w850">
+                                        <thead>
+                                            <tr style="text-align:center;">
+                                                <th>ID</th>
+                                                <th>Ingridients Name</th>
+                                                <th>Quantity</th>
+                                                <th>Oil</th>
+                                                <th>GL</th>
+                                                <th>Useble Cals</th>
+                                                <th>AAF adj Prot</th>
+                                                <th>CarbsNet of TDF</th>
+                                                <th>Total Fat</th>
+                                                <th>TDF</th>
+                                                <th>Sodium</th>
+                                                <th>Potassium</th>
+                                                <th>Phosphorus</th>
+                                                <th>Calcium</th>
+                                                <th>Magnecium</th>
+                                                <th>Total EAA</th>
+                                                <th>Lysine</th>
+                                                <th>Gross Protein</th>
+                                                <th>Free Sugar</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for val in data %}
+                                            <tr>
+                                               
+                                                <td>{{val.id}}</td>
+                                                <td>{{val.food}} </td>
+                                                <td>{{val.quantity}}</td>
+                                                <td>{{val.oil}}</td>							
+                                                <td>{{val.gl}}</td>							
+                                                <td>{{val.cals}}</td>							
+                                                <td>{{val.aaf_adj_prot}}</td>							
+                                                <td>{{val.carbs}}</td>							
+                                                <td>{{val.total_fat}}</td>							
+                                                <td>{{val.tdf}}</td>							
+                                                <td>{{val.sodium}}</td>							
+                                                <td>{{val.potassium}}</td>							
+                                                <td>{{val.phasphorous}}</td>							
+                                                <td>{{val.calcium}}</td>							
+                                                <td>{{val.magnecium}}</td>							
+                                                <td>{{val.total_eaa}}</td>							
+                                                <td>{{val.lysine}}</td>							
+                                                <td>{{val.gross_protine}}</td>							
+                                                <td>{{val.free_suger}}</td>							
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+				</div>
+            </div>
+        </div>
+        <!--**********************************
+            Content body end
+        ***********************************-->
+
+{% endblock  %}
+{% block js %} 
+{% endblock  %}

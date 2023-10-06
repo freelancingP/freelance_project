@@ -9,7 +9,8 @@ urlpatterns = [
     path('dashboard/', views.index, name='dashboard'),
     path('customers/', views.customers, name='customers'),
     path('recipe/management/', views.recipe_management, name='recipe_management'),
-    path('dish/calculator/', views.dish_calculator, name='dish_calculator'),
+    path('dish-calculator-items', views.dish_calculator, name='dish_calculator_items'),
+    path('ingredient-items/', views.ingredients_items, name='ingredient_items'),
     path('reset/password/', views.reset_password, name='reset_password'),
     path('verify/reset/otp/', views.verify_otp, name='verify_otp'),
     path('set/new/password/', views.new_password, name='new_password'),
@@ -24,6 +25,7 @@ urlpatterns = [
     path('recipe-detail/', views.recipe_details, name='recipe_details'),
     path('recipe-detail/<int:recipe_id>', views.recipe_details, name='recipe_details'),
     path('add_ingredient', views.add_ingredient, name='add_ingredient'),
-
+    path('upload-csv/', views.upload_csv, name='upload_csv'),
+    path('add/dish/calculator/', views.add_dish_calculator, name='add_dish_calculator'),
     
 ]

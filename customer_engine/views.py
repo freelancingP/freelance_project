@@ -36,6 +36,11 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from .common_responce import JsonResponse
 import json
 from django.core.mail import send_mail
+import logging
+from django.conf import settings
+
+
+logger = logging.getLogger(__name__)
 
 
 # Create your views here.
@@ -311,29 +316,58 @@ class UpdateUserDetailViews(APIView):
 
 
 class LoginAPIView(APIView):
-
+    
     def post(self, request):
+        try:
+            serializer_class = SendOtpSerializer
+            serializer = serializer_class(data=request.data)
 
-        serializer_class = SendOtpSerializer
-        # Create an instance of the serializer class
-        serializer = serializer_class(data=request.data)
+            if serializer.is_valid():
+                validated_data = serializer.validated_data
 
-        if serializer.is_valid():
-            validated_data = serializer.validated_data
+                contact_number = validated_data.get("country_code") + validated_data.get("phone_number")
+                email = validated_data.get("email")
+                user_otp = UserOTP.objects.filter(customer__contact_number=contact_number, customer__email=email).last()
 
-            contact_number = validated_data.get("country_code") + validated_data.get("phone_number")
-            email = validated_data.get("email")
-            user_otp = UserOTP.objects.filter(customer__contact_number=contact_number, customer__email=email).last()
+                if user_otp:
+                    user_otp.otp = ''.join(random.choices("0123456789", k=6))
+                    user_otp.save()
+                
+                    subject = 'Your OTP for Login'
+                    message = f'Your OTP is: {user_otp.otp}'
+                    from_email = settings.EMAIL_HOST_USER
+                    recipient_list = [email]
+                    send_mail(subject, message, from_email, recipient_list)
 
-            if user_otp:
-                # return otp 
+                    status_code = status.HTTP_200_OK
+                    message = "Success"
+                    data = {'otp': user_otp.otp}
+                    response = JsonResponse(
+                        status=status_code,
+                        msg=message,
+                        data=data,
+                        success=True,
+                        error={},
+                        count=len(data),
+                    )
+                    return response
 
-                user_otp.otp = ''.join(random.choices("0123456789", k=6))
-                user_otp.save()
+                new_customer = Customer(username=validated_data['email'], email=validated_data['email'], contact_number=contact_number)
+                new_customer.save()
+
+                otp = ''.join(random.choices("0123456789", k=6))
+                new_user_otp = UserOTP(customer_id=new_customer.id, otp=otp)
+                new_user_otp.save()
+                
+                # subject = 'Your OTP for Login'
+                # message = f'Your OTP is: {new_user_otp.otp}'
+                # from_email = settings.EMAIL_HOST_USER
+                # recipient_list = [email]
+                # send_mail(subject, message, from_email, recipient_list)
 
                 status_code = status.HTTP_200_OK
                 message = "Success"
-                data = {'otp': user_otp.otp}
+                data = {'otp': new_user_otp.otp}
                 response = JsonResponse(
                     status=status_code,
                     msg=message,
@@ -343,38 +377,34 @@ class LoginAPIView(APIView):
                     count=len(data),
                 )
                 return response
+            
+            status_code = status.HTTP_400_BAD_REQUEST
+            data = ""
+            response = JsonResponse(
+                status=status_code,
+                data=data,
+                success=False,
+                error=serializer.errors,
+                count=len(data),
+            )
+            return response
+        except Exception as e:
+            logger = logging.getLogger(__name__)
+            logger.exception("An error occurred: %s", str(e))
 
-            # Create a new user
-            new_customer = Customer(username=validated_data['email'], email=validated_data['email'], contact_number=contact_number)
-            new_customer.save()
-
-            otp = ''.join(random.choices("0123456789", k=6))
-            new_user_otp = UserOTP(customer_id=new_customer.id, otp=otp)
-            new_user_otp.save()
-
-            status_code = status.HTTP_200_OK
-            message = "Success"
-            data = {'otp': new_user_otp.otp}
+            status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+            message = "Internal Server Error"
+            data = ""
             response = JsonResponse(
                 status=status_code,
                 msg=message,
                 data=data,
-                success=True,
-                error={},
+                success=False,
+                error=str(e),  
                 count=len(data),
             )
             return response
-        
-        status_code = status.HTTP_400_BAD_REQUEST
-        data = ""
-        response = JsonResponse(
-            status=status_code,
-            data=data,
-            success=False,
-            error=serializer.errors,
-            count=len(data),
-        )
-        return response
+
 
 
 def get_tokens_for_user(user):
@@ -387,53 +417,52 @@ def get_tokens_for_user(user):
 
 class OTPVerifyAPI(APIView):
     def post(self, request):
+        try:
+            serializer_class = VerifyOtpSerializer
+            serializer = serializer_class(data=request.data)
 
-        serializer_class = VerifyOtpSerializer
-        # Create an instance of the serializer class
-        serializer = serializer_class(data=request.data)
-
-        if serializer.is_valid():
-            validated_data = serializer.validated_data
+            if serializer.is_valid():
+                validated_data = serializer.validated_data
                 
-            otp = validated_data.get('otp')
-            email = validated_data.get('email')
-            contact_number = validated_data.get("country_code") + validated_data.get("phone_number")
-            user_otp = UserOTP.objects.filter(customer__contact_number=contact_number, customer__email=email).last()
+                otp = validated_data.get('otp')
+                email = validated_data.get('email')
+                contact_number = validated_data.get("country_code") + validated_data.get("phone_number")
+                user_otp = UserOTP.objects.filter(customer__contact_number=contact_number, customer__email=email).last()
 
-            if user_otp: 
-                if int(user_otp.otp) == int(otp):
-                    token = get_tokens_for_user(user_otp.customer)
-                    customer_serializer = CustomerSerializer(user_otp.customer)
+                if user_otp: 
+                    if int(user_otp.otp) == int(otp):
+                        token = get_tokens_for_user(user_otp.customer)
+                        customer_serializer = CustomerSerializer(user_otp.customer)
 
-                    status_code = status.HTTP_200_OK
-                    message = "OTP verification successful"
+                        status_code = status.HTTP_200_OK
+                        message = "OTP verification successful"
 
-                    token_data = {'token': token["access"]}
-                    customer_data = customer_serializer.data 
-                    data = {**token_data, **customer_data}    
-                    response = JsonResponse(
-                        status=status_code,
-                        msg=message,
-                        data=data,
-                        success=True,
-                        error={},
-                        count=len(data),
-                    )
-                    return response
+                        token_data = {'token': token["access"]}
+                        customer_data = customer_serializer.data 
+                        data = {**token_data, **customer_data}    
+                        response = JsonResponse(
+                            status=status_code,
+                            msg=message,
+                            data=data,
+                            success=True,
+                            error={},
+                            count=len(data),
+                        )
+                        return response
 
+                    else:
+                        status_code = status.HTTP_400_BAD_REQUEST
+                        data = ""
+                        response = JsonResponse(
+                            status=status_code,
+                            msg="Error",
+                            data=data,
+                            success=False,
+                            error="Invalid OTP",
+                            count=len(data),
+                        )
+                        return response
                 else:
-                    status_code = status.HTTP_400_BAD_REQUEST
-                    data = ""
-                    response = JsonResponse(
-                        status=status_code,
-                        msg="Error",
-                        data=data,
-                        success=False,
-                        error="Invalid OTP",
-                        count=len(data),
-                    )
-                    return response
-            else:
                     status_code = status.HTTP_400_BAD_REQUEST
                     data = ""
                     response = JsonResponse(
@@ -445,22 +474,36 @@ class OTPVerifyAPI(APIView):
                         count=len(data),
                     )
                     return response
+            else:
+                status_code = status.HTTP_400_BAD_REQUEST
+                data = ""
+                response = JsonResponse(
+                    status=status_code,
+                    msg="Error",
+                    data=data,
+                    success=False,
+                    error="Both Email, Phone Number and OTP are required",
+                    count=len(data),
+                )
+                return response
 
-        else:
-            status_code = status.HTTP_400_BAD_REQUEST
+        except Exception as e:
+            logger = logging.getLogger(__name__)
+            logger.exception("An error occurred: %s", str(e))
+
+            status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+            message = "Internal Server Error"
             data = ""
             response = JsonResponse(
                 status=status_code,
-                msg="Error",
+                msg=message,
                 data=data,
                 success=False,
-                error="Both Email, Phone Number and OTP are required",
+                error=str(e),
                 count=len(data),
             )
             return response
-
         
-
 
 class AllDishesViewSet(viewsets.ModelViewSet):
 
@@ -473,135 +516,281 @@ class AllDishesViewSet(viewsets.ModelViewSet):
     authentication_classes=[JWTAuthentication]
     permission_classes=[IsAuthenticated]
 
-    
-    def get(self, request): 
-        queryset = self.filter_queryset(self.get_queryset())
-            
-        page = self.paginate_queryset(queryset)
 
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            status_code = status.HTTP_200_OK
-            message = "successful"
-            data = {"dishes": serializer.data}
+    def get(self, request): 
+        try:
+            queryset = self.filter_queryset(self.get_queryset())
+            
+            page = self.paginate_queryset(queryset)
+
+            if page is not None:
+                serializer = self.get_serializer(page, many=True)
+                status_code = status.HTTP_200_OK
+                message = "successful"
+                data = {"dishes": serializer.data}
+                response = JsonResponse(
+                    status=status_code,
+                    msg=message,
+                    data=data,
+                    success=True,
+                    error={},
+                    count=len(data),
+                )
+                return response
+            else:
+                status_code = status.HTTP_400_BAD_REQUEST
+                data = ""
+                response = JsonResponse(
+                    status=status_code,
+                    msg="Error",
+                    data=data,
+                    success=False,
+                    error="Invalid token",
+                    count=len(data),
+                )
+                return response
+
+        except Exception as e:
+            logger = logging.getLogger(__name__)
+            logger.exception("An error occurred: %s", str(e))
+
+            status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+            message = "Internal Server Error"
+            data = ""
             response = JsonResponse(
                 status=status_code,
                 msg=message,
                 data=data,
-                success=True,
-                error={},
-                count=len(data),
-            )
-            return response
-        else:
-            status_code = status.HTTP_400_BAD_REQUEST
-            data = ""
-            response = JsonResponse(
-                status=status_code,
-                msg="Error",
-                data=data,
                 success=False,
-                error="Invalid token",
+                error=str(e),
                 count=len(data),
             )
             return response
             
         
-    
 class DailyCaloryView(APIView):
 
     def post(self, request, format=None):
-        meal_type = request.data.get('meal_type')
-        data_queryset = DailySnacks.objects.filter(meal_type=meal_type)
+        try:
+            meal_type = request.data.get('meal_type')
+            data_queryset = DailySnacks.objects.filter(meal_type=meal_type)
 
-        if data_queryset.exists():
-            data_list = list(data_queryset)
+            if data_queryset.exists():
+                data_list = list(data_queryset)
 
-            total_calories = 0.0
-            total_carbs = 0.0
-            total_proteins = 0.0
+                total_calories = 0.0
+                total_carbs = 0.0
+                total_proteins = 0.0
 
-            for item in data_list:
-                if item.cals is not None:
-                    total_calories += item.cals
-                if item.carbs is not None:
-                    total_carbs += item.carbs
-                if item.pral is not None:
-                    total_proteins += item.pral
+                for item in data_list:
+                    if item.cals is not None:
+                        total_calories += item.cals
+                    if item.carbs is not None:
+                        total_carbs += item.carbs
+                    if item.pral is not None:
+                        total_proteins += item.pral
 
-            daily_totals = {
-                'calories': total_calories,
-                'carbs': total_carbs,
-                'proteins': total_proteins,
-            }
-            status_code = status.HTTP_200_OK
-            serializer = DailySnacksSerializer(data=daily_totals, many=True)
-            if serializer.is_valid():
-                serializer.save()
-            message = "successful"
-            data = {"daily_calories": daily_totals}
+                daily_totals = {
+                    'calories': total_calories,
+                    'carbs': total_carbs,
+                    'proteins': total_proteins,
+                }
+                status_code = status.HTTP_200_OK
+                serializer = DailySnacksSerializer(data=daily_totals)
+                if serializer.is_valid():
+                    serializer.save()
+                message = "successful"
+                data = {"daily_calories": daily_totals}
+                response = JsonResponse(
+                    status=status_code,
+                    msg=message,
+                    data=data,
+                    success=True,
+                    error={},
+                    count=len(data),
+                )
+                return response
+            else:
+                status_code = status.HTTP_400_BAD_REQUEST
+                data = ""
+                response = JsonResponse(
+                    status=status_code,
+                    msg="Error",
+                    data=data,
+                    success=False,
+                    error="No data found for the given meal type",
+                    count=len(data),
+                )
+                return response
+
+        except Exception as e:
+            logger = logging.getLogger(__name__)  
+            logger.exception("An error occurred: %s", str(e))
+
+            status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+            message = "Internal Server Error"
+            data = ""
             response = JsonResponse(
                 status=status_code,
                 msg=message,
                 data=data,
-                success=True,
-                error={},
-                count=len(data),
-            )
-            return response
-        else:
-            status_code = status.HTTP_400_BAD_REQUEST
-            data = ""
-            response = JsonResponse(
-                status=status_code,
-                msg="Error",
-                data=data,
                 success=False,
-                error="No data found for the given meal type",
+                error=str(e),
                 count=len(data),
             )
             return response
-           
+
 
 class AddCaloryViews(APIView):
     authentication_classes=[JWTAuthentication]
     permission_classes=[IsAuthenticated]
 
     def post(self, request):
-        customer = request.user.id
-        
-        """
-        payload = {
-            "dish_ids": [21,33,4]
+        try:
+
+            customer = request.user.id
             
-        }
-        """
-        
-        data = request.data
-        given_dish_ids = set(data.get("dish_ids", []))
+            """
+            payload = {
+                "dish_ids": [21,33,4]
+                
+            }
+            """
+            
+            data = request.data
+            given_dish_ids = set(data.get("dish_ids", []))
 
 
-        # Retrieve existing UserSnacks objects for the customer
-        existing_dish_ids = set(UserSnacks.objects.filter(customer=customer, updated_at__date=date.today()).values_list('dish_id', flat=True))
+            existing_dish_ids = set(UserSnacks.objects.filter(customer=customer, updated_at__date=date.today()).values_list('dish_id', flat=True))
 
-        # Calculate dish IDs to add (those in given_dish_ids but not in existing_dish_ids)
-        dish_ids_to_add = given_dish_ids - existing_dish_ids
+            dish_ids_to_add = given_dish_ids - existing_dish_ids
 
-        # Calculate dish IDs to remove (those in existing_dish_ids but not in given_dish_ids)
-        dish_ids_to_remove = existing_dish_ids - given_dish_ids
-        # Remove UserSnacks objects for dish_ids_to_remove
-        UserSnacks.objects.filter(customer=customer, dish_id__in=dish_ids_to_remove, updated_at__date=date.today()).delete()
+            dish_ids_to_remove = existing_dish_ids - given_dish_ids
+            
+            UserSnacks.objects.filter(customer=customer, dish_id__in=dish_ids_to_remove, updated_at__date=date.today()).delete()
 
-        save_calories = []
-        for row in dish_ids_to_add:
-            save_calories.append({
-                "customer":customer,
-                "dish":row
-            })
+            save_calories = []
+            for row in dish_ids_to_add:
+                save_calories.append({
+                    "customer":customer,
+                    "dish":row
+                })
 
-        serializer = AddCalorySerializer(data=save_calories, many=True)
-        if serializer.is_valid():
-            serializer.save()
+            serializer = AddCalorySerializer(data=save_calories, many=True)
+            if serializer.is_valid():
+                serializer.save()
+                status_code = status.HTTP_200_OK
+                message = "successful"
+                data = JsonResponse(
+                    status=status_code,
+                    msg=message,
+                    data=data,
+                    success=True,
+                    error={},
+                    count=len(data),
+                )
+                return data
+            else:
+                status_code = status.HTTP_400_BAD_REQUEST
+                data = ""
+                response = JsonResponse(
+                    status=status_code,
+                    msg="Error",
+                    data=data,
+                    success=False,
+                    error="Invalid data",
+                    count=len(data),
+                )
+                return response
+
+        except Exception as e:
+            logger = logging.getLogger(__name__)
+            logger.exception("An error occurred: %s", str(e))
+
+            status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+            message = "Internal Server Error"
+            data = ""
+            response = JsonResponse(
+                status=status_code,
+                msg=message,
+                data=data,
+                success=False,
+                error=str(e),
+                count=len(data),
+            )
+            return response
+            
+
+class CustomerDailyCaloriesView(APIView):
+    authentication_classes=[JWTAuthentication]
+    permission_classes=[IsAuthenticated]
+
+    def get(self, request, date, *args, **kwargs):
+        try:
+
+            customer = request.user.id
+            date_obj = datetime.strptime(date, "%Y-%m-%d").date()  
+
+            dish_ids_list = UserSnacks.objects.filter(customer=customer, updated_at__date=date_obj).values_list('dish_id', flat=True)
+            
+            daily_snacks = DailySnacks.objects.filter(id__in=dish_ids_list)
+
+            calories_used = 0
+            total_calory = 0
+            total_carbs = 0
+            total_calcium = 0
+
+            data = {
+                'calories_used':0,
+                'total_calory':0,
+                'calorie_breakdown':None,
+                'breakfast':[],
+                'lunch':[],
+                'dinner':[],
+                'evening_snacks':[],
+                'added_dish':dish_ids_list
+            }
+
+            for instance in daily_snacks:
+                data[instance.meal_type].append({
+                            "id": instance.id,
+                            "food": instance.food,
+                            "ingredients": instance.ingredients,
+                            "cals": instance.cals,
+                        })
+                if instance.cals:
+                    total_calory += instance.cals
+
+                if instance.carbs:
+                    total_carbs += instance.carbs
+
+                if instance.calcium:
+                    total_calcium += instance.calcium
+
+            # update data
+            calorie_breakdown = {
+                "calories": {
+                        'value':total_calory,
+                        'color':'#2CA3FA',
+                        'percentage': 1                
+                    },
+                "carbs": {
+                        'value':total_carbs,
+                        'color':'#FF7326',
+                        'percentage': 2
+                    },
+                "calcium": {
+                        'value':total_calcium,
+                        'color':'#81BE00',
+                        'percentage': 3
+                    }
+            }
+
+            calories_used = total_calory
+            data['calorie_breakdown'] = calorie_breakdown
+            data['calories_used'] = calories_used
+            data['total_calory'] = total_calory
+
             status_code = status.HTTP_200_OK
             message = "successful"
             data = JsonResponse(
@@ -613,111 +802,65 @@ class AddCaloryViews(APIView):
                     count=len(data),
                 )
             return data
-        else:
-            status_code = status.HTTP_400_BAD_REQUEST
-            data = ""
+        
+        except Exception as e:
+                logger = logging.getLogger(__name__)  # Get a logger instance for this module
+                logger.exception("An error occurred: %s", str(e))
+
+                status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+                message = "Internal Server Error"
+                response_data = {
+                    "status": status_code,
+                    "msg": message,
+                    "data": {},
+                    "success": False,
+                    "error": str(e),
+                    "count": 0,
+                }
+                return JsonResponse(response_data, status=status_code)
+        
+
+class CalorigramView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, id, *args, **kwargs):
+        try:
+            daily_snacks = DailySnacks.objects.get(id=id)
+
+            data_is = DailySnacksSerializer(daily_snacks).data
+
+            nutrition_value = [
+                {"label": "calories", "value": data_is['cals'], "percentage": 5, "color_code": "#01BA91","unit":"cals"},
+                {"label": 'glycemic load', "value": data_is['gl'], "percentage": 6, "color_code": "#00AE4D","unit":"gl"},
+                {"label": "carbs", "value": data_is['carbs'], "percentage": 3, "color_code": "#29B6C7","unit":"carbs"},
+                {"label": "protein", "value": data_is['pral'], "percentage": 5, "color_code": "#98C71C","unit":"pral"},
+                {"label": "fats", "value": data_is['total_fat'], "percentage": 5, "color_code": "#E35F11","unit":"fats"},
+                {"label": "oil", "value": data_is['oil'], "percentage": 5, "color_code": "#E3B523","unit":"oil"},
+            ]
+
+            data = {
+                "dish_name": data_is['food'],
+                "calories": data_is['cals'],
+                "recipes": [ingredient.strip() for ingredient in data_is['ingredients'].split(',')] if data_is['ingredients'] else [],
+                "nutrition_value": nutrition_value,
+            }
+
+            status_code = status.HTTP_200_OK
+            message = "successful"
             response = JsonResponse(
                 status=status_code,
-                msg="Error",
-                data=data,
-                success=False,
-                error="Invalid data",
-                count=len(data),
-            )
-            return response
-            
-
-class CustomerDailyCaloriesView(APIView):
-    authentication_classes=[JWTAuthentication]
-    permission_classes=[IsAuthenticated]
-
-    def get(self, request, date, *args, **kwargs):
-        customer = request.user.id
-        date_obj = datetime.strptime(date, "%Y-%m-%d").date()  # Convert the date string to a date object
-
-        dish_ids_list = UserSnacks.objects.filter(customer=customer, updated_at__date=date_obj).values_list('dish_id', flat=True)
-        
-        daily_snacks = DailySnacks.objects.filter(id__in=dish_ids_list)
-
-        calories_used = 0
-        total_calory = 0
-        total_carbs = 0
-        total_calcium = 0
-
-        data = {
-            'calories_used':0,
-            'total_calory':0,
-            'calorie_breakdown':None,
-            'breakfast':[],
-            'lunch':[],
-            'dinner':[],
-            'evening_snacks':[],
-            'added_dish':dish_ids_list
-        }
-
-        for instance in daily_snacks:
-            data[instance.meal_type].append({
-                        "id": instance.id,
-                        "food": instance.food,
-                        "ingredients": instance.ingredients,
-                        "cals": instance.cals,
-                    })
-            if instance.cals:
-                total_calory += instance.cals
-
-            if instance.carbs:
-                total_carbs += instance.carbs
-
-            if instance.calcium:
-                total_calcium += instance.calcium
-
-        # update data
-        calorie_breakdown = {
-            "calories": {
-                    'value':total_calory,
-                    'color':'#2CA3FA',
-                    'percentage': 1                
-                },
-            "carbs": {
-                    'value':total_carbs,
-                    'color':'#FF7326',
-                    'percentage': 2
-                },
-            "calcium": {
-                    'value':total_calcium,
-                    'color':'#81BE00',
-                    'percentage': 3
-                }
-        }
-
-        calories_used = total_calory
-        data['calorie_breakdown'] = calorie_breakdown
-        data['calories_used'] = calories_used
-        data['total_calory'] = total_calory
-
-        status_code = status.HTTP_200_OK
-        message = "successful"
-        data = JsonResponse(
-                status=status_code,
-                msg=message,
+                message=message,
                 data=data,
                 success=True,
                 error={},
                 count=len(data),
             )
-        return data
-    
+            return response
 
-
-class CalorigramView(APIView):
-    authentication_classes=[JWTAuthentication]
-    permission_classes=[IsAuthenticated]
-
-    def get(self,request, id, *args,**kwargs):
-
-        try:
-            daily_snacks = DailySnacks.objects.get(id=id)
         except DailySnacks.DoesNotExist:
+            logger = logging.getLogger(__name__) 
+            logger.error("Daily snacks with ID %s not found", id)
 
             status_code = status.HTTP_404_NOT_FOUND
             message = "Daily snacks not found"
@@ -730,36 +873,22 @@ class CalorigramView(APIView):
                 count=len(""),
             )
             return response
-        
-        data_is = DailySnacksSerializer(daily_snacks).data
 
-        nutrition_value = [
-            {"label": "calories", "value": data_is['cals'], "percentage": 5, "color_code": "#01BA91","unit":"cals"},
-            {"label": 'glycemic load', "value": data_is['gl'], "percentage": 6, "color_code": "#00AE4D","unit":"gl"},
-            {"label": "carbs", "value": data_is['carbs'], "percentage": 3, "color_code": "#29B6C7","unit":"carbs"},
-            {"label": "protein", "value": data_is['pral'], "percentage": 5, "color_code": "#98C71C","unit":"pral"},
-            {"label": "fats", "value": data_is['total_fat'], "percentage": 5, "color_code": "#E35F11","unit":"fats"},
-            {"label": "oil", "value": data_is['oil'], "percentage": 5, "color_code": "#E3B523","unit":"oil"},
-        ]
+        except Exception as e:
+            logger = logging.getLogger(__name__) 
+            logger.exception("An error occurred while processing the request: %s", str(e))
 
-        data = {
-            "dish_name": data_is['food'],
-            "calories": data_is['cals'],
-            "recipes": [ingredient.strip() for ingredient in data_is['ingredients'].split(',')] if data_is['ingredients'] else [],
-            "nutrition_value": nutrition_value,
-        }
-      
-        status_code = status.HTTP_200_OK
-        message = "successful"
-        response = JsonResponse(
-            status=status_code,
-            message=message,
-            data=data,
-            success=True,
-            error={},
-            count=len(data),
-        )
-        return response
+            status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+            message = "Internal Server Error"
+            response_data = {
+                "status": status_code,
+                "message": message,
+                "data": {},
+                "success": False,
+                "error": str(e),
+                "count": 0,
+            }
+            return JsonResponse(response_data, status=status_code)
 
 
 class CreateRecipe(APIView):
@@ -767,55 +896,75 @@ class CreateRecipe(APIView):
     permission_classes=[IsAuthenticated]
 
     def post(self, request, format=None):
-        serializer = RecipeSerializer(data=request.data)
+        try:
+            serializer = RecipeSerializer(data=request.data)
 
-        if serializer.is_valid():
-            recipe = serializer.save()
+            if serializer.is_valid():
+                recipe = serializer.save()
 
-            ingredients_data = request.data.get('ingredients', [])
-            for ingredient_data in ingredients_data:
-                ingredient_data['recipe'] = recipe.id
-                ingredient_serializer = RecipeIngridientSerializer(data=ingredient_data)
-                if ingredient_serializer.is_valid():
-                    ingredient_serializer.save()
-                else:
-                    status_code = status.HTTP_404_NOT_FOUND
-                    message = "Recipe not found"
-                    response = JsonResponse(
+                ingredients_data = request.data.get('ingredients', [])
+                for ingredient_data in ingredients_data:
+                    ingredient_data['recipe'] = recipe.id
+                    ingredient_serializer = RecipeIngridientSerializer(data=ingredient_data)
+                    if ingredient_serializer.is_valid():
+                        ingredient_serializer.save()
+                    else:
+                        logger = logging.getLogger(__name__) 
+                        logger.error("Error while saving ingredient: %s", ingredient_serializer.errors)
+
+                        status_code = status.HTTP_400_BAD_REQUEST
+                        message = "Bad request"
+                        response = JsonResponse(
+                            status=status_code,
+                            message=message,
+                            data=[],
+                            success=True,
+                            error=ingredient_serializer.errors,
+                            count=len(ingredient_serializer.errors),
+                        )
+                        return response
+
+                status_code = status.HTTP_201_CREATED
+                message = "successful"
+                data = JsonResponse(
                         status=status_code,
-                        message=message,
-                        data=[],
+                        msg=message,
+                        data=serializer.data,
                         success=True,
-                        error="Recipe not found",
-                        count=len(""),
+                        error={},
+                        count=len("data"),
                     )
-                    return response
-                    # Handle errors if needed
-            status_code = status.HTTP_201_CREATED
-            message = "successful"
-            data = JsonResponse(
-                    status=status_code,
-                    msg=message,
-                    data=serializer.data,
-                    success=True,
-                    error={},
-                    count=len("data"),
-                )
-            return data
-        status_code = status.HTTP_400_BAD_REQUEST
-        message = "Bad request"
-        response = JsonResponse(
-            status=status_code,
-            message=message,
-            data=[],
-            success=True,
-            error="Bad request",
-            count=len(""),
-        )
-        return response
+                return data
+
+            status_code = status.HTTP_400_BAD_REQUEST
+            message = "Bad request"
+            response = JsonResponse(
+                status=status_code,
+                message=message,
+                data=[],
+                success=True,
+                error=serializer.errors,
+                count=len(serializer.errors),
+            )
+            return response
+
+        except Exception as e:
+            logger = logging.getLogger(__name__) 
+            logger.exception("An error occurred while processing the request: %s", str(e))
+
+            status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+            message = "Internal Server Error"
+            response_data = {
+                "status": status_code,
+                "message": message,
+                "data": {},
+                "success": False,
+                "error": str(e),
+                "count": 0,
+            }
+            return JsonResponse(response_data, status=status_code)
+
     
-
-
 class DailyCalorigramView(APIView):
     authentication_classes=[JWTAuthentication]
     permission_classes=[IsAuthenticated]
@@ -906,7 +1055,11 @@ class DailyCalorigramView(APIView):
                 count=len(data),
             )
             return response
-        except ValueError:
+
+        except ValueError as ve:
+            logger = logging.getLogger(__name__)  # Get a logger instance for this module
+            logger.exception("ValueError occurred while processing the request: %s", str(ve))
+
             status_code = status.HTTP_400_BAD_REQUEST
             message = "Invalid date format"
             response = JsonResponse(
@@ -919,6 +1072,23 @@ class DailyCalorigramView(APIView):
             )
             return response
 
+        except Exception as e:
+            logger = logging.getLogger(__name__)  # Get a logger instance for this module
+            logger.exception("An error occurred while processing the request: %s", str(e))
+
+            status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+            message = "Internal Server Error"
+            response_data = {
+                "status": status_code,
+                "message": message,
+                "data": {},
+                "success": False,
+                "error": str(e),
+                "count": 0,
+            }
+            return JsonResponse(response_data, status=status_code)
+
+
 
 
 class GetIngridientView(APIView):
@@ -926,10 +1096,37 @@ class GetIngridientView(APIView):
     permission_classes=[IsAuthenticated]
 
     def get(self, request, id=None, *args, **kwargs):
-        if id is not None:
-            try:
-                dish= Dishes.objects.get(id=id)
-                data = {"name": dish.food}
+        try:
+            if id is not None:
+                try:
+                    dish = Dishes.objects.get(id=id)
+                    data = {"name": dish.food}
+                    status_code = status.HTTP_200_OK
+                    message = "successful"
+                    response = JsonResponse(
+                        status=status_code,
+                        message=message,
+                        data=data,
+                        success=True,
+                        error={},
+                        count=len(data),
+                    )
+                    return response
+                except Dishes.DoesNotExist:
+                    status_code = status.HTTP_400_BAD_REQUEST
+                    message = "Dish not found"
+                    response = JsonResponse(
+                        status=status_code,
+                        message=message,
+                        data=None,
+                        success=False,
+                        error={},
+                        count=0,
+                    )
+                    return response
+            else:
+                dishes = Dishes.objects.all()
+                data = [{"id": dish.id, "name": dish.food} for dish in dishes]
                 status_code = status.HTTP_200_OK
                 message = "successful"
                 response = JsonResponse(
@@ -941,35 +1138,24 @@ class GetIngridientView(APIView):
                     count=len(data),
                 )
                 return response
-            except Dishes.DoesNotExist:
-                status_code = status.HTTP_400_BAD_REQUEST
-                message = "Invalid date format"
-                response = JsonResponse(
-                    status=status_code,
-                    message=message,
-                    data=None,
-                    success=False,
-                    error={},
-                    count=0,
-                )
-                return response
-        else:
-            dishes = Dishes.objects.all()
-            data = [{"id": dish.id, "name": dish.food} for dish in dishes]
-            status_code = status.HTTP_200_OK
-            message = "successful"
-            response = JsonResponse(
-                status=status_code,
-                message=message,
-                data=data,
-                success=True,
-                error={},
-                count=len(data),
-            )
-            return response
 
+        except Exception as e:
+            logger = logging.getLogger(__name__)  # Get a logger instance for this module
+            logger.exception("An error occurred while processing the request: %s", str(e))
 
-    
+            status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+            message = "Internal Server Error"
+            response_data = {
+                "status": status_code,
+                "message": message,
+                "data": {},
+                "success": False,
+                "error": str(e),
+                "count": 0,
+            }
+            return JsonResponse(response_data, status=status_code)
+
+        
 class UserProfile(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
@@ -979,11 +1165,12 @@ class UserProfile(APIView):
         customer = request.user
         try:
             user_profile = Customer.objects.get(id=customer.id)
-        except Customer.DoesNotExist:
+        except Customer.DoesNotExist as customer_does_not_exist_error:
+            logger.error("Customer with ID %s does not exist: %s", customer.id, str(customer_does_not_exist_error))
             response = JsonResponse(
-                {"detail": "Missing start_date or end_date query parameters"},
-                status=status.HTTP_400_BAD_REQUEST,
-                message="Invalid date format",
+                {"detail": "Customer not found"},
+                status=status.HTTP_404_NOT_FOUND,
+                message="Customer not found",
                 data=None,
                 success=False,
                 error={},
@@ -995,6 +1182,7 @@ class UserProfile(APIView):
         end_date_str = request.query_params.get('end_date')
 
         if not start_date_str or not end_date_str:
+            logger.error("Missing start_date or end_date query parameters")
             response = JsonResponse(
                 {"detail": "Missing start_date or end_date query parameters"},
                 status=status.HTTP_400_BAD_REQUEST,
@@ -1009,9 +1197,10 @@ class UserProfile(APIView):
         try:
             start_date = datetime.strptime(start_date_str, "%Y-%m-%d").date()
             end_date = datetime.strptime(end_date_str, "%Y-%m-%d").date()
-        except ValueError:
+        except ValueError as value_error:
+            logger.error("Invalid date format: %s", str(value_error))
             response = JsonResponse(
-                {"detail": "Missing start_date or end_date query parameters"},
+                {"detail": "Invalid date format"},
                 status=status.HTTP_400_BAD_REQUEST,
                 message="Invalid date format",
                 data=None,
