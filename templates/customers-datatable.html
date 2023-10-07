@@ -31,8 +31,6 @@
                                                 <th>Name</th>
                                                 <th>Age</th>
                                                 <th>Gender</th>
-												<th>Goal</th> 
-                                                <th>Status</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -40,34 +38,15 @@
                                             {% for d in data %}
                                             <tr>
                                                
-                                                <td>DCFL{{forloop.counter}}</td>
-                                                <td>{{d.date}}</td>
-                                                <td>{{d.first_name}}&nbsp;{{d.last_name}}</td>
-                                                <td>{{d.age}}</td>
-                                                <td>{{d.gender}}</td>
-                                                <td>{{d.goal}}</td>
-                                                <td>{{d.status}}
-                                                    {% if d.status == "new_customer" %}
-                                                    <span class="badge light badge-danger">
-                                                        <i class="fa fa-circle text-danger mr-1"></i>
-                                                        New Customer
-                                                    </span>
-                                                    {% elif d.status == "in_customer" %}
-                                                        <span class="badge light badge-warning">
-                                                            <i class="fa fa-circle text-warning mr-1"></i>
-                                                            In Customer
-                                                        </span>
-                                                    {% else %}
-                                                        <span class="badge light badge-success">
-                                                            <i class="fa fa-circle text-success mr-1"></i>
-                                                            Recovered
-                                                        </span>
-                                                    {% endif %} 
-                                                </td>
+                                                <td style="text-align: left;">DCFL{{forloop.counter}}</td>
+                                                <td style="text-align: left;">{{d.date}}</td>
+                                                <td style="text-align: left;">{{d.first_name}}&nbsp;{{d.last_name}}</td>
+                                                <td style="text-align: left;">{{d.age}}</td>
+                                                <td style="text-align: left;">{{d.gender}}</td>
                                                 {% comment %} <td>{{d.action}}</td> {% endcomment %}
                                                 
-                                                <td>
-													<div class="d-flex">
+                                                <td style="text-align: left;">
+													<div class="d-flex justify-content-left">
 														<a href="{% url 'customers_detail' d.id %}" class="btn btn-primary shadow btn-xs sharp mr-1"><i class="fa fa-eye"></i></a>
 													</div>
 												</td>												
