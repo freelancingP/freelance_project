@@ -8,7 +8,7 @@
     <!-- Favicon icon -->
     <link rel="icon" type="image/png" sizes="16x16" href="images/favicon.png">
     <link href="css/style.css" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&amp;family=Roboto:wght@100;300;400;500;700;900&amp;display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&amp;family=Roboto:wght@100;300;400;500;700;900&amp;display=swap" rel="stylesheet">
 </head>
 
 <body class="h-100">
@@ -23,14 +23,29 @@
 									<div class="text-center mb-3">
 										<img src="images/logo.png" alt=""></a>
 									</div>
-                                    <h4 class="text-center mb-4 text-white">Forgot Password</h4>
-                                    <form action="index.html">
+                                    <h4 class="text-center mb-4" style="color:#554848 !important;">Sign in your account</h4>
+                                     <form action="index.html">
                                         <div class="form-group">
-                                            <label class="" style="color:#554848 !important;"><strong>Email</strong></label>
+                                            <label class="mb-1" style="color:#554848 !important;"><strong>Email</strong></label>
                                             <input type="email" class="form-control" value="hello@example.com">
                                         </div>
+                                        <div class="form-group">
+                                            <label class="mb-1" style="color:#554848 !important;"><strong>Password</strong></label> 
+                                            <input type="password" class="form-control" value="Password">
+                                        </div>
+                                        <div class="form-row d-flex justify-content-between mt-4 mb-2">
+                                            <div class="form-group">
+                                               <div class="custom-control custom-checkbox ml-1 text-white">
+													<input type="checkbox" class="custom-control-input" id="basic_checkbox_1">
+													<label class="custom-control-label" for="basic_checkbox_1" style="color:#554848 !important;">Remember my preference</label>
+												</div>
+                                            </div>
+                                            <div class="form-group">
+                                                <a class="" href="page-forgot-password.html" style="color:#554848 !important;">Forgot Password?</a>
+                                            </div>
+                                        </div>
                                         <div class="text-center">
-                                            <button type="submit" class="btn bg-blue text-primary btn-block" style="color:#FFF !important;">SUBMIT</button>
+                                            <button type="submit" class="btn bg-blue text-primary btn-block"  style="color:#FFF !important;">Sign Me In</button>
                                         </div>
                                     </form>
                                 </div>

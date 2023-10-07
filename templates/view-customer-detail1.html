@@ -1,0 +1,352 @@
+{% extends 'base.html' %}
+{% block css %}{% endblock %}
+{% block content %}
+
+        <!--**********************************
+            Content body start
+        ***********************************-->
+        <div class="content-body">
+            <div class="container-fluid">
+                <div class="page-titles">
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item"><a href="javascript:void(0)">Customer</a></li>
+						<li class="breadcrumb-item active"><a href="javascript:void(0)">Details</a></li>
+					</ol>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    
+                                    <!--Tab slider End-->
+                                    <div class="col-xl-9 col-lg-6  col-md-6 col-xxl-12 col-sm-12">
+                                        <div class="product-detail-content">
+                                            <!--Product details-->
+											
+                                            <div class="new-arrival-content pr">
+												<div class="container">
+													<div class="row mb-2">
+														<div class="col-md-4 col-sm-4">
+															{% if customer.image_url %}
+																<img src="{{ customer.image_url }}" alt="Profile Image" width="100" height="100">
+															{% else %}
+																<p>No profile image available.</p>
+															{% endif %}
+														</div>
+														<div class="col-md-4 col-sm-4 mt-5">
+															<h4>{{ customer.first_name }} {{ customer.last_name }}</h4>
+														</div>
+														<div class="col-md-4 col-sm-4 mt-5">
+															<button type="button" class="btn btn-toggle" data-toggle="button" aria-pressed="false" autocomplete="off">
+																<div class="handle"></div>
+															</button>
+														</div>
+													</div>
+												</div>
+												
+												
+												<div class="row">
+												 <div class="col-md-4">
+												  <p>Email: <span class="item">{{customer.email}}</span></p>
+												 </div>
+												 <div class="col-md-4">
+												  <p>Number: <span class="item">{{customer.contact_number}}</span></p>
+												  </div>
+												  <div class="col-md-4">
+													<p>Profession: <span class="item">{{customer.profession}}</span></p>
+												   </div>
+												</div>
+												<div class="row">
+												  <div class="col-md-4">
+												  <p>Age: <span class="item">{{customer.age}}</span> </p>
+												  </div>
+												  
+												  <div class="col-md-4">
+												  <p>Height: <span class="item">{{customer.height}}</span></p>
+												  </div>
+												  <div class="col-md-4">
+													<p>Weight:&nbsp;&nbsp;<span class="badge badge-success light">{{customer.weight}}Kg</span></p>
+												  </div>
+												</div>
+												<div class="row">
+													<div class="col-md-4">
+													<p>Any Health Issues?: <span class="item">{{customer.health_issue}}</span></p>
+													</div>
+												  <div class="col-md-4">
+													<p>Any Other Issues?: <span class="item">{{customer.other_issue}}</span></p>
+												  </div>
+												  <div class="col-md-4">
+												  <p>Used Any Medication Earlier: <span class="item">{{customer.any_medication}}</span></p>
+												  </div>
+												
+												</div>
+												<div class="row">
+												  <div class="col-md-4">
+												  <p>Location: <span class="item">{{customer.location}}</span> </p>
+												  </div>
+												  <div class="col-md-4">
+												  <p>VEG/NON VEGETARIAN: <span class="item">{{customer.veg_nonveg}}</span></p>
+												  </div>
+												  <div class="col-md-4">
+												  <p>Gender: <span class="item">{{customer.gender}}</span></p>
+												  </div>
+												
+												</div>
+												<div class="row">
+												  <div class="col-md-4">
+												  <p>Address: <span class="item">{{customer.address}}</span> </p>
+												  </div>
+												  <div class="col-md-4">
+												  <p>Date: <span class="item">{{customer.date}}</span></p>
+												  </div>
+												<div class="col-md-4">
+												  <p>ID: <span class="item">{{customer.id}}</span></p>
+												  </div>
+												</div>
+												<div class="row">
+													<div class="col-md-4">
+													<p>Date Of Birth: <span class="item">{{customer.date_of_birth}}</span> </p>
+													</div>
+													<div class="col-md-4">
+													<p>Any Help?: <span class="item">{{customer.help}}</span></p>
+													</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+					<!-- review -->
+					<div class="modal fade" id="reviewModal">
+						<div class="modal-dialog" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title">Review</h5>
+									<button type="button" class="close" data-dismiss="modal"><span>&times;</span>
+									</button>
+								</div>
+								<div class="modal-body">
+									<form>
+										<div class="text-center mb-4">
+											<img class="img-fluid rounded" width="78" src="images/avatar/1.jpg" alt="DexignZone">
+										</div>
+										<div class="form-group">
+											<div class="rating-widget mb-4 text-center">
+												<!-- Rating Stars Box -->
+												<div class="rating-stars">
+													<ul id="stars">
+														<li class="star" title="Poor" data-value="1">
+															<i class="fa fa-star fa-fw"></i>
+														</li>
+														<li class="star" title="Fair" data-value="2">
+															<i class="fa fa-star fa-fw"></i>
+														</li>
+														<li class="star" title="Good" data-value="3">
+															<i class="fa fa-star fa-fw"></i>
+														</li>
+														<li class="star" title="Excellent" data-value="4">
+															<i class="fa fa-star fa-fw"></i>
+														</li>
+														<li class="star" title="WOW!!!" data-value="5">
+															<i class="fa fa-star fa-fw"></i>
+														</li>
+													</ul>
+												</div>
+											</div>
+										</div>
+										<div class="form-group">
+											<textarea class="form-control" placeholder="Comment" rows="5"></textarea>
+										</div>
+										<button class="btn btn-success btn-block">RATE</button>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+                </div>
+				<div class="row">
+					<div class="col-xl-9 col-xxl-12">
+						<div class="row">	
+							<div class="col-xl-12">
+								<div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">Dish Calculator-Food </h4>
+                            </div>
+                            <div class="card-body">
+							<div class="row">
+							<div class="col-md-8">
+                                <ul class="nav nav-pills justify-content-start mb-4">
+                                    <li class=" nav-item">
+                                        <a href="#navpills2-1" class="nav-link active" data-toggle="tab" aria-expanded="true">Breakfast</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="#navpills2-2" class="nav-link" data-toggle="tab" aria-expanded="false">Lunch</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="#navpills2-3" class="nav-link" data-toggle="tab" aria-expanded="flase">Snaks</a>
+                                    </li>
+									 <li class="nav-item">
+                                        <a href="#navpills2-4" class="nav-link" data-toggle="tab" aria-expanded="flase">Dinner</a>
+                                    </li>
+                                </ul>
+								</div>
+								<div class="col-md-4">
+								<input type="date" class="form-control" placeholder="2017-06-04" id="mdate" data-dtp="dtp_aeNPT">
+								</div>
+								</div>
+                                <div class="tab-content">
+                                    <div id="navpills2-1" class="tab-pane active">
+                                        <div class="row">
+                                            <div class="col-md-6"> 
+											<div class="media border-bottom mb-3 pb-3 d-lg-flex d-block menu-list">
+											<a href="coustomer-detail.html"><img class="rounded mr-3 mb-md-0 mb-3" src="images/Sandwich_With_Egg.png" alt="" width="120"></a>
+												<div class="media-body col-lg-8 pl-0">
+												<h6 class="fs-16 font-w600"><a href="coustomer-detail.html" class="text-black">Sandwich_With_Egg</a></h6>
+												<p class="fs-14">Lorem ipsum dolor sit ametconsectetur adipiscing laboris nisi ut aliquip</p>
+												<div class="d-flex flex-wrap align-items-center">
+													<ul class="d-flex flex-wrap mb-sm-0 mb-2 align-items-center">
+														<li class="mb-2 mr-4 text-nowrap"><i class="las la-prescription-bottle scale5 mr-2"></i><span class="text-nowrap fs-14 text-black font-w500">8 Ingridients</span></li>
+														<li class="mb-2 mr-4 text-nowrap"><a href="coustomer-detail.html"><button type="button" class="btn light btn-primary">View More</button></a></li>
+													</ul>
+												</div>
+											</div>
+										</div>
+                                            </div>
+											 <div class="col-md-6"> 
+											<div class="media border-bottom mb-3 pb-3 d-lg-flex d-block menu-list">
+											<a href="coustomer-detail.html"><img class="rounded mr-3 mb-md-0 mb-3" src="images/croissant_with_coffee.png" alt="" width="120"></a>
+												<div class="media-body col-lg-8 pl-0">
+												<h6 class="fs-16 font-w600"><a href="coustomer-detail.html" class="text-black">Croissant_with_Coffee</a></h6>
+												<p class="fs-14">Lorem ipsum dolor sit ametconsectetur adipiscing laboris nisi ut aliquip</p>
+												<div class="d-flex flex-wrap align-items-center">
+													<ul class="d-flex flex-wrap mb-sm-0 mb-2 align-items-center">
+														<li class="mb-2 mr-4 text-nowrap"><i class="las la-prescription-bottle scale5 mr-2"></i><span class="text-nowrap fs-14 text-black font-w500">8 Ingridients</span></li>
+														<li class="mb-2 mr-4 text-nowrap"><a href="coustomer-detail.html"><button type="button" class="btn light btn-primary">View More</button></a></li>
+													</ul>
+												</div>
+											</div>
+										</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="navpills2-2" class="tab-pane">
+                                        <div class="row">
+                                            <div class="col-md-6"> 
+											<div class="media border-bottom mb-3 pb-3 d-lg-flex d-block menu-list">
+											<a href="coustomer-detail.html"><img class="rounded mr-3 mb-md-0 mb-3" src="images/menus/4.png" alt="" width="120"></a>
+												<div class="media-body col-lg-8 pl-0">
+												<h6 class="fs-16 font-w600"><a href="coustomer-detail.html" class="text-black">Papaya Fruit</a></h6>
+												<p class="fs-14">Lorem ipsum dolor sit ametconsectetur adipiscing laboris nisi ut aliquip</p>
+												<div class="d-flex flex-wrap align-items-center">
+													<ul class="d-flex flex-wrap mb-sm-0 mb-2 align-items-center">
+														<li class="mb-2 mr-4 text-nowrap"><i class="las la-prescription-bottle scale5 mr-2"></i><span class="text-nowrap fs-14 text-black font-w500">8 Ingridients</span></li>
+														<li class="mb-2 mr-4 text-nowrap"><a href="coustomer-detail.html"><button type="button" class="btn light btn-primary">View More</button></a></li>
+													</ul>
+												</div>
+											</div>
+										</div>
+                                            </div>
+											<div class="col-md-6"> 
+											<div class="media border-bottom mb-3 pb-3 d-lg-flex d-block menu-list">
+											<a href="coustomer-detail.html"><img class="rounded mr-3 mb-md-0 mb-3" src="images/menus/5.png" alt="" width="120"></a>
+												<div class="media-body col-lg-8 pl-0">
+												<h6 class="fs-16 font-w600"><a href="coustomer-detail.html" class="text-black">Papaya Fruit</a></h6>
+												<p class="fs-14">Lorem ipsum dolor sit ametconsectetur adipiscing laboris nisi ut aliquip</p>
+												<div class="d-flex flex-wrap align-items-center">
+													<ul class="d-flex flex-wrap mb-sm-0 mb-2 align-items-center">
+														<li class="mb-2 mr-4 text-nowrap"><i class="las la-prescription-bottle scale5 mr-2"></i><span class="text-nowrap fs-14 text-black font-w500">8 Ingridients</span></li>
+														<li class="mb-2 mr-4 text-nowrap"><a href="coustomer-detail"><button type="button" class="btn light btn-primary">View More</button></a></li>
+													</ul>
+												</div>
+											</div>
+										</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                  <div id="navpills2-3" class="tab-pane">
+                                        <div class="row">
+                                        <div class="col-md-6"> 
+											<div class="media border-bottom mb-3 pb-3 d-lg-flex d-block menu-list">
+											<a href="coustomer-detail.html"><img class="rounded mr-3 mb-md-0 mb-3" src="images/menus/7.png" alt="" width="120"></a>
+												<div class="media-body col-lg-8 pl-0">
+												<h6 class="fs-16 font-w600"><a href="coustomer-detail.html" class="text-black">Papaya Fruit</a></h6>
+												<p class="fs-14">Lorem ipsum dolor sit ametconsectetur adipiscing laboris nisi ut aliquip</p>
+												<div class="d-flex flex-wrap align-items-center">
+													<ul class="d-flex flex-wrap mb-sm-0 mb-2 align-items-center">
+														<li class="mb-2 mr-4 text-nowrap"><i class="las la-prescription-bottle scale5 mr-2"></i><span class="text-nowrap fs-14 text-black font-w500">8 Ingridients</span></li>
+														<li class="mb-2 mr-4 text-nowrap"><a href="coustomer-detail.html"><button type="button" class="btn light btn-primary">View More</button></a></li>
+													</ul>
+												</div>
+											</div>
+										</div>
+                                            </div>    
+									 <div class="col-md-6"> 
+											<div class="media border-bottom mb-3 pb-3 d-lg-flex d-block menu-list">
+											<a href="coustomer-detail.html"><img class="rounded mr-3 mb-md-0 mb-3" src="images/menus/8.png" alt="" width="120"></a>
+												<div class="media-body col-lg-8 pl-0">
+												<h6 class="fs-16 font-w600"><a href="coustomer-detail.html" class="text-black">Papaya Fruit</a></h6>
+												<p class="fs-14">Lorem ipsum dolor sit ametconsectetur adipiscing laboris nisi ut aliquip</p>
+												<div class="d-flex flex-wrap align-items-center">
+													<ul class="d-flex flex-wrap mb-sm-0 mb-2 align-items-center">
+														<li class="mb-2 mr-4 text-nowrap"><i class="las la-prescription-bottle scale5 mr-2"></i><span class="text-nowrap fs-14 text-black font-w500">8 Ingridients</span></li>
+														<li class="mb-2 mr-4 text-nowrap"><a href="coustomer-detail.html"><button type="button" class="btn light btn-primary">View More</button></a></li>
+													</ul>
+												</div>
+											</div>
+										</div>
+                                            </div>
+                                </div>
+								
+                                    </div>
+									<div id="navpills2-4" class="tab-pane">
+                                        <div class="row">
+                                           <div class="col-md-6"> 
+											<div class="media border-bottom mb-3 pb-3 d-lg-flex d-block menu-list">
+											<a href="coustomer-detail.html"><img class="rounded mr-3 mb-md-0 mb-3" src="images/menus/11.png" alt="" width="120"></a>
+												<div class="media-body col-lg-8 pl-0">
+												<h6 class="fs-16 font-w600"><a href="coustomer-detail.html" class="text-black">Papaya Fruit</a></h6>
+												<p class="fs-14">Lorem ipsum dolor sit ametconsectetur adipiscing laboris nisi ut aliquip</p>
+												<div class="d-flex flex-wrap align-items-center">
+													<ul class="d-flex flex-wrap mb-sm-0 mb-2 align-items-center">
+														<li class="mb-2 mr-4 text-nowrap"><i class="las la-prescription-bottle scale5 mr-2"></i><span class="text-nowrap fs-14 text-black font-w500">8 Ingridients</span></li>
+														<li class="mb-2 mr-4 text-nowrap"><a href="coustomer-detail.html"><button type="button" class="btn light btn-primary">View More</button></a></li>
+													</ul>
+												</div>
+											</div>
+										</div>
+                                            </div>
+											<div class="col-md-6"> 
+											<div class="media border-bottom mb-3 pb-3 d-lg-flex d-block menu-list">
+											<a href="coustomer-detail.html"><img class="rounded mr-3 mb-md-0 mb-3" src="images/menus/2.png" alt="" width="120"></a>
+												<div class="media-body col-lg-8 pl-0">
+												<h6 class="fs-16 font-w600"><a href="coustomer-detail.html" class="text-black">Papaya Fruit</a></h6>
+												<p class="fs-14">Lorem ipsum dolor sit ametconsectetur adipiscing laboris nisi ut aliquip</p>
+												<div class="d-flex flex-wrap align-items-center">
+													<ul class="d-flex flex-wrap mb-sm-0 mb-2 align-items-center">
+														<li class="mb-2 mr-4 text-nowrap"><i class="las la-prescription-bottle scale5 mr-2"></i><span class="text-nowrap fs-14 text-black font-w500">8 Ingridients</span></li>
+														<li class="mb-2 mr-4 text-nowrap"><a href=""><button type="button" class="btn light btn-primary">View More</button></a></li>
+													</ul>
+												</div>
+											</div>
+										</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+							</div>
+						</div>
+					</div>
+				
+				</div>
+            </div>
+        </div>
+        <!--**********************************
+            Content body end
+        ***********************************-->
+{% endblock  %}
+{% block js %} 
+{% endblock  %}

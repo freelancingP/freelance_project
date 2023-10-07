@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block css %}{% endblock %}
-{% block js %}{% endblock  %}
 {% block content %}
+
+
         <!--**********************************
             Content body start
         ***********************************-->
@@ -22,7 +24,7 @@
                                         <!-- Tab panes -->
                                         <div class="tab-content ">
                                             <div role="tabpanel" class="tab-pane fade show active d-flex justify-content-center" id="first">
-                                                <img class="img-fluid" src="images/Sandwich_With_Egg_2.png" width="100%" alt="">
+                                                <img class="img-fluid" src="{% static 'images/Sandwich_With_Egg_2.png' %}" width="100%" alt="">
                                             </div>
                                         </div>
                                     </div>
@@ -239,9 +241,81 @@
             </div>
         </div>
         <!--**********************************
-            Content body end
+            Content body endpath('customers/detail/<int:user_id>/', views.customers_detail, name='customers_detail'),
         ***********************************-->
 
+
+        
+<script>
+
+var columnChartValues = [{
+  y: 686.04,
+  label: "one",
+    color: "#1f77b4"
+}, {
+  y: 381.84,
+  label: "two",
+  color: "#ff7f0e"
+}, {
+  y: 375.76,
+  label: "three",
+  color: " #ffbb78"
+}, {
+  y: 97.48,
+  label: "four",
+  color: "#d62728"
+}, {
+  y: 94.2,
+  label: "five",
+  color: "#98df8a"
+}, {
+  y: 65.28,
+  label: "Hi",
+  color: "#bcbd22"
+}, {
+  y: 51.2,
+  label: "Hello",
+  color: "#f7b6d2"
+}];
+renderColumnChart(columnChartValues);
+
+function renderColumnChart(values) {
+
+  var chart = new CanvasJS.Chart("columnChart", {
+    backgroundColor: "white",
+    colorSet: "colorSet3",
+    title: {
+      text: "Column Chart",
+      fontFamily: "Verdana",
+      fontSize: 25,
+      fontWeight: "normal",
+    },
+    animationEnabled: true,
+    legend: {
+      verticalAlign: "bottom",
+      horizontalAlign: "center"
+    },
+    theme: "theme2",
+    data: [
+
+      {
+        indexLabelFontSize: 15,
+        indexLabelFontFamily: "Monospace",
+        indexLabelFontColor: "darkgrey",
+        indexLabelLineColor: "darkgrey",
+        indexLabelPlacement: "outside",
+        type: "column",
+        showInLegend: false,
+        legendMarkerColor: "grey",
+        dataPoints: values
+      }
+    ]
+  });
+
+  chart.render();
+}
+</script>
+</html>
 
 {% endblock  %}
 {% block js %} 

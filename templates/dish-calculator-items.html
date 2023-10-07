@@ -1,87 +1,77 @@
 {% extends 'base.html' %}
 {% block css %}{% endblock %}
 {% block content %}
-<div class="content-body" style="min-height: 1113px;">
-    <div class="container-fluid">
-        <div class="page-titles">
-			<ol class="breadcrumb">
-				<li class="breadcrumb-item"><a href="javascript:void(0)">Dish Calculator Items</a></li>
-				<li class="breadcrumb-item active"><a href="javascript:void(0)">Table</a></li>
-			</ol>
-        </div>
-        <div class="row">
-			<div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h4 class="card-title">Dish Calculator Items</h4>
-						<div class="">
-						   <!-- <a href="{% url 'add_ingredient' %}"><button type="submit" class="btn btn-primary">Add New Item</button></a> -->
-						   <a href="{% url 'add_dish' %}"><button type="submit" class="btn btn-primary">Add New Item</button></a>
-						</div>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <div id="example5_wrapper" class="dataTables_wrapper no-footer">
-                                <table id="example5" class="display min-w850 dataTable no-footer" role="grid" aria-describedby="example5_info">
-                                <thead>
-                                    <tr style="text-align:center;" role="row">
-                                        <th class="sorting_asc" tabindex="0" aria-controls="example5" rowspan="1" colspan="1" aria-sort="ascending" aria-label="ID: activate to sort column descending" style="width: 16px;">ID</th>
-                                        <th class="sorting" tabindex="0" aria-controls="example5" rowspan="1" colspan="1" aria-label="Ingridients Name: activate to sort column ascending" style="width: 129.812px;">Ingridients Name</th>
-                                        <th class="sorting" tabindex="0" aria-controls="example5" rowspan="1" colspan="1" aria-label="Quantity: activate to sort column ascending" style="width: 64.8906px;">Quantity</th>
-                                        <th class="sorting" tabindex="0" aria-controls="example5" rowspan="1" colspan="1" aria-label="Oil: activate to sort column ascending" style="width: 21.3438px;">PRAL</th>
-                                        <th class="sorting" tabindex="0" aria-controls="example5" rowspan="1" colspan="1" aria-label="GL: activate to sort column ascending" style="width: 22.2188px;">Oil</th>
-                                        <th class="sorting" tabindex="0" aria-controls="example5" rowspan="1" colspan="1" aria-label="Useble Cals: activate to sort column ascending" style="width: 90.7188px;">Glycemic load</th>
-                                        <th class="sorting" tabindex="0" aria-controls="example5" rowspan="1" colspan="1" aria-label="AAF adj Prot: activate to sort column ascending" style="width: 96.8906px;">Calories</th>
-                                        <th class="sorting" tabindex="0" aria-controls="example5" rowspan="1" colspan="1" aria-label="CarbsNet of TDF: activate to sort column ascending" style="width: 126.234px;">AAF adj Prot</th>
-                                        <th class="sorting" tabindex="0" aria-controls="example5" rowspan="1" colspan="1" aria-label="Total Fat: activate to sort column ascending" style="width: 65.4844px;">Carbohydrates</th>
-                                        <th class="sorting" tabindex="0" aria-controls="example5" rowspan="1" colspan="1" aria-label="TDF: activate to sort column ascending" style="width: 31.1094px;">Total Fat</th>
-                                        <th class="sorting" tabindex="0" aria-controls="example5" rowspan="1" colspan="1" aria-label="Sodium: activate to sort column ascending" style="width: 58.6719px;">TDF</th>
-                                        <th class="sorting" tabindex="0" aria-controls="example5" rowspan="1" colspan="1" aria-label="Sodium: activate to sort column ascending" style="width: 58.6719px;">Sodium</th>
-                                        <th class="sorting" tabindex="0" aria-controls="example5" rowspan="1" colspan="1" aria-label="Potassium: activate to sort column ascending" style="width: 80.9219px;">Potassium</th>
-                                        <th class="sorting" tabindex="0" aria-controls="example5" rowspan="1" colspan="1" aria-label="Phosphorus: activate to sort column ascending" style="width: 93.3438px;">Phosphorus</th>
-                                        <th class="sorting" tabindex="0" aria-controls="example5" rowspan="1" colspan="1" aria-label="Calcium: activate to sort column ascending" style="width: 62.25px;">Calcium</th>
-                                        <th class="sorting" tabindex="0" aria-controls="example5" rowspan="1" colspan="1" aria-label="Magnecium: activate to sort column ascending" style="width: 88.0156px;">Magnecium</th>
-                                        <th class="sorting" tabindex="0" aria-controls="example5" rowspan="1" colspan="1" aria-label="Total EAA: activate to sort column ascending" style="width: 75.2656px;">Total EAA</th>
-                                        <th class="sorting" tabindex="0" aria-controls="example5" rowspan="1" colspan="1" aria-label="Lysine: activate to sort column ascending" style="width: 50.0938px;">Lysine</th>
-                                        <th class="sorting" tabindex="0" aria-controls="example5" rowspan="1" colspan="1" aria-label="Gross Prot-ein: activate to sort column ascending" style="width: 111.141px;">Gross Prot-ein</th>
-                                        <th class="sorting" tabindex="0" aria-controls="example5" rowspan="1" colspan="1" aria-label="Free Sugar: activate to sort column ascending" style="width: 83.5938px;">Free Sugar</th></tr>
-                                </thead>
-                                <tbody>
+
+        <!--**********************************
+            Content body start
+        ***********************************-->
+        <div class="content-body">
+            <div class="container-fluid">
+                <div class="page-titles">
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item"><a href="javascript:void(0)">Dish Calculator Items</a></li>
+						<li class="breadcrumb-item active"><a href="javascript:void(0)">Table</a></li>
+					</ol>
+                </div>
+                <!-- row -->
+
+
+                <div class="row">
+					<div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">Dish Calculator Items</h4>
+								<div class="">
+								   <a href="{% url 'add_dish_calculator' %}"><button type="submit" class="btn btn-primary">Add New Item</button></a>
+								</div>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table id="example5" class="display min-w850">
+                                        <thead>
+                                            <tr style="text-align:left;">
+                                                <th>ID</th>
+                                                <th>Item Name</th>
+                                                <th>Sub Name</th>
+                                                <th>Type of Meal</th>
+                                                <th>Type of Food</th>
+                                                <th>Ingridients</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
                                     
                                     
-                                    {% for dish in dishes %}
-                                    <tr>
-                                        <td>{{dish.id}}</td>
-                                        <td>{{dish.food}}</td>
-                                        <td>{{dish.quantity}}</td>
-                                        <td>{{dish.oil}}</td>
-                                        <td>{{dish.glycemicload}}</td>
-                                        <td>{{dish.pral}}</td>
-                                        <td>{{dish.calories}}</td>
-                                        <td>{{dish.aaf_adj_prot}}</td>
-                                        <td>{{dish.carbohydtrates}}</td>
-                                        <td>{{dish.total_fat}}</td>
-                                        <td>{{dish.tdf}}</td>
-                                        <td>{{dish.sodium}}</td>
-                                        <td>{{dish.potassium}}</td>
-                                        <td>{{dish.phasphorous}}</td>
-                                        <td>{{dish.calcium}}</td>
-                                        <td>{{dish.magnecium}}</td>
-                                        <td>{{dish.total_eaa}}</td>
-                                        <td>{{dish.lysine}}</td>
-                                        <td>{{dish.gross_protine}}</td>
-                                        <td>{{dish.free_suger}}</td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
+                                            {% for dish in dishes %}
+                                            <tr>
+                                               
+                                                <td>{{dish.id}}</td>
+                                                <td>{{dish.item.item_name}}</td>
+                                                <td>{{dish.item.sub_name}}</td>
+                                                <td>{{dish.item.type_of_meal}}</td>
+                                                <td>{{dish.item.type_of_food}}</td>
+                                                <td>{{dish.ingridient_name}}</td>
+                                                <td>
+                                                <div class="">
+                                                    <a href="{% url 'recipe_calculator' id=dish.id %}" class="btn btn-primary shadow btn-xs sharp mr-1"><i class="fa fa-eye"></i></a>
+                                                </div>
+                                            </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
+				</div>
             </div>
-		</div>
-    </div>
-</div>
+        </div>
+        <!--**********************************
+            Content body end
+        ***********************************-->
+
 
 {% endblock  %}
 {% block js %} 

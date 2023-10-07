@@ -1,0 +1,225 @@
+{% extends 'base.html' %}
+{% block css %}{% endblock %}
+
+{% block content %}
+        <div class="content-body">
+            <div class="container-fluid">
+                <div class="page-titles">
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item"><a href="javascript:void(0)">Form</a></li>
+						<li class="breadcrumb-item active"><a href="javascript:void(0)">Add Dish</a></li>
+					</ol>
+                </div>
+                {% if messages %}
+                {% for message in messages %}
+                    <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}" role="alert">{{ message }}</div>
+                {% endfor %}
+                {% endif %}
+                {% if message %}
+                    <div class="alert alert-{{tag}} text-center " role="alert">{{ message }}</div>
+                {% endif %}
+                <!-- row -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">Dish Caluculator</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="row form-material">
+                                    <div class="col-xl-12 col-xxl-12 col-md-12 mb-3">
+                                        <div class="form-group">
+                                          <form name="add_name" action='{% url 'add_recipe' %}' method="post" id="add_name">
+                                            {% csrf_token %}
+                                            <table class="table table-bordered table-hover" id="dynamic_field">
+                                              <tbody><tr>
+                                               <td>
+												<label style="color:black;">Item Name</label>
+												    <input type="text" name="item-name" placeholder="Enter Sub Name" class="form-control name_list text-black" Required>
+												</td>
+                                                <td>
+												<label style="color:black;">Sub Name</label>
+												    <input type="text" name="sub-name" placeholder="Enter Sub Name" class="form-control name_list" text-black>
+												</td>
+                                                </td>
+                                                <td>
+                                                    <label style="color:black;">Quantity (gms)</label>
+                                                    <div class="row">
+                                                    <div class="col-md-6">
+                                                        <select class="form-control text-black" name="qty-type">
+                                                            <option>select</option>
+                                                            <option>Ml</option>
+                                                            <option>Grms</option>
+                                                            <option>Quntity</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <input type="text" name="qty" placeholder="120" class="form-control name_list text-black">
+                                                    </div>
+                                                    </div> 
+                                                </td>
+												<td>
+												<label style="color:black;">Quantity Help</label>
+												  <input type="text" name="qty-help" placeholder="Enter Quantity 120" class="form-control name_list text-black" Required>
+												</td>
+                                              </tr>
+                                              <tr>
+                                                <td>
+                                                 <label style="color:black;">Type of Meal</label>
+                                                     <select class="form-control text-black" name="meal-type">
+                                                         <option>select...</option>
+                                                         <option>BreakFast</option>
+                                                         <option>Lunch</option>
+                                                         <option>Snacks</option>
+                                                         <option>Dinner</option>
+                                                       </select>
+                                                 </td>
+                                                 <td>
+                                                 <label style="color:black;">Type of Food</label>
+                                                 <select class="form-control text-black" name="food-type">
+                                                     <option>select...</option>
+                                                     <option>Veg</option>
+                                                     <option>Egg</option>
+                                                     <option>Non-Veg</option>
+                                                   </select>
+                                                 </td>
+                                                 {% comment %} <td>
+                                                     <label style="color:black;">Health Conditions</label>
+                                                       <select class="form-control text-black" name="health-condition">
+                                                         <option>Anxiety</option>
+                                                         <option>Asthma</option>
+                                                         <option>Chest pain</option>
+                                                         <option>Deafblindness</option>
+                                                         <option>Dehydration</option>
+                                                         <option>Diabetes</option>
+                                                         <option>Migraine</option>
+                                                       </select>
+                                                     </div>
+                                                 </td> {% endcomment %}
+                                              </tr>
+                                              <tr>
+                                                <td>
+												  <label style="color:black;">Ingridient Name</label>
+												  <input type="text" name="ingridient-name" placeholder="Enter Ingridient Name" class="form-control name_list text-black" Required>
+												 </td>
+                                                 <td>
+                                                    <label style="color:black;">Ingridient Quantity</label>
+                                                    <div class="row">
+                                                     <div class="col-md-6">
+                                                    <select class="form-control text-black" name="ingridient-qty-type">
+                                                      <option>select</option>
+                                                      <option>Ml</option>
+                                                      <option>Grms</option>
+                                                      <option>Quntity</option>
+                                                    </select>
+                                                    </div>
+                                                     <div class="col-md-6">
+                                                     <input type="text" name="ingridient-qty" placeholder="120" class="form-control name_list text-black">
+                                                    </div>
+                                                    </div>
+                                                </td>
+												<td>
+												  <label style="color:black;">Protein</label>
+                                                  <input type="text" name="Sugars[]" placeholder="Enter Protein" class="form-control name_list text-black"/>
+											    </td>
+												 <td>
+												  <label style="color:black;">Calories</label>
+												  <input type="text" name="calories" placeholder="Enter Calories" class="form-control name_list text-black">
+												 </td>
+                                              </tr>
+											  <tr>
+                                               
+                                                <td>
+												  <label style="color:black;">Fat</label>
+												  <input type="text" name="fat" placeholder="Enter Fat" class="form-control name_list text-black">
+											    </td>
+												<td>
+												  <label style="color:black;">carps</label>
+												  <input type="text" name="carps" placeholder="Enter carps" class="form-control name_list text-black">
+											    </td>
+											 <td>
+												  <label style="color:black;">Sugars</label>
+												  <input type="text" name="sugars" placeholder="Enter Sugars" class="form-control name_list text-black">
+												 </td>
+                                                <td>
+												  <label style="color:black;">Sodium</label>
+												  <input type="text" name="sodium" placeholder="Enter Sodium" class="form-control name_list text-black">
+											    </td>
+                                              </tr>
+											  <tr>
+                                               
+												<td>
+												  <label style="color:black;">Fiber</label>
+												  <input type="text" name="fiber" placeholder="Enter Fiber" class="form-control name_list text-black">
+											    </td>
+                                              </tr>
+											  
+                                            </tbody></table>
+											
+                                            <button type="submit" class="btn btn-success">Submit</button>
+											<button type="button" name="add" id="add" class="btn btn-primary">Add New Ingridient</button>
+                                          </form>
+                                        </div>
+                                      </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+{% endblock  %}
+{% block js %} 
+    <!-- Pickdate -->
+    <script src="/static/js/plugins-init/pickadate-init.js"></script>
+    <script>
+        $(document).ready(function(){
+
+        var i = 1;
+        var length;
+        //var addamount = 0;
+        var addamount = 700;
+
+        $("#add").click(function(){
+            addamount += 700;
+            console.log('amount: ' + addamount);
+            i++;
+            var newRow = '<tr id="row' + i + '">' +
+                '<td><h4 style="margin-top:50px;">item:2</h4></td>' +
+                '</tr>' +
+                '<tr id="row' + i + '">' +
+                '<td><label>Ingridient Name</label><input type="text" name="ingridient-name" placeholder="Enter Ingridient Name" class="form-control name_list" required/></td>' +
+                '<td><label>Ingridient Quantity</label><div class="row"><div class="col-md-6"><select class="form-control" name="ingridient-qty-type"><option>select</option><option>Ml</option><option>Grms</option><option>Quntity</option></select></div><div class="col-md-6"><input type="text" name="ingridient-qty" placeholder="120" class="form-control name_list"></div></div></td>' +
+                '<td><label>Protein</label><input type="number" name="protein" placeholder="Enter Protein" class="form-control name_list"/></td>' +
+                '<td><label>Calories</label><input type="number" name="calories" placeholder="Enter Calories" class="form-control name_list" /></td>' +
+                '</tr>' +
+                '<tr id="row' + i + '">' +
+                '<td><label>Fat</label><input type="number" name="fat" placeholder="Enter Fat" class="form-control name_list"/></td>' +
+                '<td><label>carps</label><input type="number" name="carps" placeholder="Enter carps" class="form-control name_list"/></td>' +
+                '<td><label>Sugars</label><input type="number" name="sugars" placeholder="Enter Sugars" class="form-control name_list" /></td>' +
+                '<td><label>Sodium</label><input type="number" name="sodium" placeholder="Enter Sodium" class="form-control name_list"/></td>' +
+                '</tr>' +
+                '<tr id="row' + i + '">' +
+                '<td><label>Fiber</label><input type="number" name="fiber" placeholder="Enter Fiber" class="form-control name_list"/></td>' +
+                '<td><button type="button" name="remove" id="' + i + '" class="btn btn-danger btn_remove">X</button></td>' +
+                '</tr>';
+        
+            $('#dynamic_field').append(newRow);
+        });
+        
+
+        $(document).on('click', '.btn_remove', function(){  
+        addamount -= 700;
+        console.log('amount: ' + addamount);
+
+        //  <!-- var rowIndex = $('#dynamic_field').find('tr').length;	 -->
+        //   <!-- addamount -= (700 * rowIndex); -->
+        //   <!-- console.log(addamount); -->
+        
+        var button_id = $(this).attr("id");     
+        $('#row'+button_id+'').remove();  
+        });
+
+        });
+   </script>
+   {% endblock  %}

@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% block css %}{% endblock %}
+{% block content %}
+
+        <!--**********************************
+            Content body start
+        ***********************************-->
+        <div class="content-body">
+            <div class="container-fluid">
+                <div class="page-titles">
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item"><a href="javascript:void(0)">Form</a></li>
+						<li class="breadcrumb-item active"><a href="javascript:void(0)">Add Ingredient</a></li>
+					</ol>
+                    {{message}}
+                </div>
+                <!-- row -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">Add Ingredient</h4>
+                            </div>
+                            <div class="card-body">
+                                <form action="{% url 'add_ingredient' %}" method="POST">
+                                {% csrf_token %}
+                                <div class="row form-material">
+                                    <div class="col-sm-12 col-lg-3 col-md-3 mb-3">
+                                        <label style= "color: black;">Ingridient Name</label>
+                                        <input type="text" name="ingridient_name" placeholder="Enter Ingridient Name" class="form-control name_list text-black" required>
+                                    </div>
+                                    <div class="col-sm-12 col-lg-3 col-md-3 mb-3">
+                                      	<label style= "color: black;">Ingridient Quantity</label>
+									  <div class="row d-flex">
+									   <div class="col-md-6">
+										  <select class="form-control text-black" name="ingridient_type" >
+											<option>select</option>
+											<option>Ml</option>
+											<option>Grms</option>
+											<option>Quntity</option>
+										  </select>
+									  </div>
+									   <div class="col-md-6">
+									     <input type="text" name="ingridient_quantity" placeholder="qty." class="form-control name_list text-black">
+									  </div>
+								  </div>
+                                    </div>
+									 <div class="col-sm-12 col-lg-3 col-md-3 mb-3">
+                                        <label style= "color: black;">Protein</label>
+									  <input type="text" name="protein" placeholder="Enter Protein" class="form-control name_list text-black" required>
+                                    </div>
+                                    <div class="col-sm-12 col-lg-3 col-md-3 mb-3">
+                                       <label style= "color: black;">Calories</label>
+									  <input type="text" name="calories" placeholder="Enter Calories" class="form-control name_list text-black" required>
+                                    </div>
+                                    <div class="col-sm-12 col-lg-3 col-md-3 mb-3">
+                                        <label style="color:black;">Fat</label>
+                                      <input type="text" name="fat" placeholder="Enter Fat" class="form-control name_list text-black" required>
+                                    </div>
+                                    <div class="col-sm-12 col-lg-3 col-md-3 mb-3">
+                                        <label style="color:black;">carbs</label>
+                                      <input type="text" name="carbs" placeholder="Enter carbs" class="form-control name_list text-black" required>
+                                    </div>
+                                    <div class="col-sm-12 col-lg-3 col-md-3 mb-3">
+                                        <label style="color: black;">Sugars</label>
+                                        <input type="text" name="sugars" placeholder="Enter Sugars" class="form-control name_list text-black" required>
+                                    </div>
+                                    <div class="col-sm-12 col-lg-3 col-md-3 mb-3">
+                                        <label style="color:black;">Sodium</label>
+                                      <input type="text" name="sodium" placeholder="Enter Sodium" class="form-control name_list text-black" required>
+                                    </div>
+                                    <div class="col-sm-12 col-lg-3 col-md-3 mb-3">
+                                        <label style="color:black;">Fiber</label>
+                                      <input type="text" name="fiber" placeholder="Enter Fiber" class="form-control name_list text-black" required>
+                                    </div>                 
+									<div class="col-xl-12 col-xxl-12 col-md-12 mt-3">
+                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                    </div>
+								
+                                </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--**********************************
+            Content body end
+        ***********************************-->
+
+
+{% endblock  %}
+{% block js %} 
+{% endblock  %}

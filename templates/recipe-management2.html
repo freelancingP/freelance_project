@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% block css %}{% endblock %}
+
+{% block content %}
+
+        <!--**********************************
+            Content body start
+        ***********************************-->
+        <div class="content-body">
+            <div class="container-fluid">
+                <div class="page-titles">
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item"><a href="javascript:void(0)">Layout</a></li>
+						<li class="breadcrumb-item active"><a href="javascript:void(0)">Recipe Management</a></li>
+					</ol>
+                </div>
+				<div class="row">
+					<div class="col-xl-9 col-xxl-12">
+						<div class="row">	
+							<div class="col-xl-12">
+								<div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">Recipe Management</h4>
+                            </div>
+                            <div class="card-body">
+
+							<div class="row">
+							<div class="col-md-8">
+                                <ul class="nav nav-pills justify-content-start mb-4">
+                                    <li class="nav-item">
+                                        <a href="{% url 'recipe_management' %}?meal_type=breakfast" class="nav-link active" data-toggle="tab" aria-expanded="true">Breakfast</a>
+                                    </li>                                    
+                                    <li class="nav-item">
+                                        <a href="{% url 'recipe_management' %}?meal_type=lunch" class="nav-link" data-toggle="tab" aria-expanded="false">Lunch</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{% url 'recipe_management' %}?meal_type=evening_snacks" class="nav-link" data-toggle="tab" aria-expanded="flase">Snaks</a>
+                                    </li>
+									 <li class="nav-item">
+                                        <a href="{% url 'recipe_management' %}?meal_type=dinner" class="nav-link" data-toggle="tab" aria-expanded="flase">Dinner</a>
+                                    </li>
+                                </ul>
+								</div>
+
+                                <div class="tab-content">
+                                    <div id="navpills2-1" class="tab-pane active">
+                                        <div class="row">
+
+
+											{% for val in data %}
+
+                                            <div class="col-md-6"> 
+											<div class="media border-bottom mb-3 pb-3 d-lg-flex d-block menu-list">
+											<a href=""><img class="rounded mr-3 mb-md-0 mb-3" src="/static/images/meatbal_th.png" alt="" width="120"></a>
+												<div class="media-body col-lg-8 pl-0">
+												<h6 class="fs-16 font-w600"><a href="" class="text-black">{{val.food}}</a></h6>
+												<p class="fs-14">Lorem ipsum dolor sit ametconsectetur adipiscing laboris nisi ut aliquip</p>
+												<div class="d-flex flex-wrap align-items-center">
+													<ul class="d-flex flex-wrap mb-sm-0 mb-2">
+													
+											<!-- <li class="mb-2 text-nowrap"><i class="las la-calendar-alt scale5 mr-3"></i><span class="fs-14 text-black  font-w500">Breakfast (Monday, Tuesday)</span></li> -->
+											
+														<li class="mb-2 mr-4 text-nowrap"><i class="las la-prescription-bottle scale5 mr-2"></i><span class="text-nowrap fs-14 text-black font-w500">{{val.quantity}}   </span></li>
+														<li class="mb-2 mr-4 text-nowrap"><i class="las la-clock scale5 mr-2"></i><span class="text-nowrap fs-14 text-black font-w500">4-6 mins</span></li>
+														
+													</ul>
+														<a href="{% url 'recipe_details' recipe_id=val.id %}"><button type="button" class="btn light btn-primary">View Recipe</button></a>
+												</div>
+											
+											</div>
+										</div>
+                                    </div>
+
+									{% endfor %}
+
+
+
+                                            
+                            </div>
+                        </div>
+						
+						</div>
+					</div>
+				
+				</div>
+            </div>
+        </div>
+        <!--**********************************
+            Content body end
+        ***********************************-->
+{% endblock  %}
+{% block js %} 
+{% endblock  %}

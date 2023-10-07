@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% block css %}{% endblock %}
+{% block content %}
+
+        <!--**********************************
+            Content body start
+        ***********************************-->
+        <div class="content-body">
+            <div class="container-fluid">
+                <div class="page-titles">
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item"><a href="javascript:void(0)">Recipe</a></li>
+						<li class="breadcrumb-item active"><a href="javascript:void(0)">Table</a></li>
+					</ol>
+                </div>
+                <!-- row -->
+
+
+                <div class="row">
+					<div class="col-lg-12">
+                        <div class="card">
+                            
+						<div class="row card-body text-black"> 
+								   <div class="col-lg-2 text-center"> <span>Recipe Name:</span> <h4 class="card-title"><span>{{ recipe.item_name }}</span> </h4></div>
+								   <div class="col-lg-2 text-center"> <span>Sub Name:</span><h4 class="card-title">{{ recipe.sub_name }}</h4></div>
+								   <div class="col-lg-2 text-center"> <span>Recipe Grams :</span> <h4 class="card-title">{{ recipe.quantity }}</h4></div>
+								   <div class="col-lg-2 text-center"> <span>Quantity Help :</span> <h4 class="card-title">{{ recipe.quantity_help }} </h4></div>
+								   <div class="col-lg-2 text-center"> <span>Type of Meal :</span>  <h4 class="card-title">{{ recipe.type_of_meal }} </h4></div>
+								   <div class="col-lg-2 text-center"> <span>Type of Food :</span>  <h4 class="card-title">{{ recipe.type_of_food }} </h4></div>
+                             
+						</div>
+                                
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-responsive-sm text-black">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Ingridient Name</th>
+                                                <th>Ingridient Quantity</th>
+                                                <th>Protein</th>
+                                                <th>Calories</th>
+                                                <th>Fat</th>
+                                                <th>carbs</th>
+                                                <th>Sugars</th>
+                                                <th>Sodium</th>
+                                                <th>Fiber</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for ingridient in ingridients%}
+                                            <tr>
+                                                <th>{{ingridient.id}}</th>
+												<td>{{ingridient.ingridient_name}}</td>
+												<td>{{ingridient.ingridient_quantity}}</td>
+												<td>{{ingridient.protein}}</td>
+												<td>{{ingridient.calories}}</td>
+												<td>{{ingridient.fat}}</td>
+												<td>{{ingridient.carps}}</td>
+												<td>{{ingridient.sugars}}</td>
+												<td>{{ingridient.sodium}}</td>
+												<td>{{ingridient.fiber}}</td>
+                                                <!-- <td><span class="badge badge-primary light">Bajra</span></td> -->
+                                            </tr>
+                                            {% endfor %}
+                                            
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /# card -->
+                    </div>
+				</div>
+            </div>
+        </div>
+        <!--**********************************
+            Content body end
+        ***********************************-->
+
+
+{% endblock  %}
+{% block js %} 
+{% endblock  %}

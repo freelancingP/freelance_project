@@ -371,8 +371,6 @@ img {
   vertical-align: middle;
   border-style: none; }
 
-  
-
 svg {
   overflow: hidden;
   vertical-align: middle; }
@@ -4005,9 +4003,6 @@ input[type="button"].btn-block {
       border-radius: 0;
       margin-bottom: -1px; }
 
-      .breadcrumbs{
-        display: flex;
-      }
 .breadcrumb {
   display: flex;
   flex-wrap: wrap;
