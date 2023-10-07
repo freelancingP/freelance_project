@@ -275,11 +275,17 @@ def recipe_calculator(request, id):
 @custom_login_required
 def customers_detail(request,user_id):
     user = AdminUser.objects.get(id = request.session["user"])
-    data = UserSnacks.objects.get(customer = user_id)
-    return render(request,"view-customer-detail.html",{
-        "user":user,
+    try:
+        data = UserSnacks.objects.get(customer=user_id)
+        print(data, "=========")
+    except UserSnacks.DoesNotExist:
+        data = None  # Set data to None if UserSnacks record is not found
+    
+    return render(request, "view-customer-detail.html", {
+        "user": user,
         "data":data
-    })
+})
+    
 @custom_login_required
 def view_more(request):
     user = AdminUser.objects.get(id = request.session["user"])
@@ -515,14 +521,15 @@ def add_ingredient(request):
         print(data,"==================")
         
         data.save()
-        return render(request,"add_ingredient.html",{
+        return render(request,"add-ingredient.html",{
             "user":user,
             "tag":"success",
             "message": "Ingridient Added Successfully."
         })
     return render(request,"add_ingredient.html",{
         "user":user,
-    })
+})
+
 
 def ingredients_items(request):
     user = AdminUser.objects.get(id = request.session["user"])

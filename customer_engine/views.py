@@ -314,60 +314,36 @@ class UpdateUserDetailViews(APIView):
             return Response(response_data)
       
 
-
 class LoginAPIView(APIView):
-    
+     
     def post(self, request):
-        try:
-            serializer_class = SendOtpSerializer
-            serializer = serializer_class(data=request.data)
+        # try:
+        serializer_class = SendOtpSerializer
+        serializer = serializer_class(data=request.data) 
 
-            if serializer.is_valid():
-                validated_data = serializer.validated_data
+        if serializer.is_valid():
+            validated_data = serializer.validated_data
 
-                contact_number = validated_data.get("country_code") + validated_data.get("phone_number")
-                email = validated_data.get("email")
-                user_otp = UserOTP.objects.filter(customer__contact_number=contact_number, customer__email=email).last()
+            contact_number = validated_data.get("country_code") + validated_data.get("phone_number")
+            email = validated_data.get("email")
+            user_otp = UserOTP.objects.filter(customer__contact_number=contact_number, customer__email=email).last()
 
-                if user_otp:
-                    user_otp.otp = ''.join(random.choices("0123456789", k=6))
-                    user_otp.save()
-                
-                    subject = 'Your OTP for Login'
-                    message = f'Your OTP is: {user_otp.otp}'
-                    from_email = settings.EMAIL_HOST_USER
-                    recipient_list = [email]
+            if user_otp:
+                user_otp.otp = ''.join(random.choices("0123456789", k=6))
+                user_otp.save()
+                                
+                subject = 'Your OTP'
+                message = f'Your OTP is: {user_otp.otp}'
+                from_email = settings.EMAIL_HOST_USER
+                recipient_list = [email]
+                try:
                     send_mail(subject, message, from_email, recipient_list)
-
-                    status_code = status.HTTP_200_OK
-                    message = "Success"
-                    data = {'otp': user_otp.otp}
-                    response = JsonResponse(
-                        status=status_code,
-                        msg=message,
-                        data=data,
-                        success=True,
-                        error={},
-                        count=len(data),
-                    )
-                    return response
-
-                new_customer = Customer(username=validated_data['email'], email=validated_data['email'], contact_number=contact_number)
-                new_customer.save()
-
-                otp = ''.join(random.choices("0123456789", k=6))
-                new_user_otp = UserOTP(customer_id=new_customer.id, otp=otp)
-                new_user_otp.save()
-                
-                # subject = 'Your OTP for Login'
-                # message = f'Your OTP is: {new_user_otp.otp}'
-                # from_email = settings.EMAIL_HOST_USER
-                # recipient_list = [email]
-                # send_mail(subject, message, from_email, recipient_list)
-
+                except Exception as e:
+                    print(f"Error sending email: {e}")          
+                                       
                 status_code = status.HTTP_200_OK
                 message = "Success"
-                data = {'otp': new_user_otp.otp}
+                data = {'otp': user_otp.otp}
                 response = JsonResponse(
                     status=status_code,
                     msg=message,
@@ -377,34 +353,63 @@ class LoginAPIView(APIView):
                     count=len(data),
                 )
                 return response
-            
-            status_code = status.HTTP_400_BAD_REQUEST
-            data = ""
-            response = JsonResponse(
-                status=status_code,
-                data=data,
-                success=False,
-                error=serializer.errors,
-                count=len(data),
-            )
-            return response
-        except Exception as e:
-            logger = logging.getLogger(__name__)
-            logger.exception("An error occurred: %s", str(e))
 
-            status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
-            message = "Internal Server Error"
-            data = ""
+            new_customer = Customer(username=validated_data['email'], email=validated_data['email'], contact_number=contact_number)
+            new_customer.save()
+
+            otp = ''.join(random.choices("0123456789", k=6))
+            new_user_otp = UserOTP(customer_id=new_customer.id, otp=otp)
+            new_user_otp.save()
+            
+            
+            subject = 'Your OTP'
+            message = f'Your OTP is: {new_user_otp.otp}'
+            from_email = settings.EMAIL_HOST_USER
+            recipient_list = [email]
+            try:
+                send_mail(subject, message, from_email, recipient_list)
+            except Exception as e:
+                print(f"Error sending email: {e}")
+                
+            status_code = status.HTTP_200_OK
+            message = "Success"
+            data = {'otp': new_user_otp.otp}
             response = JsonResponse(
                 status=status_code,
                 msg=message,
                 data=data,
-                success=False,
-                error=str(e),  
+                success=True,
+                error={},
                 count=len(data),
             )
             return response
+        
+        status_code = status.HTTP_400_BAD_REQUEST
+        data = ""
+        response = JsonResponse(
+            status=status_code,
+            data=data,
+            success=False,
+            error=serializer.errors,
+            count=len(data),
+        )
+        return response
+        # except Exception as e:
+        #     logger = logging.getLogger(__name__)
+        #     logger.exception("An error occurred: %s", str(e))
 
+        #     status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+        #     message = "Internal Server Error"
+        #     data = ""
+        #     response = JsonResponse(
+        #         status=status_code,
+        #         msg=message,
+        #         data=data,
+        #         success=False,
+        #         error=str(e),  
+        #         count=len(data),
+        #     )
+        #     return response
 
 
 def get_tokens_for_user(user):
