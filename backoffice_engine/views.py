@@ -617,7 +617,7 @@ def add_ingredient(request):
 def ingredients_items(request):
     user = AdminUser.objects.get(id = request.session["user"])
     data = DailySnacks.objects.all()
-    print(data,"*************")
+    # print(data,"*************")
     return render(request,"ingredients-items.html",{
         "user":user,
         "data":data
@@ -691,6 +691,8 @@ def add_dish_calculator(request):
             food_type = request.POST["food-type"]
             
             ingridient_name = request.POST.getlist("ingridient-name")
+            print(ingridient_name,'--')
+            
             ingridient_qty_type = request.POST.getlist("ingridient-qty-type")
             ingridient_qty = request.POST.getlist("ingridient-qty")
             protein = request.POST.getlist("protein")
@@ -705,6 +707,7 @@ def add_dish_calculator(request):
             dishes_data.save()
             
             recipe = AddRecipe.objects.get(id=dishes_data.id)
+            print(ingridient_name,"----------------")
             
             for i in range(len(ingridient_name)):
                 ingridient = AddIngridient(
@@ -720,6 +723,7 @@ def add_dish_calculator(request):
                     sodium=float(sodium[i]) if sodium[i] else None,
                     fiber=float(fiber[i]) if fiber[i] else None
                 )
+                print(ingridient,"===============")
                 ingridient.save()
             
             messages.success(request, "Dishes Successfully Added.")

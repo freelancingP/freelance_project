@@ -112,10 +112,10 @@
 							</li>
                             <li class="nav-item dropdown header-profile">
                                 <a class="nav-link" href="javascript:void(0)" role="button" data-toggle="dropdown">
-                                    <img src="{% static 'images/profile/17.jpg' %}" width="20" alt=""/>
+                                    <img src="{{user.image_url}}" width="20" alt=""/>
 									<div class="header-info">
-										<span class="text-black"><strong>Peter Parkur</strong></span>
-										<p class="fs-12 mb-0">Super Admin</p>
+										<span class="text-black"><strong>{{user.name}}</strong></span>
+										<p class="fs-12 mb-0">{{user.user_type}}</p>
 									</div>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right">
@@ -422,7 +422,7 @@
       addamount += 700;
       console.log('amount: ' + addamount);
     i++;
-       $('#dynamic_field').append('<tr id="row'+i+'"><td><h4 style="margin-top:50px;">item:2</h4></td></tr>','<tr id="row'+i+'"><td><label>Ingridient Name</label><input type="text" name="name[]" placeholder="Enter Ingridient Name" class="form-control name_list" /></td><td><label>Ingridient Quantity</label><div class="row"><div class="col-md-6"><select class="form-control"><option>select</option><option>Grms</option><option>Quntity</option></select></div><div class="col-md-6"><input type="text" name="name[]" placeholder="120" class="form-control name_list"></div></div></td><td><label>Protein</label><input type="text" placeholder="Enter Protein" class="form-control name_list"/></td><td><label>Calories</label><input type="text" name="name[]" placeholder="Enter Calories" class="form-control name_list" /></td></tr>','<tr id="row'+i+'"><td><label>Fat</label><input type="text" name="Sugars[]" placeholder="Enter Fat" class="form-control name_list"/></td><td><label>carbs</label><input type="text" placeholder="Enter carbs" class="form-control name_list"/></td><td><label>Sugars</label><input type="text" name="name[]" placeholder="Enter Sugars" class="form-control name_list" /></td><td><label>Sodium</label><input type="text" name="Sugars[]" placeholder="Enter Sodium" class="form-control name_list"/></td></tr>','<tr id="row'+i+'"><td><label>Fiber</label><input type="text" name="Sugars[]" placeholder="Enter Fiber" class="form-control name_list"/></td><td><button type="button" name="remove" id="'+i+'" class="btn btn-danger btn_remove">X</button></td></tr>');  
+       $('#dynamic_field').append('<tr id="row'+i+'"><td><h4 style="margin-top:50px;">item:2</h4></td></tr>','<tr id="row'+i+'"><td><label>Ingridient Name</label><input type="text" name="ingredient-name" placeholder="Enter Ingridient Name" class="form-control name_list" /></td><td><label>Ingridient Quantity</label><div class="row"><div class="col-md-6"><select class="form-control"><option>select</option><option>Grms</option><option>Quntity</option></select></div><div class="col-md-6"><input type="text" name="qty" placeholder="120" class="form-control name_list"></div></div></td><td><label>Protein</label><input type="text" name="protein" placeholder="Enter Protein" class="form-control name_list"/></td><td><label>Calories</label><input type="text" name="calories" placeholder="Enter Calories" class="form-control name_list" /></td></tr>','<tr id="row'+i+'"><td><label>Fat</label><input type="text" name="fat" placeholder="Enter Fat" class="form-control name_list"/></td><td><label>carbs</label><input type="text" name="carbs" placeholder="Enter carbs" class="form-control name_list"/></td><td><label>Sugars</label><input type="text" name="sugars" placeholder="Enter Sugars" class="form-control name_list" /></td><td><label>Sodium</label><input type="text" name="sodium" placeholder="Enter Sodium" class="form-control name_list"/></td></tr>','<tr id="row'+i+'"><td><label>Fiber</label><input type="text" name="fiber" placeholder="Enter Fiber" class="form-control name_list"/></td><td><button type="button" name="remove" id="'+i+'" class="btn btn-danger btn_remove">X</button></td></tr>');  
      });
  
    $(document).on('click', '.btn_remove', function(){  

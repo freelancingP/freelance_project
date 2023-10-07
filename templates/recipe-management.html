@@ -333,7 +333,7 @@ th {
 								</div>
 								<div class="popup" id="popup">
                                     <button id="closePopup" class="close-button">X</button>
-                                    <h2>Select a Category and Upload an Excel File</h2>
+                                    <h2>Select a Category and Upload an CSV File</h2>
                                     <form action="{% url 'upload_csv' %}" method="post" enctype="multipart/form-data">
                                         {% csrf_token %}
                                         <label for="category">Select Category:</label>
@@ -458,8 +458,7 @@ th {
 													{% for d in data %}
                                                     {% if d.meal_type == 'lunch' %}
 													<tr>
-                                                        <td>{{d.meal_type}}</td>
-														<td>{{d.food}}</td>
+                                                        <td>{{d.food}}</td>
 														<td>{{d.quantity}}</td>
 														<td>{{d.ingredients}}</td>
 														<td>{{d.veg_nonveg_egg}}</td>
@@ -527,7 +526,7 @@ th {
                                                             <th>GI (Glucose)</th>
                                                         </tr>
 														{% for d in data %}
-                                                    {% if d.meal_type == 'evening_snacks' %}
+                                                        {% if d.meal_type == 'evening_snacks' %}
 
 													<tr>
 														<td>{{d.food}}</td>
@@ -600,8 +599,7 @@ th {
                                                     {% if d.meal_type == 'dinner' %}
 
 													<tr>
-                                                        <td>{{d.meal_type}}</td>
-														<td>{{d.food}}</td>
+                                                        <td>{{d.food}}</td>
 														<td>{{d.quantity}}</td>
 														<td>{{d.ingredients}}</td>
 														<td>{{d.veg_nonveg_egg}}</td>

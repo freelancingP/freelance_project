@@ -197,11 +197,11 @@ SIMPLE_JWT = {
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.mail5016.site4now.net' 
+EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587  
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'info@fit4lifeindia.in'
-EMAIL_HOST_PASSWORD = 'Deep1k@C'
+EMAIL_HOST_USER = 'dcfitlifeindia@gmail.com'
+EMAIL_HOST_PASSWORD = 'rkhtkifqhxawydlz'
 EMAIL_DEBUG = True
 
 
