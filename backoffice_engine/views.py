@@ -368,6 +368,8 @@ def upload_csv(request):
 
 
                 # Add your logic here to save or process the 'data' list as needed
+                # messages.success(request, "CSV file uploaded and processed successfully.")
+                # return redirect("add_dish")
 
                 return HttpResponse("CSV file uploaded and processed successfully.")
             except UnicodeDecodeError as e:

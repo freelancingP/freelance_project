@@ -264,17 +264,17 @@ th {
 							<span class="nav-text">Customers</span>
 						</a>
                     </li>
-                    <li><a class="ai-icon" href="{% url 'recipe_management' %}" aria-expanded="false">
+                    {% comment %} <li><a class="ai-icon" href="{% url 'recipe_management' %}" aria-expanded="false">
 							<i class="flaticon-381-controls-3"></i>
 							<span class="nav-text">Recipe Management</span>
 						</a>
-                    </li>
+                    </li> {% endcomment %}
 					 <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
-							<i class="flaticon-381-user-3"></i>
-							<span class="nav-text">Dish Calculator</span>
-						</a>
+						<i class="flaticon-381-calculator"></i>
+						<span class="nav-text">Recipe Management</span>
+					</a>
                        <ul aria-expanded="false" class="mm-collapse mm-show" style="">
-                            <li><a href="{% url 'dish-calculator-items' %}">Recipe</a></li>
+                            <li><a href="{% url 'recipe_management' %}">Recipe</a></li>
                             <li><a href="{% url 'ingredient_items' %}">Ingredients</a></li>
                         </ul>
                     </li>
