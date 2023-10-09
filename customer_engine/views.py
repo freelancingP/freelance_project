@@ -985,7 +985,7 @@ class DailyCalorigramView(APIView):
             if meal_type:
                 all_data = DailySnacks.objects.filter(meal_type=meal_type)
             else:
-                all_data = DailySnacks.objects.filter(meal_type=meal_type)
+                all_data = DailySnacks.objects.all()
                 
             dish_ids_list = UserSnacks.objects.filter(**user_snacks_filter).values_list('dish_id', flat=True)
             data_is = DailySnacksSerializer(all_data, many=True).data
