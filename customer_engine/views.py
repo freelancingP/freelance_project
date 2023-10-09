@@ -975,123 +975,123 @@ class DailyCalorigramView(APIView):
     permission_classes=[IsAuthenticated]
 
     def get(self, request, date, *args, **kwargs):
-        try:
-            customer = request.user.id
-            meal_type = request.query_params.get('meal_type')
-            date_obj = datetime.strptime(date, "%Y-%m-%d").date() 
-            user_snacks_filter = {'customer': customer, 'updated_at__date': date_obj}
+        # try:
+        customer = request.user.id
+        meal_type = request.query_params.get('meal_type')
+        date_obj = datetime.strptime(date, "%Y-%m-%d").date() 
+        user_snacks_filter = {'customer': customer, 'updated_at__date': date_obj}
 
-            all_data = []
-            if meal_type:
-                all_data = DailySnacks.objects.filter(meal_type=meal_type)
-            else:
-                all_data = DailySnacks.objects.all()
-                
-            dish_ids_list = UserSnacks.objects.filter(**user_snacks_filter).values_list('dish_id', flat=True)
-            data_is = DailySnacksSerializer(all_data, many=True).data
+        all_data = []
+        if meal_type:
+            all_data = DailySnacks.objects.filter(meal_type=meal_type)
+        else:
+            all_data = DailySnacks.objects.all()
             
-            meal_types = ["breakfast", "lunch", "evening_snacks", "dinner"]
-            eaten_calories_breakdown = {meal_type: 0 for meal_type in meal_types}
+        dish_ids_list = UserSnacks.objects.filter(**user_snacks_filter).values_list('dish_id', flat=True)
+        data_is = DailySnacksSerializer(all_data, many=True).data
+        
+        meal_types = ["breakfast", "lunch", "evening_snacks", "dinner"]
+        eaten_calories_breakdown = {meal_type: 0 for meal_type in meal_types}
 
-            eaten_calories = 0
-            remaining_calories = 1
+        eaten_calories = 0
+        remaining_calories = 1
 
-            eaten_gl = 0
-            remaining_gl = 1
+        eaten_gl = 0
+        remaining_gl = 1
 
-            eaten_carbs = 0
-            remaining_carbs = 1 
+        eaten_carbs = 0
+        remaining_carbs = 1 
 
-            eaten_pral = 0
-            remaining_pral = 1
+        eaten_pral = 0
+        remaining_pral = 1
 
-            eaten_total_fat = 0
-            remaining_total_fat = 1
+        eaten_total_fat = 0
+        remaining_total_fat = 1
 
-            eaten_oil = 0
-            remaining_oil = 1
+        eaten_oil = 0
+        remaining_oil = 1
 
-            for item in data_is:
-                if item['id'] in dish_ids_list:
-                    meal_type = item['meal_type'].lower()
-                    eaten_calories_breakdown[meal_type] += item['cals']
+        for item in data_is:
+            if item['id'] in dish_ids_list:
+                meal_type = item['meal_type'].lower()
+                eaten_calories_breakdown[meal_type] += item['cals']
 
-                    if item['gl'] is not None:
-                        eaten_gl += item['gl']
+                if item['gl'] is not None:
+                    eaten_gl += item['gl']
 
-                    eaten_carbs += item['carbs']
-                    eaten_pral += item['pral']
-                    eaten_total_fat += item['total_fat']
-                    eaten_oil += item['oil']
+                eaten_carbs += item['carbs']
+                eaten_pral += item['pral']
+                eaten_total_fat += item['total_fat']
+                eaten_oil += item['oil']
 
-                    eaten_calories += item['cals']
-                else:
-                    remaining_calories += item['cals']
-                    remaining_gl += item['gl']
-                    remaining_carbs += item['carbs']
-                    remaining_pral += item['pral']
-                    remaining_total_fat += item['total_fat']
-                    remaining_oil += item['oil']
+                eaten_calories += item['cals']
+            else:
+                remaining_calories += item['cals'] or 0
+                remaining_gl += item['gl'] or 0
+                remaining_carbs += item['carbs'] or 0
+                remaining_pral += item['pral'] or 0
+                remaining_total_fat += item['total_fat'] or 0
+                remaining_oil += item['oil'] or 0
 
-            nutrition_value = [
-                {"label": "calories", "value": eaten_calories, "percentage": round(eaten_calories / (eaten_calories + remaining_calories) * 100) if eaten_calories + remaining_calories > 0 else 0, "color_code": "#01BA91", "unit": "cals"},
-                {"label": 'glycemic load', "value": eaten_gl, "percentage": round(eaten_gl / (eaten_gl + remaining_gl) * 100) if eaten_gl + remaining_gl > 0 else 0, "color_code": "#00AE4D", "unit": "gl"},
-                {"label": "carbs", "value": eaten_carbs, "percentage": round(eaten_carbs / (eaten_carbs + remaining_carbs) * 100) if eaten_carbs + remaining_carbs > 0 else 0, "color_code": "#29B6C7", "unit": "carbs"},
-                {"label": "protein", "value": eaten_pral, "percentage": round(eaten_pral / (eaten_pral + remaining_pral) * 100) if eaten_pral + remaining_pral > 0 else 0, "color_code": "#98C71C", "unit": "pral"},
-                {"label": "fats", "value": eaten_total_fat, "percentage": round(eaten_total_fat / (eaten_total_fat + remaining_total_fat) * 100) if eaten_total_fat + remaining_total_fat > 0 else 0, "color_code": "#E35F11", "unit": "fats"},
-                {"label": "oil", "value": eaten_oil, "percentage": round(eaten_oil / (eaten_oil + remaining_oil) * 100) if eaten_oil + remaining_oil > 0 else 0, "color_code": "#E3B523", "unit": "oil"},
-            ]
+        nutrition_value = [
+            {"label": "calories", "value": eaten_calories, "percentage": round(eaten_calories / (eaten_calories + remaining_calories) * 100) if eaten_calories + remaining_calories > 0 else 0, "color_code": "#01BA91", "unit": "cals"},
+            {"label": 'glycemic load', "value": eaten_gl, "percentage": round(eaten_gl / (eaten_gl + remaining_gl) * 100) if eaten_gl + remaining_gl > 0 else 0, "color_code": "#00AE4D", "unit": "gl"},
+            {"label": "carbs", "value": eaten_carbs, "percentage": round(eaten_carbs / (eaten_carbs + remaining_carbs) * 100) if eaten_carbs + remaining_carbs > 0 else 0, "color_code": "#29B6C7", "unit": "carbs"},
+            {"label": "protein", "value": eaten_pral, "percentage": round(eaten_pral / (eaten_pral + remaining_pral) * 100) if eaten_pral + remaining_pral > 0 else 0, "color_code": "#98C71C", "unit": "pral"},
+            {"label": "fats", "value": eaten_total_fat, "percentage": round(eaten_total_fat / (eaten_total_fat + remaining_total_fat) * 100) if eaten_total_fat + remaining_total_fat > 0 else 0, "color_code": "#E35F11", "unit": "fats"},
+            {"label": "oil", "value": eaten_oil, "percentage": round(eaten_oil / (eaten_oil + remaining_oil) * 100) if eaten_oil + remaining_oil > 0 else 0, "color_code": "#E3B523", "unit": "oil"},
+        ]
 
-            data = {
-                'eaten_calories': eaten_calories,
-                'remaining_calories': remaining_calories,
-                'eaten_calories_breakdown': eaten_calories_breakdown,
-                'nutrition_value': nutrition_value
-            }
+        data = {
+            'eaten_calories': eaten_calories,
+            'remaining_calories': remaining_calories,
+            'eaten_calories_breakdown': eaten_calories_breakdown,
+            'nutrition_value': nutrition_value
+        }
 
-            status_code = status.HTTP_200_OK
-            message = "successful"
-            response = JsonResponse(
-                status=status_code,
-                message=message,
-                data=data,
-                success=True,
-                error={},
-                count=len(data),
-            )
-            return response
+        status_code = status.HTTP_200_OK
+        message = "successful"
+        response = JsonResponse(
+            status=status_code,
+            message=message,
+            data=data,
+            success=True,
+            error={},
+            count=len(data),
+        )
+        return response
 
-        except ValueError as ve:
-            logger = logging.getLogger(__name__)  # Get a logger instance for this module
-            logger.exception("ValueError occurred while processing the request: %s", str(ve))
+        # except ValueError as ve:
+        #     logger = logging.getLogger(__name__)  # Get a logger instance for this module
+        #     logger.exception("ValueError occurred while processing the request: %s", str(ve))
 
-            status_code = status.HTTP_400_BAD_REQUEST
-            message = "Invalid date format"
-            response = JsonResponse(
-                status=status_code,
-                message=message,
-                data=None,
-                success=False,
-                error={},
-                count=0,
-            )
-            return response
+        #     status_code = status.HTTP_400_BAD_REQUEST
+        #     message = "Invalid date format"
+        #     response = JsonResponse(
+        #         status=status_code,
+        #         message=message,
+        #         data=None,
+        #         success=False,
+        #         error={},
+        #         count=0,
+        #     )
+        #     return response
 
-        except Exception as e:
-            logger = logging.getLogger(__name__)  # Get a logger instance for this module
-            logger.exception("An error occurred while processing the request: %s", str(e))
+        # except Exception as e:
+        #     logger = logging.getLogger(__name__)  # Get a logger instance for this module
+        #     logger.exception("An error occurred while processing the request: %s", str(e))
 
-            status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
-            message = "Internal Server Error"
-            response_data = {
-                "status": status_code,
-                "message": message,
-                "data": {},
-                "success": False,
-                "error": str(e),
-                "count": 0,
-            }
-            return JsonResponse(response_data, status=status_code)
+        #     status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+        #     message = "Internal Server Error"
+        #     response_data = {
+        #         "status": status_code,
+        #         "message": message,
+        #         "data": {},
+        #         "success": False,
+        #         "error": str(e),
+        #         "count": 0,
+        #     }
+        #     return JsonResponse(response_data, status=status_code)
 
 
 
