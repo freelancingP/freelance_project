@@ -328,21 +328,7 @@ class LoginAPIView(APIView):
                 email = validated_data.get("email")
                 user_otp = UserOTP.objects.filter(customer__contact_number=contact_number, customer__email=email).last()
                 
-                if user_otp:
-                    status_code = status.HTTP_400_BAD_REQUEST
-                    message = "User already exists"
-                    data = {}
-                    response = JsonResponse(
-                        status=status_code,
-                        msg=message,
-                        data=data,
-                        success=False,
-                        error={},
-                        count=len(data),
-                    )
-                    return response
-
-
+        
                 if user_otp:
                     user_otp.otp = ''.join(random.choices("0123456789", k=6))
                     user_otp.save()
