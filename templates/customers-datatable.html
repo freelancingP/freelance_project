@@ -21,6 +21,7 @@
                                 <h4 class="card-title">Customers</h4>
                                 <a href="{% url 'add_customer' %}"> <button type="button" class="btn btn-primary">Add New Customer</button></a>
                             </div>
+                            
                             <div class="card-body">
                                 <div class="table-responsive">
                                     <table id="example5" class="display min-w850">
@@ -36,6 +37,7 @@
                                         </thead>
                                         <tbody>
                                             {% for d in data %}
+                                            {% comment %} {% if user.role != "admin" %} {% endcomment %}
                                             <tr>
                                                
                                                 <td style="text-align: left;">DCFL{{forloop.counter}}</td>
@@ -51,12 +53,14 @@
 													</div>
 												</td>												
                                             </tr>
+                                            {% comment %} {% endif %} {% endcomment %}
                                             {% endfor %}
                                             
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
+                            
                         </div>
                     </div>
 				</div>

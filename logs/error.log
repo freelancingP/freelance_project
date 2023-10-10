@@ -5896,3 +5896,529 @@ Traceback (most recent call last):
   File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/template/base.py", line 558, in invalid_block_tag
     raise self.error(
 django.template.exceptions.TemplateSyntaxError: Invalid block tag on line 487: 'endif', expected 'empty' or 'endfor'. Did you forget to register or load this tag?
+ERROR 2023-10-09 12:25:20,821 log Internal Server Error: /customers/
+Traceback (most recent call last):
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/template/base.py", line 505, in parse
+    compile_func = self.tags[command]
+KeyError: 'endblock'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/dhirendra/Documents/Task/freelance_project/customer_engine/decorators.py", line 28, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/dhirendra/Documents/Task/freelance_project/backoffice_engine/views.py", line 297, in customers
+    return render(request,"customers-datatable.html",{
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/template/loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/template/loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/template/backends/django.py", line 33, in get_template
+    return Template(self.engine.get_template(template_name), self)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/template/engine.py", line 175, in get_template
+    template, origin = self.find_template(template_name)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/template/engine.py", line 157, in find_template
+    template = loader.get_template(name, skip=skip)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/template/loaders/cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/template/loaders/base.py", line 28, in get_template
+    return Template(
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/template/base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/template/base.py", line 200, in compile_nodelist
+    return parser.parse()
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/template/base.py", line 513, in parse
+    raise self.error(token, e)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/template/base.py", line 511, in parse
+    compiled_result = compile_func(self, token)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/template/loader_tags.py", line 293, in do_extends
+    nodelist = parser.parse()
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/template/base.py", line 513, in parse
+    raise self.error(token, e)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/template/base.py", line 511, in parse
+    compiled_result = compile_func(self, token)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/template/loader_tags.py", line 232, in do_block
+    nodelist = parser.parse(("endblock",))
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/template/base.py", line 513, in parse
+    raise self.error(token, e)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/template/base.py", line 511, in parse
+    compiled_result = compile_func(self, token)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/template/defaulttags.py", line 953, in do_if
+    nodelist = parser.parse(("elif", "else", "endif"))
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/template/base.py", line 507, in parse
+    self.invalid_block_tag(token, command, parse_until)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/template/base.py", line 558, in invalid_block_tag
+    raise self.error(
+django.template.exceptions.TemplateSyntaxError: Invalid block tag on line 66: 'endblock', expected 'elif', 'else' or 'endif'. Did you forget to register or load this tag?
+ERROR 2023-10-09 13:18:37,955 log Internal Server Error: /customers/
+Traceback (most recent call last):
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/dhirendra/Documents/Task/freelance_project/customer_engine/decorators.py", line 28, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/dhirendra/Documents/Task/freelance_project/backoffice_engine/views.py", line 298, in customers
+    if user.role != "admin":
+AttributeError: 'AdminUser' object has no attribute 'role'
+ERROR 2023-10-09 13:27:55,487 log Internal Server Error: /customers/
+Traceback (most recent call last):
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/dhirendra/Documents/Task/freelance_project/customer_engine/decorators.py", line 28, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/dhirendra/Documents/Task/freelance_project/backoffice_engine/views.py", line 296, in customers
+    if user.role != "admin":
+AttributeError: 'AdminUser' object has no attribute 'role'
+ERROR 2023-10-09 13:29:09,142 log Internal Server Error: /customers/
+Traceback (most recent call last):
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/dhirendra/Documents/Task/freelance_project/customer_engine/decorators.py", line 28, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/dhirendra/Documents/Task/freelance_project/backoffice_engine/views.py", line 296, in customers
+    if user.role != "admin":
+AttributeError: 'AdminUser' object has no attribute 'role'
+ERROR 2023-10-09 13:36:36,693 log Internal Server Error: /customers/
+Traceback (most recent call last):
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/dhirendra/Documents/Task/freelance_project/customer_engine/decorators.py", line 28, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/dhirendra/Documents/Task/freelance_project/backoffice_engine/views.py", line 296, in customers
+    if user.is_superuser:
+AttributeError: 'AdminUser' object has no attribute 'is_superuser'
+ERROR 2023-10-09 13:37:34,514 log Internal Server Error: /customers/
+Traceback (most recent call last):
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/dhirendra/Documents/Task/freelance_project/customer_engine/decorators.py", line 28, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/dhirendra/Documents/Task/freelance_project/backoffice_engine/views.py", line 296, in customers
+    if user.role == 'admin':
+AttributeError: 'AdminUser' object has no attribute 'role'
+ERROR 2023-10-09 13:41:26,763 log Internal Server Error: /customers/
+Traceback (most recent call last):
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/dhirendra/Documents/Task/freelance_project/customer_engine/decorators.py", line 28, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/dhirendra/Documents/Task/freelance_project/backoffice_engine/views.py", line 296, in customers
+    if user.role == 'admin':
+AttributeError: 'AdminUser' object has no attribute 'role'
+ERROR 2023-10-09 13:41:35,350 log Internal Server Error: /customers/
+Traceback (most recent call last):
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/dhirendra/Documents/Task/freelance_project/customer_engine/decorators.py", line 28, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/dhirendra/Documents/Task/freelance_project/backoffice_engine/views.py", line 296, in customers
+    if user.role == 'admin':
+AttributeError: 'AdminUser' object has no attribute 'role'
+ERROR 2023-10-09 13:43:08,109 log Internal Server Error: /customers/
+Traceback (most recent call last):
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/dhirendra/Documents/Task/freelance_project/customer_engine/decorators.py", line 28, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/dhirendra/Documents/Task/freelance_project/backoffice_engine/views.py", line 296, in customers
+    print(user.Username)
+AttributeError: 'AdminUser' object has no attribute 'Username'
+ERROR 2023-10-09 13:47:45,955 log Internal Server Error: /customers/
+Traceback (most recent call last):
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/dhirendra/Documents/Task/freelance_project/customer_engine/decorators.py", line 28, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/dhirendra/Documents/Task/freelance_project/backoffice_engine/views.py", line 296, in customers
+    data = Customer.objects.all().order_by("-date").filter(user.name!=AdminUser)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/query.py", line 1436, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/query.py", line 1454, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/query.py", line 1461, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1534, in add_q
+    clause, _ = self._add_q(q_object, self.used_aliases)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1565, in _add_q
+    child_clause, needed_inner = self.build_filter(
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1412, in build_filter
+    arg, value = filter_expr
+TypeError: cannot unpack non-iterable bool object
+ERROR 2023-10-09 13:48:05,952 log Internal Server Error: /customers/
+Traceback (most recent call last):
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/dhirendra/Documents/Task/freelance_project/customer_engine/decorators.py", line 28, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/dhirendra/Documents/Task/freelance_project/backoffice_engine/views.py", line 296, in customers
+    data = Customer.objects.all().order_by("-date").filter(user.name!="admin")
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/query.py", line 1436, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/query.py", line 1454, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/query.py", line 1461, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1534, in add_q
+    clause, _ = self._add_q(q_object, self.used_aliases)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1565, in _add_q
+    child_clause, needed_inner = self.build_filter(
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1412, in build_filter
+    arg, value = filter_expr
+TypeError: cannot unpack non-iterable bool object
+ERROR 2023-10-10 06:14:47,232 log Internal Server Error: /customers/
+Traceback (most recent call last):
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/dhirendra/Documents/Task/freelance_project/customer_engine/decorators.py", line 28, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/dhirendra/Documents/Task/freelance_project/backoffice_engine/views.py", line 296, in customers
+    if not user.is_superuser:
+AttributeError: 'AdminUser' object has no attribute 'is_superuser'
+ERROR 2023-10-10 06:28:26,219 log Internal Server Error: /customers/detail/51/
+Traceback (most recent call last):
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/dhirendra/Documents/Task/freelance_project/customer_engine/decorators.py", line 28, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/dhirendra/Documents/Task/freelance_project/backoffice_engine/views.py", line 420, in customers_detail
+    data = UserSnacks.objects.get(customer=user_id)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/query.py", line 640, in get
+    raise self.model.MultipleObjectsReturned(
+customer_engine.models.UserSnacks.MultipleObjectsReturned: get() returned more than one UserSnacks -- it returned 4!
+ERROR 2023-10-10 06:48:40,465 log Internal Server Error: /api/user-profile/
+Traceback (most recent call last):
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/views/decorators/csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/rest_framework/views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/rest_framework/views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/rest_framework/views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/home/dhirendra/Documents/Task/freelance_project/customer_engine/views.py", line 1218, in get
+    dish_ids_list = UserSnacks.objects.filter(
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/query.py", line 1436, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/query.py", line 1454, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/query.py", line 1461, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1534, in add_q
+    clause, _ = self._add_q(q_object, self.used_aliases)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1565, in _add_q
+    child_clause, needed_inner = self.build_filter(
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1415, in build_filter
+    lookups, parts, reffed_expression = self.solve_lookup_type(arg, summarize)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1225, in solve_lookup_type
+    _, field, _, lookup_parts = self.names_to_path(lookup_splitted, self.get_meta())
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1713, in names_to_path
+    raise FieldError(
+django.core.exceptions.FieldError: Cannot resolve keyword 'updated_at_date_range' into field. Choices are: created_at, customer, customer_id, dish, dish_id, id, updated_at
+ERROR 2023-10-10 06:49:26,794 log Internal Server Error: /api/user-profile/
+Traceback (most recent call last):
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/views/decorators/csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/rest_framework/views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/rest_framework/views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/rest_framework/views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/home/dhirendra/Documents/Task/freelance_project/customer_engine/views.py", line 1218, in get
+    dish_ids_list = UserSnacks.objects.filter(
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/query.py", line 1436, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/query.py", line 1454, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/query.py", line 1461, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1534, in add_q
+    clause, _ = self._add_q(q_object, self.used_aliases)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1565, in _add_q
+    child_clause, needed_inner = self.build_filter(
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1415, in build_filter
+    lookups, parts, reffed_expression = self.solve_lookup_type(arg, summarize)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1225, in solve_lookup_type
+    _, field, _, lookup_parts = self.names_to_path(lookup_splitted, self.get_meta())
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1713, in names_to_path
+    raise FieldError(
+django.core.exceptions.FieldError: Cannot resolve keyword 'updated_at_date_range' into field. Choices are: created_at, customer, customer_id, dish, dish_id, id, updated_at
+ERROR 2023-10-10 06:49:53,379 views Invalid date format: time data '2023-19-15' does not match format '%Y-%m-%d'
+ERROR 2023-10-10 06:49:53,450 log Internal Server Error: /api/user-profile/
+Traceback (most recent call last):
+  File "/home/dhirendra/Documents/Task/freelance_project/customer_engine/views.py", line 1203, in get
+    start_date = datetime.strptime(start_date_str, "%Y-%m-%d").date()
+  File "/usr/lib/python3.8/_strptime.py", line 568, in _strptime_datetime
+    tt, fraction, gmtoff_fraction = _strptime(data_string, format)
+  File "/usr/lib/python3.8/_strptime.py", line 349, in _strptime
+    raise ValueError("time data %r does not match format %r" %
+ValueError: time data '2023-19-15' does not match format '%Y-%m-%d'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/views/decorators/csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/rest_framework/views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/rest_framework/views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/rest_framework/views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/home/dhirendra/Documents/Task/freelance_project/customer_engine/views.py", line 1207, in get
+    response = JsonResponse(
+TypeError: __init__() got multiple values for argument 'data'
+ERROR 2023-10-10 06:50:06,350 log Internal Server Error: /api/user-profile/
+Traceback (most recent call last):
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/views/decorators/csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/rest_framework/views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/rest_framework/views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/rest_framework/views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/home/dhirendra/Documents/Task/freelance_project/customer_engine/views.py", line 1218, in get
+    dish_ids_list = UserSnacks.objects.filter(
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/query.py", line 1436, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/query.py", line 1454, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/query.py", line 1461, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1534, in add_q
+    clause, _ = self._add_q(q_object, self.used_aliases)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1565, in _add_q
+    child_clause, needed_inner = self.build_filter(
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1415, in build_filter
+    lookups, parts, reffed_expression = self.solve_lookup_type(arg, summarize)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1225, in solve_lookup_type
+    _, field, _, lookup_parts = self.names_to_path(lookup_splitted, self.get_meta())
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1713, in names_to_path
+    raise FieldError(
+django.core.exceptions.FieldError: Cannot resolve keyword 'updated_at_date_range' into field. Choices are: created_at, customer, customer_id, dish, dish_id, id, updated_at
+ERROR 2023-10-10 06:51:27,081 log Internal Server Error: /api/user-profile/
+Traceback (most recent call last):
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/views/decorators/csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/rest_framework/views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/rest_framework/views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/rest_framework/views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/home/dhirendra/Documents/Task/freelance_project/customer_engine/views.py", line 1218, in get
+    dish_ids_list = UserSnacks.objects.filter(
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/query.py", line 1436, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/query.py", line 1454, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/query.py", line 1461, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1534, in add_q
+    clause, _ = self._add_q(q_object, self.used_aliases)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1565, in _add_q
+    child_clause, needed_inner = self.build_filter(
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1415, in build_filter
+    lookups, parts, reffed_expression = self.solve_lookup_type(arg, summarize)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1225, in solve_lookup_type
+    _, field, _, lookup_parts = self.names_to_path(lookup_splitted, self.get_meta())
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1713, in names_to_path
+    raise FieldError(
+django.core.exceptions.FieldError: Cannot resolve keyword 'updated_at_date_range' into field. Choices are: created_at, customer, customer_id, dish, dish_id, id, updated_at
+ERROR 2023-10-10 06:54:07,005 log Internal Server Error: /api/user-profile/
+Traceback (most recent call last):
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/views/decorators/csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/rest_framework/views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/rest_framework/views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/rest_framework/views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/home/dhirendra/Documents/Task/freelance_project/customer_engine/views.py", line 1218, in get
+    dish_ids_list = UserSnacks.objects.filter(
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/query.py", line 1436, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/query.py", line 1454, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/query.py", line 1461, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1534, in add_q
+    clause, _ = self._add_q(q_object, self.used_aliases)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1565, in _add_q
+    child_clause, needed_inner = self.build_filter(
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1415, in build_filter
+    lookups, parts, reffed_expression = self.solve_lookup_type(arg, summarize)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1225, in solve_lookup_type
+    _, field, _, lookup_parts = self.names_to_path(lookup_splitted, self.get_meta())
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1713, in names_to_path
+    raise FieldError(
+django.core.exceptions.FieldError: Cannot resolve keyword 'updated_at_date_range' into field. Choices are: created_at, customer, customer_id, dish, dish_id, id, updated_at
+ERROR 2023-10-10 06:57:10,208 log Internal Server Error: /api/user-profile/
+Traceback (most recent call last):
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/views/decorators/csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/rest_framework/views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/rest_framework/views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/rest_framework/views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/home/dhirendra/Documents/Task/freelance_project/customer_engine/views.py", line 1218, in get
+    dish_ids_list = UserSnacks.objects.filter(
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/query.py", line 1436, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/query.py", line 1454, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/query.py", line 1461, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1534, in add_q
+    clause, _ = self._add_q(q_object, self.used_aliases)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1565, in _add_q
+    child_clause, needed_inner = self.build_filter(
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1415, in build_filter
+    lookups, parts, reffed_expression = self.solve_lookup_type(arg, summarize)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1225, in solve_lookup_type
+    _, field, _, lookup_parts = self.names_to_path(lookup_splitted, self.get_meta())
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1713, in names_to_path
+    raise FieldError(
+django.core.exceptions.FieldError: Cannot resolve keyword 'updated_at_date_range' into field. Choices are: created_at, customer, customer_id, dish, dish_id, id, updated_at
+ERROR 2023-10-10 06:59:21,908 log Internal Server Error: /api/user-profile/
+Traceback (most recent call last):
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/views/decorators/csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/rest_framework/views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/rest_framework/views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/rest_framework/views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/home/dhirendra/Documents/Task/freelance_project/customer_engine/views.py", line 1218, in get
+    dish_ids_list = UserSnacks.objects.filter(
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/query.py", line 1436, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/query.py", line 1454, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/query.py", line 1461, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1534, in add_q
+    clause, _ = self._add_q(q_object, self.used_aliases)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1565, in _add_q
+    child_clause, needed_inner = self.build_filter(
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1415, in build_filter
+    lookups, parts, reffed_expression = self.solve_lookup_type(arg, summarize)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1225, in solve_lookup_type
+    _, field, _, lookup_parts = self.names_to_path(lookup_splitted, self.get_meta())
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1713, in names_to_path
+    raise FieldError(
+django.core.exceptions.FieldError: Cannot resolve keyword 'updated_at_date_range' into field. Choices are: created_at, customer, customer_id, dish, dish_id, id, updated_at

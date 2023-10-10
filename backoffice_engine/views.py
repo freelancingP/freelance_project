@@ -293,7 +293,7 @@ def add_customer(request):
 @custom_login_required
 def customers(request):
     user = AdminUser.objects.get(id = request.session["user"])
-    data = Customer.objects.all()
+    data = Customer.objects.all().exclude(is_superuser=True).order_by("-date") 
     return render(request,"customers-datatable.html",{
         "user":user,
         "data":data
