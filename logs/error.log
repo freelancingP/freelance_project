@@ -6651,3 +6651,122 @@ Traceback (most recent call last):
     remaining_carbs += item['carbs']
 TypeError: unsupported operand type(s) for +=: 'float' and 'NoneType'
 >>>>>>> 253f27d448156297b86ad1ad36232c43309ec871
+ERROR 2023-10-10 07:36:16,980 log Internal Server Error: /api/user-profile/
+Traceback (most recent call last):
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/views/decorators/csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/rest_framework/views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/rest_framework/views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/rest_framework/views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/home/dhirendra/Documents/Task/freelance_project/customer_engine/views.py", line 1218, in get
+    dish_ids_list = UserSnacks.objects.filter(
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/query.py", line 1436, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/query.py", line 1454, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/query.py", line 1461, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1534, in add_q
+    clause, _ = self._add_q(q_object, self.used_aliases)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1565, in _add_q
+    child_clause, needed_inner = self.build_filter(
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1480, in build_filter
+    condition = self.build_lookup(lookups, col, value)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1301, in build_lookup
+    lhs = self.try_transform(lhs, lookup_name)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1345, in try_transform
+    raise FieldError(
+django.core.exceptions.FieldError: Unsupported lookup 'date_range' for DateTimeField or join on the field not permitted, perhaps you meant range?
+ERROR 2023-10-10 07:41:10,433 log Internal Server Error: /api/user-profile/
+Traceback (most recent call last):
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/sql/query.py", line 2150, in add_fields
+    join_info = self.setup_joins(
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1812, in setup_joins
+    path, final_field, targets, rest = self.names_to_path(
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1713, in names_to_path
+    raise FieldError(
+django.core.exceptions.FieldError: Cannot resolve keyword 'phosphorus' into field. Choices are: aa_factor, aaf_adj_prot, calcium, cals, carbs, dailyrecipe, food, free_suger, gl, glucose, gross_protine, id, ingredients, lysine, magnecium, meal_type, oil, phasphorous, potassium, pral, quantity, sodium, tdf, total_eaa, total_fat, usersnacks, veg_nonveg_egg
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/views/decorators/csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/rest_framework/views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/rest_framework/views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/rest_framework/views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/home/dhirendra/Documents/Task/freelance_project/customer_engine/views.py", line 1292, in get
+    data_queryset = DailySnacks.objects.filter(id__in=dish_ids).values(
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/query.py", line 1313, in values
+    clone = self._values(*fields, **expressions)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/query.py", line 1308, in _values
+    clone.query.set_values(fields)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/sql/query.py", line 2449, in set_values
+    self.add_fields(field_names, True)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/sql/query.py", line 2183, in add_fields
+    raise FieldError(
+django.core.exceptions.FieldError: Cannot resolve keyword 'phosphorus' into field. Choices are: aa_factor, aaf_adj_prot, calcium, cals, carbs, dailyrecipe, food, free_suger, gl, glucose, gross_protine, id, ingredients, lysine, magnecium, meal_type, oil, phasphorous, potassium, pral, quantity, sodium, tdf, total_eaa, total_fat, usersnacks, veg_nonveg_egg
+ERROR 2023-10-10 07:41:16,786 log Internal Server Error: /api/user-profile/
+Traceback (most recent call last):
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/sql/query.py", line 2150, in add_fields
+    join_info = self.setup_joins(
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1812, in setup_joins
+    path, final_field, targets, rest = self.names_to_path(
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1713, in names_to_path
+    raise FieldError(
+django.core.exceptions.FieldError: Cannot resolve keyword 'phosphorus' into field. Choices are: aa_factor, aaf_adj_prot, calcium, cals, carbs, dailyrecipe, food, free_suger, gl, glucose, gross_protine, id, ingredients, lysine, magnecium, meal_type, oil, phasphorous, potassium, pral, quantity, sodium, tdf, total_eaa, total_fat, usersnacks, veg_nonveg_egg
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/views/decorators/csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/rest_framework/views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/rest_framework/views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/rest_framework/views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/home/dhirendra/Documents/Task/freelance_project/customer_engine/views.py", line 1292, in get
+    data_queryset = DailySnacks.objects.filter(id__in=dish_ids).values(
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/query.py", line 1313, in values
+    clone = self._values(*fields, **expressions)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/query.py", line 1308, in _values
+    clone.query.set_values(fields)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/sql/query.py", line 2449, in set_values
+    self.add_fields(field_names, True)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/sql/query.py", line 2183, in add_fields
+    raise FieldError(
+django.core.exceptions.FieldError: Cannot resolve keyword 'phosphorus' into field. Choices are: aa_factor, aaf_adj_prot, calcium, cals, carbs, dailyrecipe, food, free_suger, gl, glucose, gross_protine, id, ingredients, lysine, magnecium, meal_type, oil, phasphorous, potassium, pral, quantity, sodium, tdf, total_eaa, total_fat, usersnacks, veg_nonveg_egg
