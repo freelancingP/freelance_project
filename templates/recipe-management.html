@@ -307,6 +307,7 @@ th {
 								<div class="card">
                             <div class="card-header">
                                 <h4 class="card-title">Recipe Management</h4>
+                                <button id="popupButton" style="float:right;">Open Popup</button>
                             </div>
                             <div class="card-body">
 							<div class="row">
@@ -323,9 +324,6 @@ th {
                                     </li>
                                     <li class="nav-item">
                                         <a href="#navpills2-4" class="nav-link" data-toggle="tab" aria-expanded="flase">Dinner</a>
-                                    </li>
-									<li class="nav-item">
-										<button id="popupButton">Open Popup</button>
                                     </li>
                                 </ul>
 								</div>
@@ -353,7 +351,7 @@ th {
                                 <div class="tab-content">
                                     <div id="navpills2-1" class="tab-pane active">
                                         <div class="row">
-                                            <div class="col-md-12 table-container"> 
+                                            <div class="col-md-16 table-container"> 
 												<h4>Breakfast</h4>
 												<table>
 													<tr>
@@ -701,6 +699,10 @@ th {
 
 	<!-- Rating -->
 	<script src="{% static 'vendor/star-rating/jquery.star-rating-svg.js' %}"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    {% comment %} <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script> {% endcomment %}
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 </body>
 

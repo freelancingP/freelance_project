@@ -830,7 +830,7 @@
 													</div>
 													<div class="col-md-6 col-lg-6">
 															<div class="progress-circle over50 p83">
-														   <span>83%</span>
+														   <span></span>
 														   <div class="left-half-clipper">
 															  <div class="first50-bar" style="background-color:#0B2A97 !important;"></div>
 															  <div class="value-bar" style="background-color:#0B2A97 !important;border:none !important;"></div>
@@ -1133,6 +1133,29 @@
         <!--**********************************
             Content body end
         ***********************************-->
+		<!--**********************************
+        Scripts
+    ***********************************-->
+    <!-- Required vendors -->
+    <script src="{% static 'vendor/global/global.min.js' %}"></script>
+	<script src="{% static 'vendor/bootstrap-select/dist/js/bootstrap-select.min.js' %}"></script>
+    <script src="{% static 'js/custom.min.js' %}"></script>
+	<script src="{% static 'js/deznav-init.js' %}"></script>
+	
+    
+    <script src="{% static 'vendor/highlightjs/highlight.pack.min.js' %}"></script>
+    <!-- Circle progress -->
+
+	<!-- Rating -->
+	<script src="{% static 'vendor/star-rating/jquery.star-rating-svg.js' %}"></script>
+	
+	<!-- chart -->
+	 <script src="{% static 'vendor/chart.js/Chart.bundle.min.js' %}"></script>
+    <script src="{% static 'js/plugins-init/chartjs-init.js' %}"></script>
+	   <!-- Chart total calarie in circle -->
+    <script src="{% static 'vendor/morris/raphael-min.js' %}"></script>
+    <script src="{% static 'vendor/morris/morris.min.js' %}"></script>
+    {% comment %} <script src="{% static 'js/plugins-init/morris-init.js' %}"></script> {% endcomment %}
 
 {% endblock  %}
 {% block js %} 
