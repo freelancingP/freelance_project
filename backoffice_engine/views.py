@@ -310,72 +310,142 @@ def recipe_management(request):
         "data": data
     })
     
+# @custom_login_required
+# def upload_csv(request):
+#     # user = AdminUser.objects.get(id=request.session["user"])
+#     print(request.method ,"-------------------01")
+#     if request.method == 'POST':
+#         category = request.POST['category']
+#         uploaded_file = request.FILES.get('file')
+
+#         if uploaded_file:
+#             # Specify the encoding as 'latin-1' to handle extended character sets
+#             encoding = 'latin-1'
+
+#             try:
+#                 # Attempt to read the CSV file using the specified encoding
+#                 decoded_data = uploaded_file.read().decode(encoding)
+
+#                 # Create a CSV DictReader
+#                 reader = csv.DictReader(decoded_data.splitlines())
+
+#                 # Create a list to store the processed data
+#                 data = []
+
+#                 # Process the CSV data as dictionaries (key-value pairs)
+#                 for row in reader:
+#                     # You can access columns by their names as keys
+#                     print(row)
+
+#                     # Map CSV columns to model fields and append to the 'data' list
+#                     if len(row.get("Food", "")) > 0:
+#                         data.append({
+#                             'meal_type': category,  # Use the 'category' variable
+#                             'food': row.get('Food', ''),
+#                             'quantity': row.get('Quantity', ''),
+#                             'ingredients': row.get('Ingredients ', ''),
+#                             'veg_nonveg_egg': row.get('Veg/Non Veg/Egg', ''),
+#                             'pral': row.get('PRAL', ''),
+#                             'oil': row.get('Oil', ''),
+#                             'gl': row.get('GL', ''),
+#                             'cals': row.get('Cals\nNet of  TDF', ''),
+#                             'aaf_adj_prot': row.get('AAF \nadj Prot', ''),
+#                             'carbs': row.get('Carbs          (Net of TDF)', ''),
+#                             'total_fat': row.get('Total Fat', ''),
+#                             'tdf': row.get('TDF', ''),
+#                             'sodium': row.get('Sodium', ''),
+#                             'potassium': row.get('Pota-ssium', ''),
+#                             'phasphorous': row.get('Phosphorus', ''),
+#                             'calcium': row.get('Calcium', ''),
+#                             'magnecium': row.get('Magnecium', ''),
+#                             'total_eaa': row.get('Total EAA', ''),
+#                             'lysine': row.get('Lysine', ''),
+#                             'gross_protine': row.get('Gross Protein', ''),
+#                             'free_suger': row.get('Free Sugars', ''),
+#                             'aa_factor': 0,
+#                             'glucose': 0
+#                         })
+
+
+#                 # Add your logic here to save or process the 'data' list as needed
+#                 # messages.success(request, "CSV file uploaded and processed successfully.")
+#                 # return redirect("add_dish")
+
+#                 return HttpResponse("CSV file uploaded and processed successfully.")
+#             except UnicodeDecodeError as e:
+#                 # Handle the encoding error, e.g., by returning an error message
+#                 error_message = f"Error decoding file: {str(e)}"
+#                 return HttpResponse(error_message, status=400)
+
+#     return render(request, "upload_csv.html")
+
+
 @custom_login_required
 def upload_csv(request):
-    # user = AdminUser.objects.get(id=request.session["user"])
-    print(request.method ,"-------------------01")
     if request.method == 'POST':
-        category = request.POST['category']
+        user_id = request.session.get("user")
+
+        if user_id is None:
+            return HttpResponse("User not found or not authorized.", status=403)
+
+        try:
+            user = AdminUser.objects.get(id=user_id)
+        except AdminUser.DoesNotExist:
+            return HttpResponse("User not found or not authorized.", status=403)
+
+        category = request.POST.get('category', '')
         uploaded_file = request.FILES.get('file')
 
-        if uploaded_file:
-            # Specify the encoding as 'latin-1' to handle extended character sets
-            encoding = 'latin-1'
+        if not category or not uploaded_file:
+            return HttpResponse("Category and file are required fields.", status=400)
 
-            try:
-                # Attempt to read the CSV file using the specified encoding
-                decoded_data = uploaded_file.read().decode(encoding)
+        encoding = 'latin-1'
 
-                # Create a CSV DictReader
-                reader = csv.DictReader(decoded_data.splitlines())
+        try:
+            decoded_data = uploaded_file.read().decode(encoding)
+            reader = csv.DictReader(decoded_data.splitlines())
+            data = []
 
-                # Create a list to store the processed data
-                data = []
+            for row in reader:
+                if row.get("Food"):
+                    dish_data = {
+                        # 'meal_type': category,
+                        'food': row.get('Food', ''),  # Use .get() to handle missing keys
+                        'quantity': row.get('Quantity', ''),
+                        'ingredients': row.get('Ingredients', ''),
+                        'veg_nonveg_egg': row.get('Veg/Non Veg/Egg', ''),
+                        'pral': row.get('PRAL', ''),
+                        'oil': row.get('Oil', ''),
+                        'gl': row.get('GL', ''),
+                        'cals': 1,
+                        'aaf_adj_prot': 1,
+                        'carbs': 1,
+                        'total_fat': row.get('Total Fat', ''),
+                        'tdf': row.get('TDF', ''),
+                        'sodium': row.get('Sodium', ''),
+                        'potassium': row.get('Pota-ssium', ''),
+                        'phosphorus': row.get('Phosphorus', ''),
+                        'calcium': row.get('Calcium', ''),
+                        'magnesium': row.get('Magnecium', ''),
+                        'total_eaa': row.get('Total EAA', ''),
+                        'lysine': row.get('Lysine', ''),
+                        'gross_protein': row.get('Gross Protein', ''),
+                        'free_sugar': row.get('Free Sugars', ''),
+                        'aa_factor': 1,
+                        'glucose': 1
+                    }
+                    data.append(dish_data)
 
-                # Process the CSV data as dictionaries (key-value pairs)
-                for row in reader:
-                    # You can access columns by their names as keys
-                    print(row)
+            for dish_data in data:
+                try:
+                    DailySnacks.objects.create(**dish_data)
+                except Exception as e:
+                    print(e,'----->')
 
-                    # Map CSV columns to model fields and append to the 'data' list
-                    if len(row.get("Food", "")) > 0:
-                        data.append({
-                            'meal_type': category,  # Use the 'category' variable
-                            'food': row.get('Food', ''),
-                            'quantity': row.get('Quantity', ''),
-                            'ingredients': row.get('Ingredients ', ''),
-                            'veg_nonveg_egg': row.get('Veg/Non Veg/Egg', ''),
-                            'pral': row.get('PRAL', ''),
-                            'oil': row.get('Oil', ''),
-                            'gl': row.get('GL', ''),
-                            'cals': row.get('Cals\nNet of  TDF', ''),
-                            'aaf_adj_prot': row.get('AAF \nadj Prot', ''),
-                            'carbs': row.get('Carbs          (Net of TDF)', ''),
-                            'total_fat': row.get('Total Fat', ''),
-                            'tdf': row.get('TDF', ''),
-                            'sodium': row.get('Sodium', ''),
-                            'potassium': row.get('Pota-ssium', ''),
-                            'phasphorous': row.get('Phosphorus', ''),
-                            'calcium': row.get('Calcium', ''),
-                            'magnecium': row.get('Magnecium', ''),
-                            'total_eaa': row.get('Total EAA', ''),
-                            'lysine': row.get('Lysine', ''),
-                            'gross_protine': row.get('Gross Protein', ''),
-                            'free_suger': row.get('Free Sugars', ''),
-                            'aa_factor': 0,
-                            'glucose': 0
-                        })
-
-
-                # Add your logic here to save or process the 'data' list as needed
-                # messages.success(request, "CSV file uploaded and processed successfully.")
-                # return redirect("add_dish")
-
-                return HttpResponse("CSV file uploaded and processed successfully.")
-            except UnicodeDecodeError as e:
-                # Handle the encoding error, e.g., by returning an error message
-                error_message = f"Error decoding file: {str(e)}"
-                return HttpResponse(error_message, status=400)
+            return HttpResponse("CSV file uploaded and processed successfully.")
+        except UnicodeDecodeError as e:
+            error_message = f"Error decoding file: {str(e)}"
+            return HttpResponse(error_message, status=400)
 
     return render(request, "upload_csv.html")
     
