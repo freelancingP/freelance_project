@@ -442,7 +442,8 @@ def upload_csv(request):
                 except Exception as e:
                     print(e,'----->')
 
-            return HttpResponse("CSV file uploaded and processed successfully.")
+            # return HttpResponse("CSV file uploaded and processed successfully.")
+            return redirect('recipe_management')
         except UnicodeDecodeError as e:
             error_message = f"Error decoding file: {str(e)}"
             return HttpResponse(error_message, status=400)
