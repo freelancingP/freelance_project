@@ -687,27 +687,176 @@
 				data: {
 					defaultFontFamily: 'Poppins',
 					datasets: [{
-						data: [45, 25, 20, 10],
+						data: [75, 25],
 						borderWidth: 0, 
 						backgroundColor: [
 							"rgba(11, 42, 151, .9)",
 							"rgba(11, 42, 151, .7)",
-							"rgba(11, 42, 151, .5)",
-							"rgba(0,0,0,0.07)"
+							
 						],
 						hoverBackgroundColor: [
 							"rgba(11, 42, 151, .9)",
 							"rgba(11, 42, 151, .7)",
-							"rgba(11, 42, 151, .5)",
-							"rgba(0,0,0,0.07)"
+							
 						]
 
 					}],
 					labels: [
-						"one",
-						"two",
-						"three", 
-						"four"
+						"Eaten",
+						"remaining"
+					]
+				},
+				options: {
+					responsive: true, 
+					legend: false, 
+					maintainAspectRatio: false
+				}
+			});
+		}
+	}
+	var breakfast = function(){
+		//pie chart
+		if(jQuery('#pie_charts').length > 0 ){
+			//pie chart
+			const pie_chart = document.getElementById("pie_charts").getContext('2d');
+			// pie_chart.height = 100;
+			new Chart(pie_charts, {
+				type: 'pie',
+				data: {
+					defaultFontFamily: 'Poppins',
+					datasets: [{
+						data: [75, 25],
+						borderWidth: 0, 
+						backgroundColor: [
+							"rgba(11, 42, 151, .9)",
+							"rgba(11, 42, 151, .7)",
+							
+						],
+						hoverBackgroundColor: [
+							"rgba(11, 42, 151, .9)",
+							"rgba(11, 42, 151, .7)",
+							
+						]
+
+					}],
+					labels: [
+						"Eaten",
+						"remaining"
+					]
+				},
+				options: {
+					responsive: true, 
+					legend: false, 
+					maintainAspectRatio: false
+				}
+			});
+		}
+	}
+	var lunch = function(){
+		//pie chart
+		if(jQuery('#pie_lunch').length > 0 ){
+			//pie chart
+			const pie_chart = document.getElementById("pie_lunch").getContext('2d');
+			// pie_chart.height = 100;
+			new Chart(pie_lunch, {
+				type: 'pie',
+				data: {
+					defaultFontFamily: 'Poppins',
+					datasets: [{
+						data: [75, 25],
+						borderWidth: 0, 
+						backgroundColor: [
+							"rgba(11, 42, 151, .9)",
+							"rgba(11, 42, 151, .7)",
+							
+						],
+						hoverBackgroundColor: [
+							"rgba(11, 42, 151, .9)",
+							"rgba(11, 42, 151, .7)",
+							
+						]
+
+					}],
+					labels: [
+						"Eaten",
+						"remaining"
+					]
+				},
+				options: {
+					responsive: true, 
+					legend: false, 
+					maintainAspectRatio: false
+				}
+			});
+		}
+	}
+	var snaks = function(){
+		//pie chart
+		if(jQuery('#pie_snaks').length > 0 ){
+			//pie chart
+			const pie_chart = document.getElementById("pie_snaks").getContext('2d');
+			// pie_chart.height = 100;
+			new Chart(pie_snaks, {
+				type: 'pie',
+				data: {
+					defaultFontFamily: 'Poppins',
+					datasets: [{
+						data: [75, 25],
+						borderWidth: 0, 
+						backgroundColor: [
+							"rgba(11, 42, 151, .9)",
+							"rgba(11, 42, 151, .7)",
+							
+						],
+						hoverBackgroundColor: [
+							"rgba(11, 42, 151, .9)",
+							"rgba(11, 42, 151, .7)",
+							
+						]
+
+					}],
+					labels: [
+						"Eaten",
+						"remaining"
+					]
+				},
+				options: {
+					responsive: true, 
+					legend: false, 
+					maintainAspectRatio: false
+				}
+			});
+		}
+	}
+	
+	var dinner = function(){
+		//pie chart
+		if(jQuery('#pie_dinner').length > 0 ){
+			//pie chart
+			const pie_chart = document.getElementById("pie_dinner").getContext('2d');
+			// pie_chart.height = 100;
+			new Chart(pie_dinner, {
+				type: 'pie',
+				data: {
+					defaultFontFamily: 'Poppins',
+					datasets: [{
+						data: [75, 25],
+						borderWidth: 0, 
+						backgroundColor: [
+							"rgba(11, 42, 151, .9)",
+							"rgba(11, 42, 151, .7)",
+							
+						],
+						hoverBackgroundColor: [
+							"rgba(11, 42, 151, .9)",
+							"rgba(11, 42, 151, .7)",
+							
+						]
+
+					}],
+					labels: [
+						"Eaten",
+						"remaining"
 					]
 				},
 				options: {
@@ -812,6 +961,10 @@
 				areaChart3();
 				radarChart();
 				pieChart();
+				breakfast();
+				lunch();
+				snaks();
+				dinner();
 				doughnutChart(); 
 				polarChart(); 
 			},
@@ -829,6 +982,10 @@
 				areaChart3();
 				radarChart();
 				pieChart();
+				breakfast();
+				lunch();
+				snaks();
+				dinner();
 				doughnutChart(); 
 				polarChart(); 
 			}

@@ -1,4 +1,3 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,16 +6,190 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Fit4LifeIndia Admin Dashboard</title>
     <!-- Favicon icon -->
-    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/favicon.png' %}">
-	<link href="{% static 'vendor/bootstrap-select/dist/css/bootstrap-select.min.css' %}" rel="stylesheet">
-	<link rel="stylesheet" type="text/css" href="{% static 'vendor/star-rating/star-rating-svg.css' %}">
-    <link href="{% static 'css/style.css" rel="stylesheet' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon.png">
+	<link href="vendor/bootstrap-select/dist/css/bootstrap-select.min.css" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="vendor/star-rating/star-rating-svg.css">
+    <link href="css/style.css" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&amp;family=Roboto:wght@100;300;400;500;700;900&amp;display=swap" rel="stylesheet">
 	<style>
+.progress-circle {
+   position: relative; /* so that children can be absolutely positioned */
+   padding: 0;
+   width: 4em;
+   height: 4em;
+   background-color: #F2E9E1; 
+   border-radius: 50%;
+   line-height: 4em;
+      float: left;
+}
 
+.progress-circle:after{
+    border: none;
+    position: absolute;
+    top: 0.35em;
+    left: 0.35em;
+    text-align: center;
+    display: block;
+    border-radius: 50%;
+    width: 3.3em;
+    height: 3.3em;
+    background-color: white;
+    content: " ";
+}
+/* Text inside the control */
+.progress-circle span {
+    position: absolute;
+    line-height: 4em;
+    width: 4em;
+    text-align: center;
+    display: block;
+    color: #53777A;
+    z-index: 2;
+}
+.left-half-clipper { 
+   /* a round circle */
+   border-radius: 50%;
+   width: 4em;
+   height: 4em;
+   position: absolute; /* needed for clipping */
+   clip: rect(0, 5em, 5em, 2.5em); /* clips the whole left half*/ 
+}
+/* when p>50, don't clip left half*/
+.progress-circle.over50 .left-half-clipper {
+   clip: rect(auto,auto,auto,auto);
+}
+.value-bar {
+   /*This is an overlayed square, that is made round with the border radius,
+   then it is cut to display only the left half, then rotated clockwise
+   to escape the outer clipping path.*/ 
+   position: absolute; /*needed for clipping*/
+   clip: rect(0, 2.5em, 5em, 0);
+   width: 4em;
+   height: 4em;
+   border-radius: 50%;
+   border: 0.45em solid #53777A; /*The border is 0.35 but making it larger removes visual artifacts */
+   /*background-color: #4D642D;*/ /* for debug */
+   box-sizing: border-box;
+  
+}
+/* Progress bar filling the whole right half for values above 50% */
+.progress-circle.over50 .first50-bar {
+   /*Progress bar for the first 50%, filling the whole right half*/
+   position: absolute; /*needed for clipping*/
+   clip: rect(0, 5em, 5em, 2.5em);
+   background-color: #53777A;
+   border-radius: 50%;
+   width: 4em;
+   height: 4em;
+}
+.progress-circle:not(.over50) .first50-bar{ display: none; }
+
+
+/* Progress bar rotation position */
+.progress-circle.p0 .value-bar { display: none; }
+.progress-circle.p1 .value-bar { transform: rotate(4deg); }
+.progress-circle.p2 .value-bar { transform: rotate(7deg); }
+.progress-circle.p3 .value-bar { transform: rotate(11deg); }
+.progress-circle.p4 .value-bar { transform: rotate(14deg); }
+.progress-circle.p5 .value-bar { transform: rotate(18deg); }
+.progress-circle.p6 .value-bar { transform: rotate(22deg); }
+.progress-circle.p7 .value-bar { transform: rotate(25deg); }
+.progress-circle.p8 .value-bar { transform: rotate(29deg); }
+.progress-circle.p9 .value-bar { transform: rotate(32deg); }
+.progress-circle.p10 .value-bar { transform: rotate(36deg); }
+.progress-circle.p11 .value-bar { transform: rotate(40deg); }
+.progress-circle.p12 .value-bar { transform: rotate(43deg); }
+.progress-circle.p13 .value-bar { transform: rotate(47deg); }
+.progress-circle.p14 .value-bar { transform: rotate(50deg); }
+.progress-circle.p15 .value-bar { transform: rotate(54deg); }
+.progress-circle.p16 .value-bar { transform: rotate(58deg); }
+.progress-circle.p17 .value-bar { transform: rotate(61deg); }
+.progress-circle.p18 .value-bar { transform: rotate(65deg); }
+.progress-circle.p19 .value-bar { transform: rotate(68deg); }
+.progress-circle.p20 .value-bar { transform: rotate(72deg); }
+.progress-circle.p21 .value-bar { transform: rotate(76deg); }
+.progress-circle.p22 .value-bar { transform: rotate(79deg); }
+.progress-circle.p23 .value-bar { transform: rotate(83deg); }
+.progress-circle.p24 .value-bar { transform: rotate(86deg); }
+.progress-circle.p25 .value-bar { transform: rotate(90deg); }
+.progress-circle.p26 .value-bar { transform: rotate(94deg); }
+.progress-circle.p27 .value-bar { transform: rotate(97deg); }
+.progress-circle.p28 .value-bar { transform: rotate(101deg); }
+.progress-circle.p29 .value-bar { transform: rotate(104deg); }
+.progress-circle.p30 .value-bar { transform: rotate(108deg); }
+.progress-circle.p31 .value-bar { transform: rotate(112deg); }
+.progress-circle.p32 .value-bar { transform: rotate(115deg); }
+.progress-circle.p33 .value-bar { transform: rotate(119deg); }
+.progress-circle.p34 .value-bar { transform: rotate(122deg); }
+.progress-circle.p35 .value-bar { transform: rotate(126deg); }
+.progress-circle.p36 .value-bar { transform: rotate(130deg); }
+.progress-circle.p37 .value-bar { transform: rotate(133deg); }
+.progress-circle.p38 .value-bar { transform: rotate(137deg); }
+.progress-circle.p39 .value-bar { transform: rotate(140deg); }
+.progress-circle.p40 .value-bar { transform: rotate(144deg); }
+.progress-circle.p41 .value-bar { transform: rotate(148deg); }
+.progress-circle.p42 .value-bar { transform: rotate(151deg); }
+.progress-circle.p43 .value-bar { transform: rotate(155deg); }
+.progress-circle.p44 .value-bar { transform: rotate(158deg); }
+.progress-circle.p45 .value-bar { transform: rotate(162deg); }
+.progress-circle.p46 .value-bar { transform: rotate(166deg); }
+.progress-circle.p47 .value-bar { transform: rotate(169deg); }
+.progress-circle.p48 .value-bar { transform: rotate(173deg); }
+.progress-circle.p49 .value-bar { transform: rotate(176deg); }
+.progress-circle.p50 .value-bar { transform: rotate(180deg); }
+.progress-circle.p51 .value-bar { transform: rotate(184deg); }
+.progress-circle.p52 .value-bar { transform: rotate(187deg); }
+.progress-circle.p53 .value-bar { transform: rotate(191deg); }
+.progress-circle.p54 .value-bar { transform: rotate(194deg); }
+.progress-circle.p55 .value-bar { transform: rotate(198deg); }
+.progress-circle.p56 .value-bar { transform: rotate(202deg); }
+.progress-circle.p57 .value-bar { transform: rotate(205deg); }
+.progress-circle.p58 .value-bar { transform: rotate(209deg); }
+.progress-circle.p59 .value-bar { transform: rotate(212deg); }
+.progress-circle.p60 .value-bar { transform: rotate(216deg); }
+.progress-circle.p61 .value-bar { transform: rotate(220deg); }
+.progress-circle.p62 .value-bar { transform: rotate(223deg); }
+.progress-circle.p63 .value-bar { transform: rotate(227deg); }
+.progress-circle.p64 .value-bar { transform: rotate(230deg); }
+.progress-circle.p65 .value-bar { transform: rotate(234deg); }
+.progress-circle.p66 .value-bar { transform: rotate(238deg); }
+.progress-circle.p67 .value-bar { transform: rotate(241deg); }
+.progress-circle.p68 .value-bar { transform: rotate(245deg); }
+.progress-circle.p69 .value-bar { transform: rotate(248deg); }
+.progress-circle.p70 .value-bar { transform: rotate(252deg); }
+.progress-circle.p71 .value-bar { transform: rotate(256deg); }
+.progress-circle.p72 .value-bar { transform: rotate(259deg); }
+.progress-circle.p73 .value-bar { transform: rotate(263deg); }
+.progress-circle.p74 .value-bar { transform: rotate(266deg); }
+.progress-circle.p75 .value-bar { transform: rotate(270deg); }
+.progress-circle.p76 .value-bar { transform: rotate(274deg); }
+.progress-circle.p77 .value-bar { transform: rotate(277deg); }
+.progress-circle.p78 .value-bar { transform: rotate(281deg); }
+.progress-circle.p79 .value-bar { transform: rotate(284deg); }
+.progress-circle.p80 .value-bar { transform: rotate(288deg); }
+.progress-circle.p81 .value-bar { transform: rotate(292deg); }
+.progress-circle.p82 .value-bar { transform: rotate(295deg); }
+.progress-circle.p83 .value-bar { transform: rotate(299deg); }
+.progress-circle.p84 .value-bar { transform: rotate(302deg); }
+.progress-circle.p85 .value-bar { transform: rotate(306deg); }
+.progress-circle.p86 .value-bar { transform: rotate(310deg); }
+.progress-circle.p87 .value-bar { transform: rotate(313deg); }
+.progress-circle.p88 .value-bar { transform: rotate(317deg); }
+.progress-circle.p89 .value-bar { transform: rotate(320deg); }
+.progress-circle.p90 .value-bar { transform: rotate(324deg); }
+.progress-circle.p91 .value-bar { transform: rotate(328deg); }
+.progress-circle.p92 .value-bar { transform: rotate(331deg); }
+.progress-circle.p93 .value-bar { transform: rotate(335deg); }
+.progress-circle.p94 .value-bar { transform: rotate(338deg); }
+.progress-circle.p95 .value-bar { transform: rotate(342deg); }
+.progress-circle.p96 .value-bar { transform: rotate(346deg); }
+.progress-circle.p97 .value-bar { transform: rotate(349deg); }
+.progress-circle.p98 .value-bar { transform: rotate(353deg); }
+.progress-circle.p99 .value-bar { transform: rotate(356deg); }
+.progress-circle.p100 .value-bar { transform: rotate(360deg); }
 
  
-</style>
+	</style>
 </head>
 
 <body>
@@ -45,10 +218,10 @@
             Nav header start
         ***********************************-->
         <div class="nav-header">
-           <a href="{% url 'dashboard' %}" class="brand-logo">
-                <img class="logo-abbr" src="{% static 'images/icon-logo.png' %}" alt="">
-                <img class="logo-compact" src="{% static 'images/logo.png' %}" alt="">
-                <img class="brand-title" src="{% static 'images/logo.png' %}" alt="">
+           <a href="index.html" class="brand-logo">
+                <img class="logo-abbr" src="images/icon-logo.png" alt="">
+                <img class="logo-compact" src="images/logo.png" alt="">
+                <img class="brand-title" src="images/logo.png" alt="">
             </a>
 
             <div class="nav-control">
@@ -121,35 +294,31 @@
         <div class="deznav">
             <div class="deznav-scroll">
 				<ul class="metismenu" id="menu">
-                    <li><a class="ai-icon" href="{% url 'dashboard' %}" aria-expanded="false">
+                    <li><a class="ai-icon" href="index.html" aria-expanded="false">
 							<i class="flaticon-381-networking"></i>
 							<span class="nav-text">Dashboard</span>
 						</a>
                     </li>
-                    <li><a class="ai-icon" href="{% url 'customers' %}" aria-expanded="false">
+                    <li><a class="ai-icon" href="customers-datatable.html" aria-expanded="false">
 							<i class="flaticon-381-user-3"></i>
 							<span class="nav-text">Customers</span>
 						</a>
                     </li>
-                    {% comment %} <li><a class="ai-icon" href="{% url 'recipe_management' %}" aria-expanded="false">
+                    <li><a class="ai-icon" href="recipe-management.html" aria-expanded="false">
 							<i class="flaticon-381-controls-3"></i>
 							<span class="nav-text">Recipe Management</span>
 						</a>
-                    </li> {% endcomment %}
+                    </li>
 					 <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
-						<i class="flaticon-381-calculator"></i>
-						<span class="nav-text">Recipe Management</span>
-					</a>
+							<i class="flaticon-381-calculator"></i>
+							<span class="nav-text">Dish Calculator</span>
+						</a>
                        <ul aria-expanded="false" class="mm-collapse mm-show" style="">
-                            <li><a href="{% url 'recipe_management' %}">Recipe</a></li>
-                            <li><a href="{% url 'ingredient_items' %}">Ingredients</a></li>
+                            <li><a href="dish-calculator-items.html">Recipe</a></li>
+                            <li><a href="ingredients-items.html">Ingredients</a></li>
                         </ul>
                     </li>
                 </ul>
-				<!-- <div class="add-menu-sidebar"> -->
-					<!-- <img src="{% static 'images/calendar.png' %}" alt="" class="mr-3"> -->
-					<!-- <p class="	font-w500 mb-0">Create Workout Plan Now</p> -->
-				<!-- </div> -->
 			</div>
         </div>
         <!--**********************************
@@ -182,7 +351,7 @@
 											<div class="row" style="margin-bottom:20px;">
 											<div class="col-lg-12 profile-info d-flex justify-content-center align-items-center" style="">
 												<div class="profile-photo">
-													<img src="{% static 'images/profile/profile.png' %}" class="img-fluid rounded-circle" alt="">
+													<img src="images/profile/profile.png" class="img-fluid rounded-circle" alt="">
 												</div>
 												<div class="profile-details">
 													<div class="profile-name px-3 pt-2">
@@ -322,7 +491,7 @@
 								<div class="modal-body">
 									<form>
 										<div class="text-center mb-4">
-											<img class="img-fluid rounded" width="78" src="{% static 'images/avatar/1.jpg' %}" alt="DexignZone">
+											<img class="img-fluid rounded" width="78" src="images/avatar/1.jpg" alt="DexignZone">
 										</div>
 										<div class="form-group">
 											<div class="rating-widget mb-4 text-center">
@@ -404,71 +573,47 @@
 													
 													 <h4 style="font-size:14px !important;color:#828690;!important;">Calorie</h4>
 													 <h3>64</h3>
+													 <hr>
+								
 													</div>
-													<div class="col-md-6 col-lg-6">
-															<div class="">
-															  <div class="progress-circle over50 p83">
-														   <span>85%</span>
-														   <div class="left-half-clipper">
-															  <div class="first50-bar" style="background-color:#F94687 !important;"></div>
-															  <div class="value-bar" style="background-color:#F94687 !important;border:none !important;"></div>
-														   </div>
-														</div>
-															</div>
-													  </div>
+												
 												 </div>
+												 
 												</div>
+												
 											<div class="col-md-6 col-lg-6">
 												<div class="row">
-													<div class="col-md-6 col-lg-6 align-items-center" style="margin-top:10px;">
+													<div class="col-md-8 col-lg-8 align-items-center" style="margin-top:10px;">
 													  <h4 style="font-size:14px !important;color:#828690;!important;">Glycemic Load</h4>
 													 <h3>64</h3>
+													 <hr>
 													</div>
-													<div class="col-md-6 col-lg-6">
-															<div class="progress-circle over50 p83">
-														   <span>83%</span>
-														   <div class="left-half-clipper">
-																<div class="first50-bar" style="background-color:#2BC155 !important;"></div>
-															  <div class="value-bar" style="background-color:#2BC155 !important;border:none !important;"></div>
-														   </div>
-														</div>
-													  </div>
+													
 												 </div>
 											</div>
+											<hr>
 											</div>
+											
 											<div class="row mb-2">
 											<div class="col-md-6 col-lg-6">
 											  <div class="row">
 													<div class="col-md-6 col-lg-6 align-items-center" style="margin-top:10px;">
 													  <h4 style="font-size:14px !important;color:#828690;!important;">Carbs</h4>
 													 <h3>64</h3>
+													 <hr>
 													</div>
-													<div class="col-md-6 col-lg-6">
-															<div class="progress-circle over50 p83">
-														   <span>83%</span>
-														   <div class="left-half-clipper">
-															  <div class="first50-bar" style="background-color:#0B2A97 !important;"></div>
-															  <div class="value-bar" style="background-color:#0B2A97 !important;border:none !important;"></div>
-														   </div>
-														</div>
-													  </div>
+													
 												 </div>
+												 
 											</div>
 											<div class="col-md-6 col-lg-6">
 											<div class="row">
 													<div class="col-md-6 col-lg-6 align-items-center" style="margin-top:10px;">
 													  <h4 style="font-size:14px !important;color:#828690;!important;">Protein</h4>
 													 <h3>64</h3>
+													 <hr>
 													</div>
-													<div class="col-md-6 col-lg-6">
-															<div class="progress-circle over50 p83">
-														   <span>83%</span>
-														   <div class="left-half-clipper">
-															   <div class="first50-bar" style="background-color:#FFBC11 !important;"></div>
-															  <div class="value-bar" style="background-color:#FFBC11 !important;border:none !important;"></div>
-														   </div>
-														</div>
-													  </div>
+													
 												 </div>
 											</div>
 											</div>
@@ -478,16 +623,9 @@
 													<div class="col-md-6 col-lg-6 align-items-center" style="margin-top:10px;">
 													  <h4 style="font-size:14px !important;color:#828690;!important;">Fats</h4>
 													 <h3>64</h3>
+													 <hr>
 													</div>
-													<div class="col-md-6 col-lg-6">
-															<div class="progress-circle over50 p83">
-														   <span>83%</span>
-														   <div class="left-half-clipper">
-															   <div class="first50-bar" style="background-color:#1EA7C5 !important;"></div>
-															  <div class="value-bar" style="background-color:#1EA7C5 !important;border:none !important;"></div>
-														   </div>
-														</div>
-													  </div>
+													
 												 </div>
     											</div>
     											<div class="col-md-6 col-lg-6">
@@ -495,30 +633,24 @@
 													<div class="col-md-6 col-lg-6 align-items-center" style="margin-top:10px;">
 													 <h4 style="font-size:14px !important;color:#828690;!important;">Oil</h4>
 													 <h3>64</h3>
+													 <hr>
 													</div>
-													<div class="col-md-6 col-lg-6">
-															<div class="progress-circle over50 p83">
-														   <span>83%</span>
-														   <div class="left-half-clipper">
-															    <div class="first50-bar" style="background-color:#e28b21 !important;"></div>
-															  <div class="value-bar" style="background-color:#e28b21 !important;border:none !important;"></div>
-														   </div>
-														</div>
-													  </div>
+													
 												 </div>
     											</div>
     											</div>	
                                             </div>
-											  <div class="col-xl-6 col-lg-6">
+											<div class="col-xl-6 col-lg-6">
 												<div class="card">
 													<div class="card-header">
 														<h4 class="card-title">Donught Chart</h4>
 													</div>
 													<div class="card-body">
-														<div id="morris_donught" class="morris_chart_height"></div>
+														<canvas id="pie_chart"></canvas>
 													</div>
 												</div>
 											</div>
+											  
                                         </div>
                                         <div class="row">
                                             <div class="col-md-6"> 
@@ -580,13 +712,11 @@
                                     </div>
                                     
 									<div id="navpills2-2" class="tab-pane">
-									 <div class="row mb-4">
-                                            <div class="col-md-12">
-												 <div class="row mb-4">
+										<div class="row mb-4">
                                             <div class="card col-md-6" style="padding-bottom:30px;">
 											<div class="card-header">
-											<h5>Breakfast<h5>		
-                                           </div>											
+											<h5>Breakfast</h5><h5>		
+                                           </h5></div>											
 											  <div class="row mb-2 mt-4">
 											   <div class="col-md-6 col-lg-6">
 											    <div class="row">
@@ -594,71 +724,47 @@
 													
 													 <h4 style="font-size:14px !important;color:#828690;!important;">Calorie</h4>
 													 <h3>64</h3>
+													 <hr>
+								
 													</div>
-													<div class="col-md-6 col-lg-6">
-															<div class="">
-															  <div class="progress-circle over50 p83">
-														   <span>85%</span>
-														   <div class="left-half-clipper">
-															  <div class="first50-bar" style="background-color:#F94687 !important;"></div>
-															  <div class="value-bar" style="background-color:#F94687 !important;border:none !important;"></div>
-														   </div>
-														</div>
-															</div>
-													  </div>
+												
 												 </div>
+												 
 												</div>
+												
 											<div class="col-md-6 col-lg-6">
 												<div class="row">
-													<div class="col-md-6 col-lg-6 align-items-center" style="margin-top:10px;">
+													<div class="col-md-8 col-lg-8 align-items-center" style="margin-top:10px;">
 													  <h4 style="font-size:14px !important;color:#828690;!important;">Glycemic Load</h4>
 													 <h3>64</h3>
+													 <hr>
 													</div>
-													<div class="col-md-6 col-lg-6">
-															<div class="progress-circle over50 p83">
-														   <span>83%</span>
-														   <div class="left-half-clipper">
-																<div class="first50-bar" style="background-color:#2BC155 !important;"></div>
-															  <div class="value-bar" style="background-color:#2BC155 !important;border:none !important;"></div>
-														   </div>
-														</div>
-													  </div>
+													
 												 </div>
 											</div>
+											<hr>
 											</div>
+											
 											<div class="row mb-2">
 											<div class="col-md-6 col-lg-6">
 											  <div class="row">
 													<div class="col-md-6 col-lg-6 align-items-center" style="margin-top:10px;">
 													  <h4 style="font-size:14px !important;color:#828690;!important;">Carbs</h4>
 													 <h3>64</h3>
+													 <hr>
 													</div>
-													<div class="col-md-6 col-lg-6">
-															<div class="progress-circle over50 p83">
-														   <span>83%</span>
-														   <div class="left-half-clipper">
-															  <div class="first50-bar" style="background-color:#0B2A97 !important;"></div>
-															  <div class="value-bar" style="background-color:#0B2A97 !important;border:none !important;"></div>
-														   </div>
-														</div>
-													  </div>
+													
 												 </div>
+												 
 											</div>
 											<div class="col-md-6 col-lg-6">
 											<div class="row">
 													<div class="col-md-6 col-lg-6 align-items-center" style="margin-top:10px;">
 													  <h4 style="font-size:14px !important;color:#828690;!important;">Protein</h4>
 													 <h3>64</h3>
+													 <hr>
 													</div>
-													<div class="col-md-6 col-lg-6">
-															<div class="progress-circle over50 p83">
-														   <span>83%</span>
-														   <div class="left-half-clipper">
-															   <div class="first50-bar" style="background-color:#FFBC11 !important;"></div>
-															  <div class="value-bar" style="background-color:#FFBC11 !important;border:none !important;"></div>
-														   </div>
-														</div>
-													  </div>
+													
 												 </div>
 											</div>
 											</div>
@@ -668,16 +774,9 @@
 													<div class="col-md-6 col-lg-6 align-items-center" style="margin-top:10px;">
 													  <h4 style="font-size:14px !important;color:#828690;!important;">Fats</h4>
 													 <h3>64</h3>
+													 <hr>
 													</div>
-													<div class="col-md-6 col-lg-6">
-															<div class="progress-circle over50 p83">
-														   <span>83%</span>
-														   <div class="left-half-clipper">
-															   <div class="first50-bar" style="background-color:#1EA7C5 !important;"></div>
-															  <div class="value-bar" style="background-color:#1EA7C5 !important;border:none !important;"></div>
-														   </div>
-														</div>
-													  </div>
+													
 												 </div>
     											</div>
     											<div class="col-md-6 col-lg-6">
@@ -685,32 +784,24 @@
 													<div class="col-md-6 col-lg-6 align-items-center" style="margin-top:10px;">
 													 <h4 style="font-size:14px !important;color:#828690;!important;">Oil</h4>
 													 <h3>64</h3>
+													 <hr>
 													</div>
-													<div class="col-md-6 col-lg-6">
-															<div class="progress-circle over50 p83">
-														   <span>83%</span>
-														   <div class="left-half-clipper">
-															    <div class="first50-bar" style="background-color:#e28b21 !important;"></div>
-															  <div class="value-bar" style="background-color:#e28b21 !important;border:none !important;"></div>
-														   </div>
-														</div>
-													  </div>
+													
 												 </div>
     											</div>
     											</div>	
                                             </div>
-											  <div class="col-xl-6 col-lg-6">
+											<div class="col-xl-6 col-lg-6">
 												<div class="card">
 													<div class="card-header">
 														<h4 class="card-title">Donught Chart</h4>
 													</div>
-													<div class="card-body">
-														<div id="morris_donught" class="morris_chart_height"></div>
+													<div class="card-body"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+														<canvas id="pie_charts"></canvas>
 													</div>
 												</div>
 											</div>
-                                        </div>
-                                            </div>
+											  
                                         </div>
                                         <div class="row">
                                             <div class="col-md-6"> 
@@ -753,13 +844,11 @@
 										
                                     </div>
 									<div id="navpills2-3" class="tab-pane">
-									 <div class="row mb-4">
-                                            <div class="col-md-12">
-												 <div class="row mb-4">
+										<div class="row mb-4">
                                             <div class="card col-md-6" style="padding-bottom:30px;">
 											<div class="card-header">
-											<h5>Lunch<h5>		
-                                           </div>											
+											<h5>Lunch</h5><h5>		
+                                           </h5></div>											
 											  <div class="row mb-2 mt-4">
 											   <div class="col-md-6 col-lg-6">
 											    <div class="row">
@@ -767,71 +856,47 @@
 													
 													 <h4 style="font-size:14px !important;color:#828690;!important;">Calorie</h4>
 													 <h3>64</h3>
+													 <hr>
+								
 													</div>
-													<div class="col-md-6 col-lg-6">
-															<div class="">
-															  <div class="progress-circle over50 p83">
-														   <span>85%</span>
-														   <div class="left-half-clipper">
-															  <div class="first50-bar" style="background-color:#F94687 !important;"></div>
-															  <div class="value-bar" style="background-color:#F94687 !important;border:none !important;"></div>
-														   </div>
-														</div>
-															</div>
-													  </div>
+												
 												 </div>
+												 
 												</div>
+												
 											<div class="col-md-6 col-lg-6">
 												<div class="row">
-													<div class="col-md-6 col-lg-6 align-items-center" style="margin-top:10px;">
+													<div class="col-md-8 col-lg-8 align-items-center" style="margin-top:10px;">
 													  <h4 style="font-size:14px !important;color:#828690;!important;">Glycemic Load</h4>
 													 <h3>64</h3>
+													 <hr>
 													</div>
-													<div class="col-md-6 col-lg-6">
-															<div class="progress-circle over50 p83">
-														   <span>83%</span>
-														   <div class="left-half-clipper">
-																<div class="first50-bar" style="background-color:#2BC155 !important;"></div>
-															  <div class="value-bar" style="background-color:#2BC155 !important;border:none !important;"></div>
-														   </div>
-														</div>
-													  </div>
+													
 												 </div>
 											</div>
+											<hr>
 											</div>
+											
 											<div class="row mb-2">
 											<div class="col-md-6 col-lg-6">
 											  <div class="row">
 													<div class="col-md-6 col-lg-6 align-items-center" style="margin-top:10px;">
 													  <h4 style="font-size:14px !important;color:#828690;!important;">Carbs</h4>
 													 <h3>64</h3>
+													 <hr>
 													</div>
-													<div class="col-md-6 col-lg-6">
-															<div class="progress-circle over50 p83">
-														   <span>83%</span>
-														   <div class="left-half-clipper">
-															  <div class="first50-bar" style="background-color:#0B2A97 !important;"></div>
-															  <div class="value-bar" style="background-color:#0B2A97 !important;border:none !important;"></div>
-														   </div>
-														</div>
-													  </div>
+													
 												 </div>
+												 
 											</div>
 											<div class="col-md-6 col-lg-6">
 											<div class="row">
 													<div class="col-md-6 col-lg-6 align-items-center" style="margin-top:10px;">
 													  <h4 style="font-size:14px !important;color:#828690;!important;">Protein</h4>
 													 <h3>64</h3>
+													 <hr>
 													</div>
-													<div class="col-md-6 col-lg-6">
-															<div class="progress-circle over50 p83">
-														   <span>83%</span>
-														   <div class="left-half-clipper">
-															   <div class="first50-bar" style="background-color:#FFBC11 !important;"></div>
-															  <div class="value-bar" style="background-color:#FFBC11 !important;border:none !important;"></div>
-														   </div>
-														</div>
-													  </div>
+													
 												 </div>
 											</div>
 											</div>
@@ -841,16 +906,9 @@
 													<div class="col-md-6 col-lg-6 align-items-center" style="margin-top:10px;">
 													  <h4 style="font-size:14px !important;color:#828690;!important;">Fats</h4>
 													 <h3>64</h3>
+													 <hr>
 													</div>
-													<div class="col-md-6 col-lg-6">
-															<div class="progress-circle over50 p83">
-														   <span>83%</span>
-														   <div class="left-half-clipper">
-															   <div class="first50-bar" style="background-color:#1EA7C5 !important;"></div>
-															  <div class="value-bar" style="background-color:#1EA7C5 !important;border:none !important;"></div>
-														   </div>
-														</div>
-													  </div>
+													
 												 </div>
     											</div>
     											<div class="col-md-6 col-lg-6">
@@ -858,32 +916,24 @@
 													<div class="col-md-6 col-lg-6 align-items-center" style="margin-top:10px;">
 													 <h4 style="font-size:14px !important;color:#828690;!important;">Oil</h4>
 													 <h3>64</h3>
+													 <hr>
 													</div>
-													<div class="col-md-6 col-lg-6">
-															<div class="progress-circle over50 p83">
-														   <span>83%</span>
-														   <div class="left-half-clipper">
-															    <div class="first50-bar" style="background-color:#e28b21 !important;"></div>
-															  <div class="value-bar" style="background-color:#e28b21 !important;border:none !important;"></div>
-														   </div>
-														</div>
-													  </div>
+													
 												 </div>
     											</div>
     											</div>	
                                             </div>
-											  <div class="col-xl-6 col-lg-6">
+											<div class="col-xl-6 col-lg-6">
 												<div class="card">
 													<div class="card-header">
 														<h4 class="card-title">Donught Chart</h4>
 													</div>
-													<div class="card-body">
-														<div id="morris_donught" class="morris_chart_height"></div>
+													<div class="card-body"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+														<canvas id="pie_lunch"></canvas>
 													</div>
 												</div>
 											</div>
-                                        </div>
-                                            </div>
+											  
                                         </div>
                                         <div class="row">
                                             <div class="col-md-6"> 
@@ -926,138 +976,97 @@
 										
                                     </div>
                                   <div id="navpills2-4" class="tab-pane">
-								  <div class="row mb-4">
-                                            <div class="col-md-12">
-												 <div class="row mb-4">
-                                            <div class="card col-md-6" style="padding-bottom:30px;">
-											<div class="card-header">
-											<h5>Evening Snaks<h5>		
-                                           </div>											
-											  <div class="row mb-2 mt-4">
-											   <div class="col-md-6 col-lg-6">
-											    <div class="row">
-													<div class="col-md-6 col-lg-6 " style="margin-top:10px;">
-													
-													 <h4 style="font-size:14px !important;color:#828690;!important;">Calorie</h4>
-													 <h3>64</h3>
-													</div>
-													<div class="col-md-6 col-lg-6">
-															<div class="">
-															  <div class="progress-circle over50 p83">
-														   <span>85%</span>
-														   <div class="left-half-clipper">
-															  <div class="first50-bar" style="background-color:#F94687 !important;"></div>
-															  <div class="value-bar" style="background-color:#F94687 !important;border:none !important;"></div>
-														   </div>
-														</div>
-															</div>
-													  </div>
-												 </div>
+									<div class="row mb-4">
+										<div class="card col-md-6" style="padding-bottom:30px;">
+										<div class="card-header">
+										<h5>Evening Snaks</h5><h5>		
+									   </h5></div>											
+										  <div class="row mb-2 mt-4">
+										   <div class="col-md-6 col-lg-6">
+											<div class="row">
+												<div class="col-md-6 col-lg-6 " style="margin-top:10px;">
+												
+												 <h4 style="font-size:14px !important;color:#828690;!important;">Calorie</h4>
+												 <h3>64</h3>
+												 <hr>
+							
 												</div>
-											<div class="col-md-6 col-lg-6">
-												<div class="row">
-													<div class="col-md-6 col-lg-6 align-items-center" style="margin-top:10px;">
-													  <h4 style="font-size:14px !important;color:#828690;!important;">Glycemic Load</h4>
-													 <h3>64</h3>
-													</div>
-													<div class="col-md-6 col-lg-6">
-															<div class="progress-circle over50 p83">
-														   <span>83%</span>
-														   <div class="left-half-clipper">
-																<div class="first50-bar" style="background-color:#2BC155 !important;"></div>
-															  <div class="value-bar" style="background-color:#2BC155 !important;border:none !important;"></div>
-														   </div>
-														</div>
-													  </div>
-												 </div>
+											
+											 </div>
+											 
 											</div>
-											</div>
-											<div class="row mb-2">
+											
+										<div class="col-md-6 col-lg-6">
+											<div class="row">
+												<div class="col-md-8 col-lg-8 align-items-center" style="margin-top:10px;">
+												  <h4 style="font-size:14px !important;color:#828690;!important;">Glycemic Load</h4>
+												 <h3>64</h3>
+												 <hr>
+												</div>
+												
+											 </div>
+										</div>
+										<hr>
+										</div>
+										
+										<div class="row mb-2">
+										<div class="col-md-6 col-lg-6">
+										  <div class="row">
+												<div class="col-md-6 col-lg-6 align-items-center" style="margin-top:10px;">
+												  <h4 style="font-size:14px !important;color:#828690;!important;">Carbs</h4>
+												 <h3>64</h3>
+												 <hr>
+												</div>
+												
+											 </div>
+											 
+										</div>
+										<div class="col-md-6 col-lg-6">
+										<div class="row">
+												<div class="col-md-6 col-lg-6 align-items-center" style="margin-top:10px;">
+												  <h4 style="font-size:14px !important;color:#828690;!important;">Protein</h4>
+												 <h3>64</h3>
+												 <hr>
+												</div>
+												
+											 </div>
+										</div>
+										</div>
+										<div class="row mb-2">
 											<div class="col-md-6 col-lg-6">
-											  <div class="row">
-													<div class="col-md-6 col-lg-6 align-items-center" style="margin-top:10px;">
-													  <h4 style="font-size:14px !important;color:#828690;!important;">Carbs</h4>
-													 <h3>64</h3>
-													</div>
-													<div class="col-md-6 col-lg-6">
-															<div class="progress-circle over50 p83">
-														   <span>83%</span>
-														   <div class="left-half-clipper">
-															  <div class="first50-bar" style="background-color:#0B2A97 !important;"></div>
-															  <div class="value-bar" style="background-color:#0B2A97 !important;border:none !important;"></div>
-														   </div>
-														</div>
-													  </div>
-												 </div>
+											<div class="row">
+												<div class="col-md-6 col-lg-6 align-items-center" style="margin-top:10px;">
+												  <h4 style="font-size:14px !important;color:#828690;!important;">Fats</h4>
+												 <h3>64</h3>
+												 <hr>
+												</div>
+												
+											 </div>
 											</div>
 											<div class="col-md-6 col-lg-6">
 											<div class="row">
-													<div class="col-md-6 col-lg-6 align-items-center" style="margin-top:10px;">
-													  <h4 style="font-size:14px !important;color:#828690;!important;">Protein</h4>
-													 <h3>64</h3>
-													</div>
-													<div class="col-md-6 col-lg-6">
-															<div class="progress-circle over50 p83">
-														   <span>83%</span>
-														   <div class="left-half-clipper">
-															   <div class="first50-bar" style="background-color:#FFBC11 !important;"></div>
-															  <div class="value-bar" style="background-color:#FFBC11 !important;border:none !important;"></div>
-														   </div>
-														</div>
-													  </div>
-												 </div>
+												<div class="col-md-6 col-lg-6 align-items-center" style="margin-top:10px;">
+												 <h4 style="font-size:14px !important;color:#828690;!important;">Oil</h4>
+												 <h3>64</h3>
+												 <hr>
+												</div>
+												
+											 </div>
 											</div>
-											</div>
-											<div class="row mb-2">
-    											<div class="col-md-6 col-lg-6">
-    											<div class="row">
-													<div class="col-md-6 col-lg-6 align-items-center" style="margin-top:10px;">
-													  <h4 style="font-size:14px !important;color:#828690;!important;">Fats</h4>
-													 <h3>64</h3>
-													</div>
-													<div class="col-md-6 col-lg-6">
-															<div class="progress-circle over50 p83">
-														   <span>83%</span>
-														   <div class="left-half-clipper">
-															   <div class="first50-bar" style="background-color:#1EA7C5 !important;"></div>
-															  <div class="value-bar" style="background-color:#1EA7C5 !important;border:none !important;"></div>
-														   </div>
-														</div>
-													  </div>
-												 </div>
-    											</div>
-    											<div class="col-md-6 col-lg-6">
-    											<div class="row">
-													<div class="col-md-6 col-lg-6 align-items-center" style="margin-top:10px;">
-													 <h4 style="font-size:14px !important;color:#828690;!important;">Oil</h4>
-													 <h3>64</h3>
-													</div>
-													<div class="col-md-6 col-lg-6">
-															<div class="progress-circle over50 p83">
-														   <span>83%</span>
-														   <div class="left-half-clipper">
-															    <div class="first50-bar" style="background-color:#e28b21 !important;"></div>
-															  <div class="value-bar" style="background-color:#e28b21 !important;border:none !important;"></div>
-														   </div>
-														</div>
-													  </div>
-												 </div>
-    											</div>
-    											</div>	
-                                            </div>
-											  <div class="col-xl-6 col-lg-6">
-												<div class="card">
-													<div class="card-header">
-														<h4 class="card-title">Donught Chart</h4>
-													</div>
-													<div class="card-body">
-														<div id="morris_donught" class="morris_chart_height"></div>
-													</div>
+											</div>	
+										</div>
+										<div class="col-xl-6 col-lg-6">
+											<div class="card">
+												<div class="card-header">
+													<h4 class="card-title">Donught Chart</h4>
+												</div>
+												<div class="card-body"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+													<canvas id="pie_snaks"></canvas>
 												</div>
 											</div>
-                                        </div>
-                                            </div>
-                                        </div>
+										</div>
+										  
+									</div>
                                         <div class="row">
                                         <div class="col-md-6"> 
 											<div class="media border-bottom mb-3 pb-3 d-lg-flex d-block menu-list">
@@ -1099,13 +1108,11 @@
 								 
                                     </div>
 									<div id="navpills2-5" class="tab-pane">
-									<div class="row mb-4">
-                                            <div class="col-md-12">
-												 <div class="row mb-4">
+										<div class="row mb-4">
                                             <div class="card col-md-6" style="padding-bottom:30px;">
 											<div class="card-header">
-											<h5>Dinner<h5>		
-                                           </div>											
+											<h5>Dinner</h5><h5>		
+                                           </h5></div>											
 											  <div class="row mb-2 mt-4">
 											   <div class="col-md-6 col-lg-6">
 											    <div class="row">
@@ -1113,71 +1120,47 @@
 													
 													 <h4 style="font-size:14px !important;color:#828690;!important;">Calorie</h4>
 													 <h3>64</h3>
+													 <hr>
+								
 													</div>
-													<div class="col-md-6 col-lg-6">
-															<div class="">
-															  <div class="progress-circle over50 p83">
-														   <span>85%</span>
-														   <div class="left-half-clipper">
-															  <div class="first50-bar" style="background-color:#F94687 !important;"></div>
-															  <div class="value-bar" style="background-color:#F94687 !important;border:none !important;"></div>
-														   </div>
-														</div>
-															</div>
-													  </div>
+												
 												 </div>
+												 
 												</div>
+												
 											<div class="col-md-6 col-lg-6">
 												<div class="row">
-													<div class="col-md-6 col-lg-6 align-items-center" style="margin-top:10px;">
+													<div class="col-md-8 col-lg-8 align-items-center" style="margin-top:10px;">
 													  <h4 style="font-size:14px !important;color:#828690;!important;">Glycemic Load</h4>
 													 <h3>64</h3>
+													 <hr>
 													</div>
-													<div class="col-md-6 col-lg-6">
-															<div class="progress-circle over50 p83">
-														   <span>83%</span>
-														   <div class="left-half-clipper">
-																<div class="first50-bar" style="background-color:#2BC155 !important;"></div>
-															  <div class="value-bar" style="background-color:#2BC155 !important;border:none !important;"></div>
-														   </div>
-														</div>
-													  </div>
+													
 												 </div>
 											</div>
+											<hr>
 											</div>
+											
 											<div class="row mb-2">
 											<div class="col-md-6 col-lg-6">
 											  <div class="row">
 													<div class="col-md-6 col-lg-6 align-items-center" style="margin-top:10px;">
 													  <h4 style="font-size:14px !important;color:#828690;!important;">Carbs</h4>
 													 <h3>64</h3>
+													 <hr>
 													</div>
-													<div class="col-md-6 col-lg-6">
-															<div class="progress-circle over50 p83">
-														   <span>83%</span>
-														   <div class="left-half-clipper">
-															  <div class="first50-bar" style="background-color:#0B2A97 !important;"></div>
-															  <div class="value-bar" style="background-color:#0B2A97 !important;border:none !important;"></div>
-														   </div>
-														</div>
-													  </div>
+													
 												 </div>
+												 
 											</div>
 											<div class="col-md-6 col-lg-6">
 											<div class="row">
 													<div class="col-md-6 col-lg-6 align-items-center" style="margin-top:10px;">
 													  <h4 style="font-size:14px !important;color:#828690;!important;">Protein</h4>
 													 <h3>64</h3>
+													 <hr>
 													</div>
-													<div class="col-md-6 col-lg-6">
-															<div class="progress-circle over50 p83">
-														   <span>83%</span>
-														   <div class="left-half-clipper">
-															   <div class="first50-bar" style="background-color:#FFBC11 !important;"></div>
-															  <div class="value-bar" style="background-color:#FFBC11 !important;border:none !important;"></div>
-														   </div>
-														</div>
-													  </div>
+													
 												 </div>
 											</div>
 											</div>
@@ -1187,16 +1170,9 @@
 													<div class="col-md-6 col-lg-6 align-items-center" style="margin-top:10px;">
 													  <h4 style="font-size:14px !important;color:#828690;!important;">Fats</h4>
 													 <h3>64</h3>
+													 <hr>
 													</div>
-													<div class="col-md-6 col-lg-6">
-															<div class="progress-circle over50 p83">
-														   <span>83%</span>
-														   <div class="left-half-clipper">
-															   <div class="first50-bar" style="background-color:#1EA7C5 !important;"></div>
-															  <div class="value-bar" style="background-color:#1EA7C5 !important;border:none !important;"></div>
-														   </div>
-														</div>
-													  </div>
+													
 												 </div>
     											</div>
     											<div class="col-md-6 col-lg-6">
@@ -1204,32 +1180,24 @@
 													<div class="col-md-6 col-lg-6 align-items-center" style="margin-top:10px;">
 													 <h4 style="font-size:14px !important;color:#828690;!important;">Oil</h4>
 													 <h3>64</h3>
+													 <hr>
 													</div>
-													<div class="col-md-6 col-lg-6">
-															<div class="progress-circle over50 p83">
-														   <span>83%</span>
-														   <div class="left-half-clipper">
-															    <div class="first50-bar" style="background-color:#e28b21 !important;"></div>
-															  <div class="value-bar" style="background-color:#e28b21 !important;border:none !important;"></div>
-														   </div>
-														</div>
-													  </div>
+													
 												 </div>
     											</div>
     											</div>	
                                             </div>
-											  <div class="col-xl-6 col-lg-6">
+											<div class="col-xl-6 col-lg-6">
 												<div class="card">
 													<div class="card-header">
 														<h4 class="card-title">Donught Chart</h4>
 													</div>
-													<div class="card-body">
-														<div id="morris_donught" class="morris_chart_height"></div>
+													<div class="card-body"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+														<canvas id="pie_dinner"></canvas>
 													</div>
 												</div>
 											</div>
-                                        </div>
-                                            </div>
+											  
                                         </div>
                                         <div class="row">
                                            <div class="col-md-6"> 
@@ -1316,25 +1284,25 @@
         Scripts
     ***********************************-->
     <!-- Required vendors -->
-    <script src="{% static 'vendor/global/global.min.js' %}"></script>
-	<script src="{% static 'vendor/bootstrap-select/dist/js/bootstrap-select.min.js' %}"></script>
-    <script src="{% static 'js/custom.min.js' %}"></script>
-	<script src="{% static 'js/deznav-init.js' %}"></script>
+    <script src="vendor/global/global.min.js"></script>
+	<script src="vendor/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
+    <script src="js/custom.min.js"></script>
+	<script src="js/deznav-init.js"></script>
 	
     
-    <script src="{% static 'vendor/highlightjs/highlight.pack.min.js' %}"></script>
+    <script src="vendor/highlightjs/highlight.pack.min.js"></script>
     <!-- Circle progress -->
 
 	<!-- Rating -->
-	<script src="{% static 'vendor/star-rating/jquery.star-rating-svg.js' %}"></script>
+	<script src="vendor/star-rating/jquery.star-rating-svg.js"></script>
 	
 	<!-- chart -->
-	 <script src="{% static 'vendor/chart.js/Chart.bundle.min.js' %}"></script>
-    <script src="{% static 'js/plugins-init/chartjs-init.js' %}"></script>
+	 <script src="vendor/chart.js/Chart.bundle.min.js"></script>
+    <script src="js/plugins-init/chartjs-init.js"></script>
 	   <!-- Chart total calarie in circle -->
-    <script src="{% static 'vendor/morris/raphael-min.js' %}"></script>
-    <script src="{% static 'vendor/morris/morris.min.js' %}"></script>
-    <script src="{% static 'js/plugins-init/morris-init.js' %}"></script>
+    <script src="vendor/morris/raphael-min.js"></script>
+    <script src="vendor/morris/morris.min.js"></script>
+    <script src="js/plugins-init/morris-init.js"></script>
     <script>
 $(document).ready(function(){
     $('.progressWrapper progress').each(function(){
