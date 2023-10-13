@@ -6947,3 +6947,66 @@ Traceback (most recent call last):
   File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/urls/resolvers.py", line 828, in _reverse_with_prefix
     raise NoReverseMatch(msg)
 django.urls.exceptions.NoReverseMatch: Reverse for 'recipe_management' with arguments '({'message': 'CSV file uploaded and processed successfully'},)' not found. 1 pattern(s) tried: ['recipe/management/\\Z']
+ERROR 2023-10-13 08:39:08,025 log Internal Server Error: /upload-csv/
+Traceback (most recent call last):
+  File "/Users/root1/Documents/work/Appstack/env/lib/python3.11/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/root1/Documents/work/Appstack/env/lib/python3.11/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/root1/Documents/work/Appstack/freelance_project/customer_engine/decorators.py", line 28, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/root1/Documents/work/Appstack/freelance_project/backoffice_engine/views.py", line 410, in upload_csv
+    if not DailySnacks.objects.exists(food=row.get("Food")):
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/root1/Documents/work/Appstack/env/lib/python3.11/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: QuerySet.exists() got an unexpected keyword argument 'food'
+ERROR 2023-10-13 08:40:13,851 log Internal Server Error: /upload-csv/
+Traceback (most recent call last):
+  File "/Users/root1/Documents/work/Appstack/env/lib/python3.11/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/root1/Documents/work/Appstack/env/lib/python3.11/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/root1/Documents/work/Appstack/freelance_project/customer_engine/decorators.py", line 28, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/root1/Documents/work/Appstack/freelance_project/backoffice_engine/views.py", line 420, in upload_csv
+    'cals': row['Cals\nNet of  TDF'],
+            ~~~^^^^^^^^^^^^^^^^^^^^^
+KeyError: 'Cals\nNet of  TDF'
+ERROR 2023-10-13 08:40:40,973 log Internal Server Error: /upload-csv/
+Traceback (most recent call last):
+  File "/Users/root1/Documents/work/Appstack/env/lib/python3.11/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/root1/Documents/work/Appstack/env/lib/python3.11/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/root1/Documents/work/Appstack/freelance_project/customer_engine/decorators.py", line 28, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/root1/Documents/work/Appstack/freelance_project/backoffice_engine/views.py", line 421, in upload_csv
+    'cals': row['Cals\nNet of  TDF'],
+            ~~~^^^^^^^^^^^^^^^^^^^^^
+KeyError: 'Cals\nNet of  TDF'
+ERROR 2023-10-13 08:41:54,323 log Internal Server Error: /upload-csv/
+Traceback (most recent call last):
+  File "/Users/root1/Documents/work/Appstack/env/lib/python3.11/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/root1/Documents/work/Appstack/env/lib/python3.11/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/root1/Documents/work/Appstack/freelance_project/customer_engine/decorators.py", line 28, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/root1/Documents/work/Appstack/freelance_project/backoffice_engine/views.py", line 422, in upload_csv
+    'aaf_adj_prot': row['AAF \nadj Prot'],
+                    ~~~^^^^^^^^^^^^^^^^^^
+KeyError: 'AAF \nadj Prot'

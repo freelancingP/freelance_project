@@ -337,14 +337,14 @@ th {
                                         {% csrf_token %}
                                         <label for="category">Select Category:</label>
                                         <select id="category" name="category">
-                                            <option value="category1">Breakfast</option>
-                                            <option value="category2">Lunch</option>
-                                            <option value="category3">Evening Snacks</option>
-                                            <option value="category4">Dinner</option>
+                                            <option value="breakfast">Breakfast</option>
+                                            <option value="lunch">Lunch</option>
+                                            <option value="evening_snacks">Evening Snacks</option>
+                                            <option value="dinner">Dinner</option>
                                         </select>
                                         <br>
                                         <label for="file">Upload CSV File:</label>
-                                        <input type="file" id="file" name="file" accept=".csv, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                                        <input type="file" id="file" name="file" accept=".csv">
                                         <br>
                                         <button type="submit">Submit</button>
                                     </form>
