@@ -252,6 +252,7 @@ class UpdateUserDetailViews(APIView):
         try:
             customer = Customer.objects.get(id=request.user.id)
             for key, value in data.items():
+                print('key', key, 'values', value)
                 if isinstance(value, list):
                     value = ', '.join(value)  # Convert list to comma-separated string
                 if hasattr(customer, key):
@@ -266,6 +267,7 @@ class UpdateUserDetailViews(APIView):
                     return Response(response_data)
             customer.save()
             customer = Customer.objects.get(id=request.user.id)
+            print(customer.__dict__(),'customer')
             try:
                 calory_exists = CaloryCount.objects.get(customer=customer)
             except:
@@ -282,6 +284,7 @@ class UpdateUserDetailViews(APIView):
                         total_calory = 0.0
                     calory_data = CaloryCount(customer=customer,total_calory=total_calory)
                     calory_data.save()
+                    print(calory_data, 'calory_data')
             else:
                 if customer.weight is not None and customer.height is not None and customer.age is not None:
                     if customer.gender == "Male":
@@ -294,6 +297,8 @@ class UpdateUserDetailViews(APIView):
                         total_calory = 0.0
                     calory_exists.total_calory = total_calory
                     calory_exists.save()
+                    print(calory_exists, 'calory_exists')
+
 
             serializer = CustomerSerializer(customer)
             serialized_data = serializer.data
