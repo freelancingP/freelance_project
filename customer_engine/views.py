@@ -35,6 +35,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from .common_responce import JsonResponse
 import json
+from django.db.models import Sum
+
 from django.core.mail import send_mail
 import logging
 from django.conf import settings
@@ -1159,11 +1161,16 @@ class GetIngridientView(APIView):
             }
             return JsonResponse(response_data, status=status_code)
 
-        
+
 class UserProfile(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
+    def get_day_of_week(self, date_str):
+        date_obj = datetime.strptime(date_str, '%Y-%m-%d')
+        print(date_str, date_obj.strftime('%A'))
+        return date_obj.strftime('%A')
+        
     
     def get(self, request, *args, **kwargs):
         customer = request.user
@@ -1182,67 +1189,29 @@ class UserProfile(APIView):
             )
             return response
 
-        start_date_str = request.query_params.get('start_date')
-        end_date_str = request.query_params.get('end_date')
+        operation_type = request.query_params.get('type', 'weekly')
+        selected_days = None
+        if operation_type == 'weekly':
+            selected_days = timezone.now() - timedelta(days=7)
 
-        if not start_date_str or not end_date_str:
-            logger.error("Missing start_date or end_date query parameters")
-            response = JsonResponse(
-                {"detail": "Missing start_date or end_date query parameters"},
-                status=status.HTTP_400_BAD_REQUEST,
-                message="Invalid date format",
-                data=None,
-                success=False,
-                error={},
-                count=0,
-            )
-            return response
-
-        try:
-            start_date = datetime.strptime(start_date_str, "%Y-%m-%d").date()
-            end_date = datetime.strptime(end_date_str, "%Y-%m-%d").date()
-        except ValueError as value_error:
-            logger.error("Invalid date format: %s", str(value_error))
-            response = JsonResponse(
-                {"detail": "Invalid date format"},
-                status=status.HTTP_400_BAD_REQUEST,
-                message="Invalid date format",
-                data=None,
-                success=False,
-                error={},
-                count=0,
-            )
-            return response
-        
         dish_ids_list = UserSnacks.objects.filter(
                 customer=customer,
-                updated_at__date__range=(start_date, end_date)
+                updated_at__date__gte=(selected_days.date()),
+                updated_at__date__lt=(timezone.now().date())
             )
-
-        daily_calorie_data_points = []
-        daily_sodium_data_points = []
-        daily_pral_data_points = []
-        daily_oil_data_points = []
-        daily_gl_data_points = []
-        daily_aaf_adj_prot_points = []
-        daily_carbs_data_points = []
-        daily_total_fat_points =[]
-        daily_tdf_data_points = []
-        daily_potassium_data_points = []
-        daily_phosphorus_data_points = []
-        daily_calcium_data_points = []
-        daily_magnesium_data_points = []
-        daily_total_eaa_data_points = []
-        daily_lysine_data_points = []
-        daily_gross_protein_data_points = []
-        daily_free_sugar_data_points = []
-        daily_aa_factor_data_points = []
-        daily_glucose_data_points = []
         
+        dates = []
+        for i in range(7):
+            current_date = selected_days + timedelta(days=i)
+            date_str = str(current_date.date())
+            dates.insert(current_date.weekday(), date_str)
 
         date_dish_dict = {}
+        for row in dates:
+            date_dish_dict[row] = []
 
         for user_snack in dish_ids_list:
+
             updated_at = str(user_snack.updated_at.date())
             dish_id = user_snack.dish_id
 
@@ -1250,237 +1219,110 @@ class UserProfile(APIView):
                 date_dish_dict[updated_at].append(dish_id)
             else:
                 date_dish_dict[updated_at] = [dish_id]
-    
-        date_calories_sodium_dict = {}
-        total_calories = 0
-        total_sodium = 0
-        total_pral = 0
-        total_oil = 0
-        total_gl = 0
-        total_aaf_adj_prot = 0
-        total_carbs = 0
-        total_fat = 0
-        total_tdf = 0
-        total_potassium = 0
-        total_phosphorus = 0
-        total_calcium = 0
-        total_magnesium = 0
-        total_total_eaa = 0
-        total_lysine = 0
-        total_gross_protein = 0
-        total_aa_factor = 0
-        total_glucose = 0
-        total_free_sugar = 0
+        
+        for date_str in date_dish_dict.keys():
+            if not date_dish_dict[date_str]:
+                date_dish_dict[date_str] = []
 
+        cals = []
+        sodium = []
+        pral = []
+        oil = []
+        gl = []
+        aaf_adj_prot = []
+        carbs = []
+        total_fat = []
+        tdf = []
+        potassium = []
+        phosphorus = []
+        calcium = []
+        magnesium = []
+        total_eaa = []
+        lysine = []
+        gross_protein = []
+        free_sugar = []
+        aa_factor = []
+        glucose = []
+
+        column_names = [
+            'cals', 'sodium', 'pral', 'oil', 'gl', 'aaf_adj_prot', 'carbs', 'total_fat', 'tdf',
+            'potassium', 'phosphorus', 'calcium', 'magnesium', 'total_eaa', 'lysine',
+            'gross_protein', 'free_sugar', 'aa_factor', 'glucose',
+        ]
 
         for date, dish_ids in date_dish_dict.items():
+            data_queryset = DailySnacks.objects.filter(id__in=dish_ids).values(*column_names)
 
-            data_queryset = DailySnacks.objects.filter(id__in=dish_ids).values(
-                    'cals', 'sodium', 'pral', 'oil', 'gl', 'aaf_adj_prot', 'carbs', 'total_fat', 'tdf',  'potassium', 'phosphorus', 'calcium', 'magnesium',
-                    'total_eaa', 'lysine', 'gross_protein', 'free_sugar', 'aa_factor', 'glucose'
+            data_summary = (
+                data_queryset
+                .aggregate(
+                    total_cals=Sum('cals'),
+                    total_sodium=Sum('sodium'),
+                    total_pral=Sum('pral'),
+                    total_oil=Sum('oil'),
+                    total_gl=Sum('gl'),
+                    total_aaf_adj_prot=Sum('aaf_adj_prot'),
+                    total_carbs=Sum('carbs'),
+                    total_total_fat=Sum('total_fat'),
+                    total_tdf=Sum('tdf'),
+                    total_potassium=Sum('potassium'),
+                    total_phosphorus=Sum('phosphorus'),
+                    total_calcium=Sum('calcium'),
+                    total_magnesium=Sum('magnesium'),
+                    total_total_eaa=Sum('total_eaa'),
+                    total_lysine=Sum('lysine'),
+                    total_gross_protein=Sum('gross_protein'),
+                    total_free_sugar=Sum('free_sugar'),
+                    total_aa_factor=Sum('aa_factor'),
+                    total_glucose=Sum('glucose')
                 )
-            for user_snack in data_queryset:
-
-                calories = user_snack['cals']
-                sodium = user_snack['sodium']
-                pral = user_snack['pral']
-                oil = user_snack['oil']
-                gl = user_snack['gl']
-                aaf_adj_prot = user_snack['aaf_adj_prot']
-                carbs = user_snack['carbs']
-                total_fat = user_snack['total_fat']
-                tdf = user_snack['tdf']
-                potassium = user_snack['potassium']
-                phosphorus = user_snack['phosphorus']
-                calcium = user_snack['calcium']
-                magnesium = user_snack['magnesium']
-                total_eaa = user_snack['total_eaa']
-                lysine = user_snack['lysine']
-                gross_protein = user_snack['gross_protein']
-                free_sugar = user_snack['free_sugar']
-                aa_factor = user_snack['aa_factor']
-                glucose = user_snack['glucose']
+            )    
             
-                if date in date_calories_sodium_dict:
-                    date_calories_sodium_dict[date]['calories'] += calories
-                    date_calories_sodium_dict[date]['sodium'] += sodium
-                    date_calories_sodium_dict[date]['pral'] += pral
-                    date_calories_sodium_dict[date]['oil'] += oil
-                    date_calories_sodium_dict[date]['gl'] += gl
-                    date_calories_sodium_dict[date]['aaf_adj_prot'] += aaf_adj_prot
-                    date_calories_sodium_dict[date]['carbs'] += carbs
-                    date_calories_sodium_dict[date]['total_fat'] += total_fat
-                    date_calories_sodium_dict[date]['tdf'] += tdf
-                    date_calories_sodium_dict[date]['potassium'] += potassium
-                    date_calories_sodium_dict[date]['phosphorus'] += phosphorus
-                    date_calories_sodium_dict[date]['calcium'] += calcium
-                    date_calories_sodium_dict[date]['magnesium'] += magnesium
-                    date_calories_sodium_dict[date]['total_eaa'] += total_eaa
-                    date_calories_sodium_dict[date]['lysine'] += lysine
-                    date_calories_sodium_dict[date]['gross_protein'] += gross_protein
-                    date_calories_sodium_dict[date]['free_sugar'] += free_sugar
-                    date_calories_sodium_dict[date]['aa_factor'] += aa_factor
-                    date_calories_sodium_dict[date]['glucose'] += glucose
+            cals.append(data_summary['total_cals'] or 0)
+            sodium.append(data_summary['total_sodium'] or 0)
+            pral.append(data_summary['total_pral'] or 0)
+            oil.append(data_summary['total_oil'] or 0)
+            gl.append(data_summary['total_gl'] or 0)
+            aaf_adj_prot.append(data_summary['total_aaf_adj_prot'] or 0)
+            carbs.append(data_summary['total_carbs'] or 0)
+            total_fat.append(data_summary['total_total_fat'] or 0)
+            tdf.append(data_summary['total_tdf'] or 0)
+            potassium.append(data_summary['total_potassium'] or 0)
+            phosphorus.append(data_summary['total_phosphorus'] or 0)
+            calcium.append(data_summary['total_calcium'] or 0)
+            magnesium.append(data_summary['total_magnesium'] or 0)
+            total_eaa.append(data_summary['total_total_eaa'] or 0)
+            lysine.append(data_summary['total_lysine'] or 0)
+            gross_protein.append(data_summary['total_gross_protein'] or 0)
+            free_sugar.append(data_summary['total_free_sugar'] or 0)
+            aa_factor.append(data_summary['total_aa_factor'] or 0)
+            glucose.append(data_summary['total_glucose'] or 0)
 
-
-                else:
-                    date_calories_sodium_dict[date] = {
-                        'calories': calories,
-                        'sodium': sodium,
-                        'pral': pral,                        
-                        'oil': oil,
-                        'gl': gl,
-                        'aaf_adj_prot': aaf_adj_prot,
-                        'carbs': carbs,
-                        'total_fat': total_fat,
-                        'tdf': tdf,
-                        'potassium': potassium,
-                        'phosphorus': phosphorus,
-                        'calcium': calcium,
-                        'magnesium': magnesium,                     
-                        'total_eaa': total_eaa,
-                        'lysine': lysine,
-                        'gross_protein': gross_protein,
-                        'free_sugar': free_sugar,
-                        'aa_factor': aa_factor,
-                        'glucose': glucose,
-
-                    }
-
-                total_calories += calories
-                total_sodium += sodium
-                total_pral += pral
-                total_oil += oil
-                total_gl += gl
-                total_aaf_adj_prot += aaf_adj_prot
-                total_carbs += carbs
-                total_fat += total_fat
-                total_tdf += tdf
-                total_potassium += potassium
-                total_phosphorus += phosphorus
-                total_calcium += calcium
-                total_magnesium += magnesium
-                total_total_eaa += total_eaa
-                total_lysine += lysine
-                total_gross_protein += gross_protein
-                total_free_sugar += free_sugar
-                total_aa_factor += aa_factor
-                total_glucose += glucose
-
-
-
- 
         
-        for date, data in date_calories_sodium_dict.items():
-            daily_calorie_data_points.append(data['calories'])
-            daily_sodium_data_points.append(data['sodium'])
-            daily_pral_data_points.append(data['pral'])
-            daily_oil_data_points.append(data['oil'])
-            daily_gl_data_points.append(data['gl'])
-            daily_aaf_adj_prot_points.append(data['aaf_adj_prot'])
-            daily_carbs_data_points.append(data['carbs'])
-            daily_total_fat_points.append(data['total_fat'])
-            daily_tdf_data_points.append(data['tdf'])
-            daily_potassium_data_points.append(data['potassium'])
-            daily_phosphorus_data_points.append(data['phosphorus'])
-            daily_calcium_data_points.append(data['calcium'])
-            daily_magnesium_data_points.append(data['magnesium'])
-            daily_total_eaa_data_points.append(data['total_eaa'])
-            daily_lysine_data_points.append(data['lysine'])
-            daily_gross_protein_data_points.append(data['gross_protein'])
-            daily_free_sugar_data_points.append(data['free_sugar'])
-            daily_aa_factor_data_points.append(data['aa_factor'])
-            daily_glucose_data_points.append(data['glucose'])
-
-        if len(daily_calorie_data_points) > 0:
-            average_calorie = total_calories / len(daily_calorie_data_points)
+        if len(cals) > 0:
+            average_calorie = sum(cals) / len(cals)
         else:
             average_calorie = 0
+        
+        data_points = []
+        for column_name in column_names:
+            data_points.append({
+                "name": column_name, 
+                "values": eval(column_name),
+            })
+
+
         response_data = {
             "user_image": user_profile.image_url,
             "name": f"{user_profile.first_name} {user_profile.last_name}",
             "age": user_profile.age,
-            "calories": round(total_calories, 2),
+            "calories": round(sum(cals), 2),
             "calorie_intake": {
                 "average_calorie": round(average_calorie, 2),
-                "data_points": daily_calorie_data_points,
+                "data_points": cals,
             },
             "nutrition_intake": {
-                "data_points": [
-                    {
-                        "name": "Sodium",
-                        "values": daily_sodium_data_points,
-                    },
-                    {
-                        "name": "pral",
-                        "values": daily_pral_data_points,
-                    },
-                    {
-                        "name": "oil",
-                        "values": daily_oil_data_points,
-                    },
-                    {
-                        "name": "gl",
-                        "values": daily_gl_data_points,
-                    },
-                    {
-                        "name": "aaf_adj_prot",
-                        "values": daily_aaf_adj_prot_points,
-                    },
-                    {
-                        "name": "carbs",
-                        "values": daily_carbs_data_points,
-                    },
-                    {
-                        "name": "potassium",
-                        "values": daily_potassium_data_points,
-                    },
-                    {
-                        "name": "tdf",
-                        "values": daily_tdf_data_points,
-                    },
-                    {
-                        "name": "phosphorus",
-                        "values": daily_phosphorus_data_points,
-                    },
-                    {
-                        "name": "calcium",
-                        "values": daily_calcium_data_points,
-                    },
-                    {
-                        "name": "magnesium",
-                        "values": daily_magnesium_data_points,
-                    },
-                    {
-                        "name": "total_eaa",
-                        "values": daily_total_eaa_data_points,
-                    },
-                    {
-                        "name": "lysine",
-                        "values": daily_lysine_data_points,
-                    },
-                    {
-                        "name": "gross_protein",
-                        "values": daily_gross_protein_data_points,
-                    },
-                    {
-                        "name": "total_fat",
-                        "values": daily_total_fat_points,
-                    },
-                    {
-                        "name": "free_sugar",
-                        "values": daily_free_sugar_data_points,
-                    },
-                    {
-                        "name": "aa_factor",
-                        "values": daily_aa_factor_data_points,
-                    },
-                    {
-                        "name": "glucose",
-                        "values": daily_glucose_data_points,
-                    },
-                ]
-                
+                "data_points":data_points
             }
         }
 
@@ -1495,5 +1337,3 @@ class UserProfile(APIView):
             count=len(response_data),
         )
         return response
-
-
