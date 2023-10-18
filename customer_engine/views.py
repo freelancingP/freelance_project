@@ -267,11 +267,12 @@ class UpdateUserDetailViews(APIView):
                     return Response(response_data)
             customer.save()
             customer = Customer.objects.get(id=request.user.id)
-            print(customer.__dict__(),'customer')
             try:
                 calory_exists = CaloryCount.objects.get(customer=customer)
             except:
                 calory_exists = None
+
+            print(calory_exists, ' - ',customer.weight,'',customer.height ,' ', customer.age)
             if calory_exists is None:
                 if customer.weight is not None and customer.height is not None and customer.age is not None:
                     if customer.gender == "Male":
@@ -741,21 +742,29 @@ class CustomerDailyCaloriesView(APIView):
     def get(self, request, date, *args, **kwargs):
         try:
 
-            customer = request.user.id
+            customer = request.user
+            total_calory = 0
+
+            if customer.gender == "Male":
+                calory = 88.362+(float(customer.weight)*13.37)+(float(customer.height)*4.799)-(float(customer.age)*5.677)
+                total_calory = round((calory * 0.702050619834711),2)
+            elif customer.gender == "Female":
+                calory = 447.593+(float(customer.weight)*9.247)+(float(customer.height)*3.098)-(float(customer.age)*4.33)
+                total_calory = round((calory * 0.702050619834711),2)
+
             date_obj = datetime.strptime(date, "%Y-%m-%d").date()  
 
-            dish_ids_list = UserSnacks.objects.filter(customer=customer, updated_at__date=date_obj).values_list('dish_id', flat=True)
-            
+            dish_ids_list = UserSnacks.objects.filter(customer=request.user.id, updated_at__date=date_obj).values_list('dish_id', flat=True)
+            print(dish_ids_list)
             daily_snacks = DailySnacks.objects.filter(id__in=dish_ids_list)
 
             calories_used = 0
-            total_calory = 0
             total_carbs = 0
             total_calcium = 0
 
             data = {
                 'calories_used':0,
-                'total_calory':0,
+                'total_calory':total_calory,
                 'calorie_breakdown':None,
                 'breakfast':[],
                 'lunch':[],
@@ -772,7 +781,7 @@ class CustomerDailyCaloriesView(APIView):
                             "cals": instance.cals,
                         })
                 if instance.cals:
-                    total_calory += instance.cals
+                    calories_used += instance.cals
 
                 if instance.carbs:
                     total_carbs += instance.carbs
@@ -783,7 +792,7 @@ class CustomerDailyCaloriesView(APIView):
             # update data
             calorie_breakdown = {
                 "calories": {
-                        'value':total_calory,
+                        'value':calories_used,
                         'color':'#2CA3FA',
                         'percentage': 1                
                     },
@@ -799,7 +808,6 @@ class CustomerDailyCaloriesView(APIView):
                     }
             }
 
-            calories_used = total_calory
             data['calorie_breakdown'] = calorie_breakdown
             data['calories_used'] = calories_used
             data['total_calory'] = total_calory
