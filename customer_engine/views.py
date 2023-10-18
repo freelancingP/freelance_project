@@ -236,8 +236,6 @@ class UploadImageView(GenericAPIView):
             }
             return Response(response_data)
     
-
-
 class UpdateUserDetailViews(APIView):  
 
     authentication_classes=[JWTAuthentication]
@@ -251,7 +249,7 @@ class UpdateUserDetailViews(APIView):
             customer = Customer.objects.get(id=request.user.id)
             for key, value in data.items():
                 if isinstance(value, list):
-                    value = ', '.join(value)  # Convert list to comma-separated string
+                    value = ', '.join(value) 
                 if hasattr(customer, key):
                     setattr(customer, key, value)
                 else:
@@ -264,33 +262,28 @@ class UpdateUserDetailViews(APIView):
                     return Response(response_data)
             customer.save()
             customer = Customer.objects.get(id=request.user.id)
-            try:
-                calory_exists = CaloryCount.objects.get(customer=customer)
-            except:
-                calory_exists = None
+
+            calory_exists = CaloryCount.objects.filter(customer=customer).first()
+
             if calory_exists is None:
                 if customer.weight is not None and customer.height is not None and customer.age is not None:
-                    if customer.gender == "Male":
-                        calory = 88.362+(float(customer.weight)*13.37)+(float(customer.height)*4.799)-(float(customer.age)*5.677)
-                        total_calory = round((calory * 0.702050619834711),2)
-                    elif customer.gender == "Female":
-                        calory = 447.593+(float(customer.weight)*9.247)+(float(customer.height)*3.098)-(float(customer.age)*4.33)
-                        total_calory = round((calory * 0.702050619834711),2)
+                    if customer.gender == "male":
+                        calory = 88.362 + (float(customer.weight) * 13.37) + (float(customer.height) * 4.799) - (float(customer.age) * 5.677)
+                    elif customer.gender == "female":
+                        calory = 447.593 + (float(customer.weight) * 9.247) + (float(customer.height) * 3.098) - (float(customer.age) * 4.33)
                     else:
                         total_calory = 0.0
-                    calory_data = CaloryCount(customer=customer,total_calory=total_calory)
+                    calory_data = CaloryCount(customer=customer, total_calory=round((calory * 0.702050619834711), 2))
                     calory_data.save()
             else:
                 if customer.weight is not None and customer.height is not None and customer.age is not None:
-                    if customer.gender == "Male":
-                        calory = 88.362+(float(customer.weight)*13.37)+(float(customer.height)*4.799)-(float(customer.age)*5.677)
-                        total_calory = round((calory * 0.702050619834711),2)
-                    elif customer.gender == "Female":
-                        calory = 447.593+(float(customer.weight)*9.247)+(float(customer.height)*3.098)-(float(customer.age)*4.33)
-                        total_calory = round((calory * 0.702050619834711),2)
+                    if customer.gender == "male":
+                        calory = 88.362 + (float(customer.weight) * 13.37) + (float(customer.height) * 4.799) - (float(customer.age) * 5.677)
+                    elif customer.gender == "female":
+                        calory = 447.593 + (float(customer.weight) * 9.247) + (float(customer.height) * 3.098) - (float(customer.age) * 4.33)
                     else:
                         total_calory = 0.0
-                    calory_exists.total_calory = total_calory
+                    calory_exists.total_calory = round((calory * 0.702050619834711), 2)
                     calory_exists.save()
 
             serializer = CustomerSerializer(customer)
@@ -1035,12 +1028,12 @@ class DailyCalorigramView(APIView):
                     remaining_oil += item['oil']
 
             nutrition_value = [
-                {"label": "calories", "value": eaten_calories, "percentage": round(eaten_calories / (eaten_calories + remaining_calories) * 100) if eaten_calories + remaining_calories > 0 else 0, "color_code": "#01BA91", "unit": "cals"},
-                {"label": 'glycemic load', "value": eaten_gl, "percentage": round(eaten_gl / (eaten_gl + remaining_gl) * 100) if eaten_gl + remaining_gl > 0 else 0, "color_code": "#00AE4D", "unit": "gl"},
-                {"label": "carbs", "value": eaten_carbs, "percentage": round(eaten_carbs / (eaten_carbs + remaining_carbs) * 100) if eaten_carbs + remaining_carbs > 0 else 0, "color_code": "#29B6C7", "unit": "carbs"},
-                {"label": "protein", "value": eaten_pral, "percentage": round(eaten_pral / (eaten_pral + remaining_pral) * 100) if eaten_pral + remaining_pral > 0 else 0, "color_code": "#98C71C", "unit": "pral"},
-                {"label": "fats", "value": eaten_total_fat, "percentage": round(eaten_total_fat / (eaten_total_fat + remaining_total_fat) * 100) if eaten_total_fat + remaining_total_fat > 0 else 0, "color_code": "#E35F11", "unit": "fats"},
-                {"label": "oil", "value": eaten_oil, "percentage": round(eaten_oil / (eaten_oil + remaining_oil) * 100) if eaten_oil + remaining_oil > 0 else 0, "color_code": "#E3B523", "unit": "oil"},
+                {"label": "calories", "value": round(eaten_calories,2), "percentage": round(eaten_calories / (eaten_calories + remaining_calories) * 100) if eaten_calories + remaining_calories > 0 else 0, "color_code": "#01BA91", "unit": "cals"},
+                {"label": 'glycemic load', "value":round(eaten_gl,2), "percentage": round(eaten_gl / (eaten_gl + remaining_gl) * 100) if eaten_gl + remaining_gl > 0 else 0, "color_code": "#00AE4D", "unit": "gl"},
+                {"label": "carbs", "value":round(eaten_carbs,2), "percentage": round(eaten_carbs / (eaten_carbs + remaining_carbs) * 100) if eaten_carbs + remaining_carbs > 0 else 0, "color_code": "#29B6C7", "unit": "carbs"},
+                {"label": "protein", "value":round(eaten_pral,2), "percentage": round(eaten_pral / (eaten_pral + remaining_pral) * 100) if eaten_pral + remaining_pral > 0 else 0, "color_code": "#98C71C", "unit": "pral"},
+                {"label": "fats", "value":round(eaten_total_fat,2),"percentage": round(eaten_total_fat / (eaten_total_fat + remaining_total_fat) * 100) if eaten_total_fat + remaining_total_fat > 0 else 0, "color_code": "#E35F11", "unit": "fats"},
+                {"label": "oil", "value":round(eaten_oil,2), "percentage": round(eaten_oil / (eaten_oil + remaining_oil) * 100) if eaten_oil + remaining_oil > 0 else 0, "color_code": "#E3B523", "unit": "oil"},
             ]
 
             data = {
@@ -1213,44 +1206,42 @@ class UserProfile(APIView):
                 count=0,
             )
             return response
-        
-        dish_ids_list = UserSnacks.objects.filter(
-                customer=customer,
-                updated_at__date__range=(start_date, end_date)
-            )
 
-        daily_calorie_data_points = []
-        daily_sodium_data_points = []
-        daily_pral_data_points = []
-        daily_oil_data_points = []
-        daily_gl_data_points = []
-        daily_aaf_adj_prot_points = []
-        daily_carbs_data_points = []
-        daily_total_fat_points =[]
-        daily_tdf_data_points = []
-        daily_potassium_data_points = []
-        daily_phosphorus_data_points = []
-        daily_calcium_data_points = []
-        daily_magnesium_data_points = []
-        daily_total_eaa_data_points = []
-        daily_lysine_data_points = []
-        daily_gross_protein_data_points = []
-        daily_free_sugar_data_points = []
-        daily_aa_factor_data_points = []
-        daily_glucose_data_points = []
-        
+        date_range = [start_date + timedelta(days=i) for i in range((end_date - start_date).days + 1)]
+        dish_ids_list = UserSnacks.objects.filter(
+            customer=customer,
+            updated_at__date__range=(start_date, end_date)
+        )
+
+        daily_calorie_data_points = [0] * len(date_range)
+        daily_sodium_data_points = [0] * len(date_range)
+        daily_pral_data_points = [0] * len(date_range)
+        daily_oil_data_points = [0] * len(date_range)
+        daily_gl_data_points = [0] * len(date_range)
+        daily_aaf_adj_prot_points = [0] * len(date_range)
+        daily_carbs_data_points = [0] * len(date_range)
+        daily_total_fat_points = [0] * len(date_range)
+        daily_tdf_data_points = [0] * len(date_range)
+        daily_potassium_data_points = [0] * len(date_range)
+        daily_phosphorus_data_points = [0] * len(date_range)
+        daily_calcium_data_points = [0] * len(date_range)
+        daily_magnesium_data_points = [0] * len(date_range)
+        daily_total_eaa_data_points = [0] * len(date_range)
+        daily_lysine_data_points = [0] * len(date_range)
+        daily_gross_protein_data_points = [0] * len(date_range)
+        daily_free_sugar_data_points = [0] * len(date_range)
+        daily_aa_factor_data_points = [0] * len(date_range)
+        daily_glucose_data_points = [0] * len(date_range)
 
         date_dish_dict = {}
-
         for user_snack in dish_ids_list:
             updated_at = str(user_snack.updated_at.date())
             dish_id = user_snack.dish_id
-
             if updated_at in date_dish_dict:
                 date_dish_dict[updated_at].append(dish_id)
             else:
                 date_dish_dict[updated_at] = [dish_id]
-    
+
         date_calories_sodium_dict = {}
         total_calories = 0
         total_sodium = 0
@@ -1272,15 +1263,41 @@ class UserProfile(APIView):
         total_glucose = 0
         total_free_sugar = 0
 
-
-        for date, dish_ids in date_dish_dict.items():
+        for date in date_range:
+            date_str = date.strftime("%Y-%m-%d")
+            if date_str in date_dish_dict:
+                dish_ids = date_dish_dict[date_str]
+            else:
+                dish_ids = []
 
             data_queryset = DailySnacks.objects.filter(id__in=dish_ids).values(
-                    'cals', 'sodium', 'pral', 'oil', 'gl', 'aaf_adj_prot', 'carbs', 'total_fat', 'tdf',  'potassium', 'phosphorus', 'calcium', 'magnesium',
-                    'total_eaa', 'lysine', 'gross_protein', 'free_sugar', 'aa_factor', 'glucose'
-                )
-            for user_snack in data_queryset:
+                'cals', 'sodium', 'pral', 'oil', 'gl', 'aaf_adj_prot', 'carbs', 'total_fat', 'tdf',  'potassium', 'phosphorus', 'calcium', 'magnesium',
+                'total_eaa', 'lysine', 'gross_protein', 'free_sugar', 'aa_factor', 'glucose'
+            )
 
+            data = {
+                'calories': 0,
+                'sodium': 0,
+                'pral': 0,
+                'oil': 0,
+                'gl': 0,
+                'aaf_adj_prot': 0,
+                'carbs': 0,
+                'total_fat': 0,
+                'tdf': 0,
+                'potassium': 0,
+                'phosphorus': 0,
+                'calcium': 0,
+                'magnesium': 0,
+                'total_eaa': 0,
+                'lysine': 0,
+                'gross_protein': 0,
+                'free_sugar': 0,
+                'aa_factor': 0,
+                'glucose': 0
+            }
+
+            for user_snack in data_queryset:
                 calories = user_snack['cals']
                 sodium = user_snack['sodium']
                 pral = user_snack['pral']
@@ -1300,52 +1317,26 @@ class UserProfile(APIView):
                 free_sugar = user_snack['free_sugar']
                 aa_factor = user_snack['aa_factor']
                 glucose = user_snack['glucose']
-            
-                if date in date_calories_sodium_dict:
-                    date_calories_sodium_dict[date]['calories'] += calories
-                    date_calories_sodium_dict[date]['sodium'] += sodium
-                    date_calories_sodium_dict[date]['pral'] += pral
-                    date_calories_sodium_dict[date]['oil'] += oil
-                    date_calories_sodium_dict[date]['gl'] += gl
-                    date_calories_sodium_dict[date]['aaf_adj_prot'] += aaf_adj_prot
-                    date_calories_sodium_dict[date]['carbs'] += carbs
-                    date_calories_sodium_dict[date]['total_fat'] += total_fat
-                    date_calories_sodium_dict[date]['tdf'] += tdf
-                    date_calories_sodium_dict[date]['potassium'] += potassium
-                    date_calories_sodium_dict[date]['phosphorus'] += phosphorus
-                    date_calories_sodium_dict[date]['calcium'] += calcium
-                    date_calories_sodium_dict[date]['magnesium'] += magnesium
-                    date_calories_sodium_dict[date]['total_eaa'] += total_eaa
-                    date_calories_sodium_dict[date]['lysine'] += lysine
-                    date_calories_sodium_dict[date]['gross_protein'] += gross_protein
-                    date_calories_sodium_dict[date]['free_sugar'] += free_sugar
-                    date_calories_sodium_dict[date]['aa_factor'] += aa_factor
-                    date_calories_sodium_dict[date]['glucose'] += glucose
 
-
-                else:
-                    date_calories_sodium_dict[date] = {
-                        'calories': calories,
-                        'sodium': sodium,
-                        'pral': pral,                        
-                        'oil': oil,
-                        'gl': gl,
-                        'aaf_adj_prot': aaf_adj_prot,
-                        'carbs': carbs,
-                        'total_fat': total_fat,
-                        'tdf': tdf,
-                        'potassium': potassium,
-                        'phosphorus': phosphorus,
-                        'calcium': calcium,
-                        'magnesium': magnesium,                     
-                        'total_eaa': total_eaa,
-                        'lysine': lysine,
-                        'gross_protein': gross_protein,
-                        'free_sugar': free_sugar,
-                        'aa_factor': aa_factor,
-                        'glucose': glucose,
-
-                    }
+                data['calories'] += calories
+                data['sodium'] += sodium
+                data['pral'] += pral
+                data['oil'] += oil
+                data['gl'] += gl
+                data['aaf_adj_prot'] += aaf_adj_prot
+                data['carbs'] += carbs
+                data['total_fat'] += total_fat
+                data['tdf'] += tdf
+                data['potassium'] += potassium
+                data['phosphorus'] += phosphorus
+                data['calcium'] += calcium
+                data['magnesium'] += magnesium
+                data['total_eaa'] += total_eaa
+                data['lysine'] += lysine
+                data['gross_protein'] += gross_protein
+                data['free_sugar'] += free_sugar
+                data['aa_factor'] += aa_factor
+                data['glucose'] += glucose
 
                 total_calories += calories
                 total_sodium += sodium
@@ -1367,35 +1358,32 @@ class UserProfile(APIView):
                 total_aa_factor += aa_factor
                 total_glucose += glucose
 
-
-
- 
-        
-        for date, data in date_calories_sodium_dict.items():
-            daily_calorie_data_points.append(data['calories'])
-            daily_sodium_data_points.append(data['sodium'])
-            daily_pral_data_points.append(data['pral'])
-            daily_oil_data_points.append(data['oil'])
-            daily_gl_data_points.append(data['gl'])
-            daily_aaf_adj_prot_points.append(data['aaf_adj_prot'])
-            daily_carbs_data_points.append(data['carbs'])
-            daily_total_fat_points.append(data['total_fat'])
-            daily_tdf_data_points.append(data['tdf'])
-            daily_potassium_data_points.append(data['potassium'])
-            daily_phosphorus_data_points.append(data['phosphorus'])
-            daily_calcium_data_points.append(data['calcium'])
-            daily_magnesium_data_points.append(data['magnesium'])
-            daily_total_eaa_data_points.append(data['total_eaa'])
-            daily_lysine_data_points.append(data['lysine'])
-            daily_gross_protein_data_points.append(data['gross_protein'])
-            daily_free_sugar_data_points.append(data['free_sugar'])
-            daily_aa_factor_data_points.append(data['aa_factor'])
-            daily_glucose_data_points.append(data['glucose'])
+            index = (date - start_date).days
+            daily_calorie_data_points[index] = data['calories']
+            daily_sodium_data_points[index] = data['sodium']
+            daily_pral_data_points[index] = data['pral']
+            daily_oil_data_points[index] = data['oil']
+            daily_gl_data_points[index] = data['gl']
+            daily_aaf_adj_prot_points[index] = data['aaf_adj_prot']
+            daily_carbs_data_points[index] = data['carbs']
+            daily_total_fat_points[index] = data['total_fat']
+            daily_tdf_data_points[index] = data['tdf']
+            daily_potassium_data_points[index] = data['potassium']
+            daily_phosphorus_data_points[index] = data['phosphorus']
+            daily_calcium_data_points[index] = data['calcium']
+            daily_magnesium_data_points[index] = data['magnesium']
+            daily_total_eaa_data_points[index] = data['total_eaa']
+            daily_lysine_data_points[index] = data['lysine']
+            daily_gross_protein_data_points[index] = data['gross_protein']
+            daily_free_sugar_data_points[index] = data['free_sugar']
+            daily_aa_factor_data_points[index] = data['aa_factor']
+            daily_glucose_data_points[index] = data['glucose']
 
         if len(daily_calorie_data_points) > 0:
             average_calorie = total_calories / len(daily_calorie_data_points)
         else:
             average_calorie = 0
+
         response_data = {
             "user_image": user_profile.image_url,
             "name": f"{user_profile.first_name} {user_profile.last_name}",
@@ -1480,7 +1468,6 @@ class UserProfile(APIView):
                         "values": daily_glucose_data_points,
                     },
                 ]
-                
             }
         }
 
@@ -1495,5 +1482,4 @@ class UserProfile(APIView):
             count=len(response_data),
         )
         return response
-
-
+        

@@ -393,10 +393,10 @@ def upload_csv(request):
         except AdminUser.DoesNotExist:
             return HttpResponse("User not found or not authorized.", status=403)
 
-        category = request.POST.get('category', '')
+        meal_type = request.POST.get('category', 'breakfast')
         uploaded_file = request.FILES.get('file')
-
-        if not category or not uploaded_file:
+ 
+        if not uploaded_file:
             return HttpResponse("Category and file are required fields.", status=400)
 
         encoding = 'latin-1'
@@ -407,32 +407,28 @@ def upload_csv(request):
             data = []
 
             for row in reader:
-                if row.get("Food"):
+                if not DailySnacks.objects.filter(food=row.get("Food")).exists() and len(row['Food']) > 0:
                     dish_data = {
-                        # 'meal_type': category,
-                        'food': row.get('Food', ''),  # Use .get() to handle missing keys
-                        'quantity': row.get('Quantity', ''),
-                        'ingredients': row.get('Ingredients', ''),
-                        'veg_nonveg_egg': row.get('Veg/Non Veg/Egg', ''),
-                        'pral': row.get('PRAL', ''),
-                        'oil': row.get('Oil', ''),
-                        'gl': row.get('GL', ''),
-                        'cals': 1,
-                        'aaf_adj_prot': 1,
-                        'carbs': 1,
-                        'total_fat': row.get('Total Fat', ''),
-                        'tdf': row.get('TDF', ''),
-                        'sodium': row.get('Sodium', ''),
-                        'potassium': row.get('Pota-ssium', ''),
-                        'phosphorus': row.get('Phosphorus', ''),
-                        'calcium': row.get('Calcium', ''),
-                        'magnesium': row.get('Magnecium', ''),
-                        'total_eaa': row.get('Total EAA', ''),
-                        'lysine': row.get('Lysine', ''),
-                        'gross_protein': row.get('Gross Protein', ''),
-                        'free_sugar': row.get('Free Sugars', ''),
-                        'aa_factor': 1,
-                        'glucose': 1
+                        'meal_type':meal_type,
+                        'food': row['Food'],
+                        'quantity': row['Quantity'],
+                        'ingredients': row['Ingredients '],
+                        'veg_nonveg_egg': row['Veg/Non Veg/Egg'],
+                        'pral' : 0 if len(row['PRAL']) == 0 else row['PRAL'],
+                        'oil': 0 if len(row['Oil']) == 0 else row['Oil'],
+                        'gl': 0 if len(row['GL']) == 0 else row['GL'],
+                        'cals': 0 if len(row['CalsNet of  TDF']) == 0 else row['CalsNet of  TDF'],
+                        'aaf_adj_prot': 0 if len(row['AAF adj Prot']) == 0 else row['AAF adj Prot'],
+                        'carbs': 0 if len(row['Carbs(Net of TDF)']) == 0 else row['Carbs(Net of TDF)'],
+                        'total_fat': 0 if len(row['Total Fat']) == 0 else row['Total Fat'],
+                        'tdf': 0 if len(row['TDF']) == 0 else row['TDF'],
+                        'sodium': 0 if len(row['Sodium']) == 0 else row['Sodium'],
+                        'potassium': 0 if len(row['Pota-ssium']) == 0 else row['Pota-ssium'],
+                        'calcium': 0 if len(row['Calcium']) == 0 else row['Calcium'],
+                        'total_eaa': 0 if len(row['Total EAA']) == 0 else row['Total EAA'],
+                        'lysine': 0 if len(row['Lysine']) == 0 else row['Lysine'],
+                        'aa_factor':0,
+                        'glucose':0
                     }
                     data.append(dish_data)
 
@@ -487,12 +483,15 @@ def recipe_calculator(request, id):
 @custom_login_required
 def customers_detail(request,user_id):
     user = AdminUser.objects.get(id = request.session["user"])
+    data = ""
     try:
         data = UserSnacks.objects.get(customer=user_id)
-        print(data, "=========")
-    except UserSnacks.DoesNotExist:
-        data = None  # Set data to None if UserSnacks record is not found
-    
+    except :
+        data = None  
+        return render(request,"view-customer-detail.html",{
+            "user": user,
+            "data": data
+        })
     return render(request, "view-customer-detail.html", {
         "user": user,
         "data": data
