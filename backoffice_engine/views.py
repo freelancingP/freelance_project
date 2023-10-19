@@ -406,10 +406,9 @@ def upload_csv(request):
         data = []
 
         for row in reader:
-            check = DailySnacks.objects.filter(food=row.get("Food")).exists()
-            if check != True and len(row['Food']) > 0:
-                print(row)
-
+            # check = DailySnacks.objects.filter(food=row.get("Food")).exists()
+            if len(row['Food']) > 0:
+                
                 dish_data = {
                     'meal_type':meal_type,
                     'food': row['Food'],
