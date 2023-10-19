@@ -485,10 +485,9 @@ def recipe_calculator(request, id):
 def customers_detail(request,user_id):
     user = AdminUser.objects.get(id = request.session["user"])
     try:
-        data = UserSnacks.objects.get(customer=user_id)
-        print(data, "=========")
-    except UserSnacks.DoesNotExist:
-        data = None  # Set data to None if UserSnacks record is not found
+        data = UserSnacks.objects.get(customer=user_id).first()
+    except:
+        data = None
     
     return render(request, "view-customer-detail.html", {
         "user": user,
