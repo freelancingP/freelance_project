@@ -482,10 +482,10 @@ def recipe_calculator(request, id):
     })    
 
 @custom_login_required
-def customers_detail(request,user_id):
+def customers_detail(request, user_id):
     user = AdminUser.objects.get(id = request.session["user"])
     try:
-        data = UserSnacks.objects.get(customer=user_id).first()
+        data = Customer.objects.get(id=user_id)
     except:
         data = None
     
