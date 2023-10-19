@@ -745,17 +745,20 @@ class CustomerDailyCaloriesView(APIView):
             customer = request.user
             total_calory = 0
 
-            if customer.gender == "Male":
-                calory = 88.362+(float(customer.weight)*13.37)+(float(customer.height)*4.799)-(float(customer.age)*5.677)
-                total_calory = round((calory * 0.702050619834711),2)
-            elif customer.gender == "Female":
-                calory = 447.593+(float(customer.weight)*9.247)+(float(customer.height)*3.098)-(float(customer.age)*4.33)
-                total_calory = round((calory * 0.702050619834711),2)
-
+            try:
+                if customer.gender == "Male":
+                    calory = 88.362+(float(customer.weight)*13.37)+(float(customer.height)*4.799)-(float(customer.age)*5.677)
+                    total_calory = round((calory * 0.702050619834711),2)
+                elif customer.gender == "Female":
+                    calory = 447.593+(float(customer.weight)*9.247)+(float(customer.height)*3.098)-(float(customer.age)*4.33)
+                    total_calory = round((calory * 0.702050619834711),2)
+            except:
+                pass
+            
             date_obj = datetime.strptime(date, "%Y-%m-%d").date()  
 
             dish_ids_list = UserSnacks.objects.filter(customer=request.user.id, updated_at__date=date_obj).values_list('dish_id', flat=True)
-            print(dish_ids_list)
+    
             daily_snacks = DailySnacks.objects.filter(id__in=dish_ids_list)
 
             calories_used = 0

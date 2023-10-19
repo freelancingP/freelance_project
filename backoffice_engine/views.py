@@ -401,48 +401,50 @@ def upload_csv(request):
 
         encoding = 'latin-1'
 
-        try:
-            decoded_data = uploaded_file.read().decode(encoding)
-            reader = csv.DictReader(decoded_data.splitlines())
-            data = []
+        decoded_data = uploaded_file.read().decode(encoding)
+        reader = csv.DictReader(decoded_data.splitlines())
+        data = []
 
-            for row in reader:
-                if not DailySnacks.objects.filter(food=row.get("Food")).exists() and len(row['Food']) > 0:
-                    dish_data = {
-                        'meal_type':meal_type,
-                        'food': row['Food'],
-                        'quantity': row['Quantity'],
-                        'ingredients': row['Ingredients '],
-                        'veg_nonveg_egg': row['Veg/Non Veg/Egg'],
-                        'pral' : 0 if len(row['PRAL']) == 0 else row['PRAL'],
-                        'oil': 0 if len(row['Oil']) == 0 else row['Oil'],
-                        'gl': 0 if len(row['GL']) == 0 else row['GL'],
-                        'cals': 0 if len(row['CalsNet of  TDF']) == 0 else row['CalsNet of  TDF'],
-                        'aaf_adj_prot': 0 if len(row['AAF adj Prot']) == 0 else row['AAF adj Prot'],
-                        'carbs': 0 if len(row['Carbs          (Net of TDF)']) == 0 else row['Carbs          (Net of TDF)'],
-                        'total_fat': 0 if len(row['Total Fat']) == 0 else row['Total Fat'],
-                        'tdf': 0 if len(row['TDF']) == 0 else row['TDF'],
-                        'sodium': 0 if len(row['Sodium']) == 0 else row['Sodium'],
-                        'potassium': 0 if len(row['Pota-ssium']) == 0 else row['Pota-ssium'],
-                        'calcium': 0 if len(row['Calcium']) == 0 else row['Calcium'],
-                        'total_eaa': 0 if len(row['Total EAA']) == 0 else row['Total EAA'],
-                        'lysine': 0 if len(row['Lysine']) == 0 else row['Lysine'],
-                        'aa_factor':0,
-                        'glucose':0
-                    }
-                    data.append(dish_data)
+        for row in reader:
+            check = DailySnacks.objects.filter(food=row.get("Food")).exists()
+            if check != True and len(row['Food']) > 0:
+                print(row)
 
-            for dish_data in data:
-                try:
-                    DailySnacks.objects.create(**dish_data)
-                except Exception as e:
-                    print(e,'----->')
+                dish_data = {
+                    'meal_type':meal_type,
+                    'food': row['Food'],
+                    'quantity': row['Quantity'],
+                    'ingredients': row['Ingredients '],
+                    'veg_nonveg_egg': row['Veg/Non Veg/Egg'],
+                    'pral' : 0 if len(row['PRAL']) == 0 else row['PRAL'],
+                    'oil': 0 if len(row['Oil']) == 0 else row['Oil'],
+                    'gl': 0 if len(row['GL']) == 0 else row['GL'],
+                    'cals': 0 if len(row['CalsNet of  TDF']) == 0 else row['CalsNet of  TDF'],
+                    'aaf_adj_prot': 0 if len(row['AAF adj Prot']) == 0 else row['AAF adj Prot'],
+                    'carbs': 0 if len(row['Carbs          (Net of TDF)']) == 0 else row['Carbs          (Net of TDF)'],
+                    'total_fat': 0 if len(row['Total Fat']) == 0 else row['Total Fat'],
+                    'tdf': 0 if len(row['TDF']) == 0 else row['TDF'],
+                    'sodium': 0 if len(row['Sodium']) == 0 else row['Sodium'],
+                    'potassium': 0 if len(row['Pota-ssium']) == 0 else row['Pota-ssium'],
+                    'calcium': 0 if len(row['Calcium']) == 0 else row['Calcium'],
+                    'total_eaa': 0 if len(row['Total EAA']) == 0 else row['Total EAA'],
+                    'lysine': 0 if len(row['Lysine']) == 0 else row['Lysine'],
+                    'aa_factor':0,
+                    'glucose':0
+                }
+                data.append(dish_data)
 
-            # return HttpResponse("CSV file uploaded and processed successfully.")
-            return redirect('recipe_management')
-        except UnicodeDecodeError as e:
-            error_message = f"Error decoding file: {str(e)}"
-            return HttpResponse(error_message, status=400)
+        for dish_data in data:
+            try:
+                DailySnacks.objects.create(**dish_data)
+            except Exception as e:
+                print(e,'----->')
+
+        # return HttpResponse("CSV file uploaded and processed successfully.")
+        return redirect('recipe_management')
+        # except UnicodeDecodeError as e:
+        #     error_message = f"Error decoding file: {str(e)}"
+        #     return HttpResponse(error_message, status=400)
 
     return render(request, "upload_csv.html")
     
