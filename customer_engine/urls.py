@@ -24,5 +24,6 @@ urlpatterns = [
     path('daily-calorigram/<str:date>/', DailyCalorigramView.as_view(), name='daily_calorigram'),
     path('get-dishes/', GetIngridientView.as_view(), name='get_dishes'),
     path('user-profile/', UserProfile.as_view(), name='user_profile'),
+    path('user-profile-detail/', UserProfileDetails.as_view(), name='user_profile_detail'),
 
 ]

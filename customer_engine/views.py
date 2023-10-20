@@ -1353,3 +1353,39 @@ class UserProfile(APIView):
             count=len(response_data),
         )
         return response
+    
+
+class UserProfileDetails(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        customer = request.user
+        try:
+            user_profile = Customer.objects.get(id=customer.id)
+        except Customer.DoesNotExist as customer_does_not_exist_error:
+            logger.error("Customer with ID %s does not exist: %s", customer.id, str(customer_does_not_exist_error))
+            response = JsonResponse(
+                {"detail": "Customer not found"},
+                status=status.HTTP_404_NOT_FOUND,
+                message="Customer not found",
+                data=None,
+                success=False,
+                error={},
+                count=0,
+            )
+            return response
+
+        serializer = CustomerSerializer(instance=user_profile)
+     
+        status_code = status.HTTP_200_OK
+        message = "successful"
+        response = JsonResponse(
+            status=status_code,
+            message=message,
+            data=serializer.data,
+            success=True,
+            error={},
+            count=len(serializer.data),
+        )
+        return response
