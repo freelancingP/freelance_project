@@ -15,10 +15,11 @@ import pandas as pd
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from openpyxl import load_workbook
 import boto3
-import math
 import csv
 # Create your views here.
 from customer_engine.models import *
+import requests
+from .utils import get_customer_data
 
 def login(request):
     if request.method == "POST":
@@ -487,8 +488,8 @@ def customers_detail(request, user_id):
 
     user_food = None
     if data:
-        user_food = UserSnacks.objects.filter(customer=data.id)
-    
+        user_food = get_customer_data('2023-10-07', Customer)
+
     return render(request, "view-customer-detail.html", {
         "user": user,
         "data": data,
