@@ -16,6 +16,7 @@ urlpatterns = [
     path('verify/reset/otp/', views.verify_otp, name='verify_otp'),
     path('set/new/password/', views.new_password, name='new_password'),
     path('customers/detail/<int:user_id>/', views.customers_detail, name='customers_detail'),
+    path('customers/detail-more/<int:item_id>/', views.view_more, name='customers_detail_more'),
     path('customers/detail-more/', views.view_more, name='customers_detail_more'),
     path('logout/', views.logout, name='logout'),
     path('add/customer/', views.add_customer, name='add_customer'),

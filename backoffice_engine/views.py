@@ -18,7 +18,7 @@ import boto3
 import csv
 # Create your views here.
 from customer_engine.models import *
-import requests
+from datetime import date
 from .utils import get_customer_data
 
 def login(request):
@@ -471,7 +471,7 @@ def recipe_calculator(request, id):
     user = AdminUser.objects.get(id = request.session["user"])
     data = AddRecipe.objects.get(id=id)
     ingridients = AddIngridient.objects.filter(item=data.id)
-    print(data,"-------------")
+    
     return render(request,"recipe-calculator-details.html",{
         "user":user,
         "recipe":data,
@@ -480,6 +480,7 @@ def recipe_calculator(request, id):
 
 @custom_login_required
 def customers_detail(request, user_id):
+
     user = AdminUser.objects.get(id = request.session["user"])
     try:
         data = Customer.objects.get(id=user_id)
@@ -488,7 +489,19 @@ def customers_detail(request, user_id):
 
     user_food = None
     if data:
-        user_food = get_customer_data('2023-10-20', data)
+        user_food = get_customer_data(str(date.today()), data)
+
+    if request.method == "POST":
+ 
+        date_is = request.POST["date"]
+        meal_type = request.POST["meal_type"]
+        if not date_is:
+            date_is = str(date.today())
+
+        if meal_type != None:
+            user_food = get_customer_data(date_is, data, meal_type)
+        else:
+            user_food = get_customer_data(date_is, data, meal_type)
 
     return render(request, "view-customer-detail.html", {
         "user": user,
@@ -496,10 +509,12 @@ def customers_detail(request, user_id):
         'food':user_food
     })
 @custom_login_required
-def view_more(request):
+def view_more(request, item_id):
     user = AdminUser.objects.get(id = request.session["user"])
+    item = DailySnacks.objects.get(id=item_id)
     return render(request,"view-more.html",{
         "user":user,
+        "item":item
     })    
     
 @custom_login_required
@@ -524,20 +539,20 @@ def add_dish(request):
                 print(sheet_names)
                 df = pd.read_excel(file, engine='openpyxl')  # Explicitly specify the engine
                 data = df.to_dict(orient='records')
-                print(data)
+ 
                 for d in data:
                     for sheet in sheet_names:
                         dishes_data = None
                         if sheet == "Dishes":
                             dishes_data = Dishes(food=d["Food"], quantity=d["Quantity"],ingredients=d["Ingredients "],veg_nonveg_egg = d["Veg/Non Veg/Egg"],pral=d["PRAL"],gl=d["GL"], oil=d["Oil"],cals=d["Cals\nNet of  TDF"], aaf_adj_prot=d["AAF \nadj Prot"], carbs=d["Carbs          (Net of TDF)"], total_fat=d["Total Fat"], tdf=d["TDF"],sodium=d["Sodium"], potassium=d["Pota-ssium"], phasphorous=d["Phosphorus"], calcium=d["Calcium"], magnecium=d["Magnecium"], total_eaa=d["Total EAA"], lysine=d["Lysine"], gross_protine=d["Gross Protein"], free_suger=d["Free Sugars"],aa_factor=d["AA\nFactor"],glucose=d["GI       (Glu-cose)"])
-                        elif sheet == "Breakfast":
-                            dishes_data = Breakfast(food=d["Food"], quantity=d["Quantity"],ingredients=d["Ingredients "],veg_nonveg_egg = d["Veg/Non Veg/Egg"],pral=d["PRAL"],gl=d["GL"], oil=d["Oil"],cals=d["Cals\nNet of  TDF"], aaf_adj_prot=d["AAF \nadj Prot"], carbs=d["Carbs          (Net of TDF)"], total_fat=d["Total Fat"], tdf=d["TDF"],sodium=d["Sodium"], potassium=d["Pota-ssium"], phasphorous=d["Phosphorus"], calcium=d["Calcium"], magnecium=d["Magnecium"], total_eaa=d["Total EAA"], lysine=d["Lysine"], gross_protine=d["Gross Protein"], free_suger=d["Free Sugars"],aa_factor=d["AA\nFactor"],glucose=d["GI       (Glu-cose)"])
-                        elif sheet == "Lunch":
-                            dishes_data = Lunch(food=d["Food"], quantity=d["Quantity"],ingredients=d["Ingredients"],veg_nonveg_egg = d["Veg/Non Veg/Egg"],pral=d["PRAL"],gl=d["GL"], oil=d["Oil"],cals=d["Cals\nNet of  TDF"], aaf_adj_prot=d["AAF \nadj Prot"], carbs=d["Carbs          (Net of TDF)"], total_fat=d["Total Fat"], tdf=d["TDF"],sodium=d["Sodium"], potassium=d["Pota-ssium"], phasphorous=d["Phosphorus"], calcium=d["Calcium"], magnecium=d["Magnecium"], total_eaa=d["Total EAA"], lysine=d["Lysine"], gross_protine=d["Gross Protein"], free_suger=d["Free Sugars"])
-                        elif sheet == "Dinner":
-                            dishes_data = Diner(food=d["Food"], quantity=d["Quantity"],ingredients=d["Ingredients "],veg_nonveg_egg = d["Veg/Non Veg/Egg"],pral=d["PRAL"],gl=d["GL"], oil=d["Oil"],cals=d["Cals\nNet of  TDF"], aaf_adj_prot=d["AAF \nadj Prot"], carbs=d["Carbs          (Net of TDF)"], total_fat=d["Total Fat"], tdf=d["TDF"],sodium=d["Sodium"], potassium=d["Pota-ssium"], phasphorous=d["Phosphorus"], calcium=d["Calcium"], magnecium=d["Magnecium"], total_eaa=d["Total EAA"], lysine=d["Lysine"], gross_protine=d["Gross Protein"], free_suger=d["Free Sugars"],aa_factor=d["AA\nFactor"],glucose=d["GI       (Glu-cose)"])
-                        elif sheet == "Breakfast":
-                            dishes_data = Snacks(food=d["Food"], quantity=d["Quantity"],ingredients=d["Ingredients "],veg_nonveg_egg = d["Veg/Non Veg/Egg"],pral=d["PRAL"],gl=d["GL"], oil=d["Oil"],cals=d["Cals\nNet of  TDF"], aaf_adj_prot=d["AAF \nadj Prot"], carbs=d["Carbs          (Net of TDF)"], total_fat=d["Total Fat"], tdf=d["TDF"],sodium=d["Sodium"], potassium=d["Pota-ssium"], phasphorous=d["Phosphorus"], calcium=d["Calcium"], magnecium=d["Magnecium"], total_eaa=d["Total EAA"], lysine=d["Lysine"], gross_protine=d["Gross Protein"], free_suger=d["Free Sugars"],aa_factor=d["AA\nFactor"],glucose=d["GI       (Glu-cose)"])
+                        # elif sheet == "Breakfast":
+                        #     dishes_data = Breakfast(food=d["Food"], quantity=d["Quantity"],ingredients=d["Ingredients "],veg_nonveg_egg = d["Veg/Non Veg/Egg"],pral=d["PRAL"],gl=d["GL"], oil=d["Oil"],cals=d["Cals\nNet of  TDF"], aaf_adj_prot=d["AAF \nadj Prot"], carbs=d["Carbs          (Net of TDF)"], total_fat=d["Total Fat"], tdf=d["TDF"],sodium=d["Sodium"], potassium=d["Pota-ssium"], phasphorous=d["Phosphorus"], calcium=d["Calcium"], magnecium=d["Magnecium"], total_eaa=d["Total EAA"], lysine=d["Lysine"], gross_protine=d["Gross Protein"], free_suger=d["Free Sugars"],aa_factor=d["AA\nFactor"],glucose=d["GI       (Glu-cose)"])
+                        # elif sheet == "Lunch":
+                        #     dishes_data = Lunch(food=d["Food"], quantity=d["Quantity"],ingredients=d["Ingredients"],veg_nonveg_egg = d["Veg/Non Veg/Egg"],pral=d["PRAL"],gl=d["GL"], oil=d["Oil"],cals=d["Cals\nNet of  TDF"], aaf_adj_prot=d["AAF \nadj Prot"], carbs=d["Carbs          (Net of TDF)"], total_fat=d["Total Fat"], tdf=d["TDF"],sodium=d["Sodium"], potassium=d["Pota-ssium"], phasphorous=d["Phosphorus"], calcium=d["Calcium"], magnecium=d["Magnecium"], total_eaa=d["Total EAA"], lysine=d["Lysine"], gross_protine=d["Gross Protein"], free_suger=d["Free Sugars"])
+                        # elif sheet == "Dinner":
+                        #     dishes_data = Diner(food=d["Food"], quantity=d["Quantity"],ingredients=d["Ingredients "],veg_nonveg_egg = d["Veg/Non Veg/Egg"],pral=d["PRAL"],gl=d["GL"], oil=d["Oil"],cals=d["Cals\nNet of  TDF"], aaf_adj_prot=d["AAF \nadj Prot"], carbs=d["Carbs          (Net of TDF)"], total_fat=d["Total Fat"], tdf=d["TDF"],sodium=d["Sodium"], potassium=d["Pota-ssium"], phasphorous=d["Phosphorus"], calcium=d["Calcium"], magnecium=d["Magnecium"], total_eaa=d["Total EAA"], lysine=d["Lysine"], gross_protine=d["Gross Protein"], free_suger=d["Free Sugars"],aa_factor=d["AA\nFactor"],glucose=d["GI       (Glu-cose)"])
+                        # elif sheet == "Breakfast":
+                        #     dishes_data = Snacks(food=d["Food"], quantity=d["Quantity"],ingredients=d["Ingredients "],veg_nonveg_egg = d["Veg/Non Veg/Egg"],pral=d["PRAL"],gl=d["GL"], oil=d["Oil"],cals=d["Cals\nNet of  TDF"], aaf_adj_prot=d["AAF \nadj Prot"], carbs=d["Carbs          (Net of TDF)"], total_fat=d["Total Fat"], tdf=d["TDF"],sodium=d["Sodium"], potassium=d["Pota-ssium"], phasphorous=d["Phosphorus"], calcium=d["Calcium"], magnecium=d["Magnecium"], total_eaa=d["Total EAA"], lysine=d["Lysine"], gross_protine=d["Gross Protein"], free_suger=d["Free Sugars"],aa_factor=d["AA\nFactor"],glucose=d["GI       (Glu-cose)"])
                         if dishes_data is not None:
                             dishes_data.save()
                 return render(request, "add-dish-calculator.html", {
@@ -646,9 +661,7 @@ def recipe_details(request, recipe_id):
 #     })
 def add_ingredient(request):
     user = AdminUser.objects.get(id = request.session["user"])
-    print(request.method ,"-------------------01")
     if request.method == "POST":
-        print(request.POST,"=============02")
         ingridient_name = request.POST["ingridient_name"]
         quantity_type = request.POST["ingridient_type"]
         ingridient_quantity = request.POST["ingridient_quantity"]
@@ -672,8 +685,6 @@ def add_ingredient(request):
             sodium=sodium,
             fiber=fiber,
         )
-        
-        print(data,"==================")
         
         data.save()
         return render(request,"add-ingredient.html",{

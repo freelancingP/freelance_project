@@ -2,7 +2,7 @@ from datetime import datetime
 from  customer_engine.models import DailySnacks, UserSnacks
 from django.db.models import Sum
 
-def get_customer_data(date, customer):
+def get_customer_data(date, customer, meal_type=None):
 
     total_calory = 0
 
@@ -17,7 +17,7 @@ def get_customer_data(date, customer):
         pass
     
     column_names = [
-            'meal_type', 'ingredients', 'food', 'cals', 'sodium', 'pral', 'oil', 'gl', 'aaf_adj_prot', 'carbs', 'total_fat', 'tdf',
+            'id','meal_type', 'ingredients', 'food', 'cals', 'sodium', 'pral', 'oil', 'gl', 'aaf_adj_prot', 'carbs', 'total_fat', 'tdf',
             'potassium', 'phosphorus', 'calcium', 'magnesium', 'total_eaa', 'lysine',
             'gross_protein', 'free_sugar', 'aa_factor', 'glucose',
         ]
@@ -26,7 +26,11 @@ def get_customer_data(date, customer):
 
     dish_ids_list = UserSnacks.objects.filter(customer=customer.id, updated_at__date=date_obj).values_list('dish_id', flat=True)
 
-    data_queryset = DailySnacks.objects.filter(id__in=dish_ids_list).values(*column_names)
+    data_queryset = None
+    if meal_type:
+        data_queryset = DailySnacks.objects.filter(id__in=dish_ids_list, meal_type=meal_type).values(*column_names)
+    else:
+        data_queryset = DailySnacks.objects.filter(id__in=dish_ids_list).values(*column_names)
 
     data = (
         data_queryset
@@ -54,6 +58,14 @@ def get_customer_data(date, customer):
     )    
 
     data['total_calory'] = total_calory
+    
+    food_data = []
+    unique_ingredients = set()
+
+    for item in data_queryset:
+       food_data.append(item)
+
+    data['items'] = food_data
 
     # calories_used = 0
     # total_carbs = 0
