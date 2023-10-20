@@ -488,7 +488,7 @@ def customers_detail(request, user_id):
 
     user_food = None
     if data:
-        user_food = get_customer_data('2023-10-07', data)
+        user_food = get_customer_data('2023-10-20', data)
 
     return render(request, "view-customer-detail.html", {
         "user": user,
