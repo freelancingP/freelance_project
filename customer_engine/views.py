@@ -1314,7 +1314,6 @@ class UserProfile(APIView):
             aa_factor.append(data_summary['total_aa_factor'] or 0)
             glucose.append(data_summary['total_glucose'] or 0)
 
-        
         if len(cals) > 0:
             average_calorie = sum(cals) / len(cals)
         else:
@@ -1378,6 +1377,20 @@ class UserProfileDetails(APIView):
 
         serializer = CustomerSerializer(instance=user_profile)
      
+        total_calory = 0
+
+        try:
+            if user_profile.gender == "Male":
+                calory = 88.362+(float(user_profile.weight)*13.37)+(float(user_profile.height)*4.799)-(float(user_profile.age)*5.677)
+                total_calory = round((calory * 0.702050619834711),2)
+            elif customer.gender == "Female":
+                calory = 447.593+(float(user_profile.weight)*9.247)+(float(user_profile.height)*3.098)-(float(user_profile.age)*4.33)
+                total_calory = round((calory * 0.702050619834711),2)
+        except:
+            pass
+
+        data = serializer.data
+        data['calories'] = total_calory 
         status_code = status.HTTP_200_OK
         message = "successful"
         response = JsonResponse(
