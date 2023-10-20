@@ -163,7 +163,7 @@ def index(request):
     user = AdminUser.objects.get(id = request.session["user"])
     total_customer = Customer.objects.all().count()
     total_dishes = DailySnacks.objects.all().count()
-    print(total_dishes,"---------------")
+ 
     return render(request,"index.html",{
         "user":user,
         "total_customer":total_customer,
@@ -244,10 +244,7 @@ def index(request):
 @custom_login_required
 def add_customer(request):
     user = AdminUser.objects.get(id = request.session["user"])
-    print(request.method ,"-------------------01")
     if request.method == "POST":
-        print(request.POST,"=============02")
-        
         firstname = request.POST["fname"]
         lastname = request.POST["lname"]
         gender = request.POST["gender"]
@@ -270,7 +267,6 @@ def add_customer(request):
         
         data = Customer(username = email, first_name = firstname, last_name = lastname ,gender = gender,address = address, location = location, contact_number = contact, email = email, date_of_birth = dob, age = age , height = height, weight = weight, health_issue = health_issue, other_issue = other_issue, any_medication = any_medication, veg_nonveg = veg_nonveg, profession = profession , help=help)
         
-        print(data,"==================")
         customer_exists = Customer.objects.filter(Q(contact_number=contact) | Q(email=email)).exists()
         if customer_exists:
             return render(request,"add_customer.html",{
@@ -488,10 +484,15 @@ def customers_detail(request, user_id):
         data = Customer.objects.get(id=user_id)
     except:
         data = None
+
+    user_food = None
+    if data:
+        user_food = UserSnacks.objects.filter(customer=data.id)
     
     return render(request, "view-customer-detail.html", {
         "user": user,
-        "data": data
+        "data": data,
+        'food':user_food
     })
 @custom_login_required
 def view_more(request):
