@@ -1396,9 +1396,9 @@ class UserProfileDetails(APIView):
         response = JsonResponse(
             status=status_code,
             message=message,
-            data=serializer.data,
+            data=data,
             success=True,
             error={},
-            count=len(serializer.data),
+            count=len(data),
         )
         return response
