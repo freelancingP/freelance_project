@@ -280,12 +280,13 @@ def add_customer(request):
             })
         else:
             data.save()
-            return render(request,"add_customer.html",{
-                "user":user,
-                "tag":"success",
-                "message": "Customer Added Successfully."
+            return redirect('customer_datatable')
+            # return render(request,"add_customer.html",{
+            #     "user":user,
+            #     "tag":"success",
+            #     "message": "Customer Added Successfully."
                 
-            })
+            # })
     return render(request,"add_customer.html",{
         "user":user,
     })
@@ -485,7 +486,8 @@ def customers_detail(request,user_id):
     user = AdminUser.objects.get(id = request.session["user"])
     data = ""
     try:
-        data = UserSnacks.objects.get(customer=user_id)
+        data = UserSnacks.objects.filter(customer=user_id).first()
+        print(data.__dict__,"--------------------")
     except :
         data = None  
         return render(request,"view-customer-detail.html",{
