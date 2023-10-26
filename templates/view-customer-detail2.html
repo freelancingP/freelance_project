@@ -778,7 +778,7 @@
 													<div class="col-md-4">
 														<div class="profile-name px-3 pt-2">
 															<p>Food</p>
-															<h4 class="text-primary mb-0">{{food_all.dish.food}}</h4>
+															<h4 class="text-primary mb-0">{{food.dish.food}}</h4>
 														</div>
 													</div>
 												</div>
@@ -910,12 +910,9 @@
 												</ul>
 											</div>
 											<div class="col-md-4">
-												<form method="post" action="{% url 'customers_detail' user_id=data.id %}" id="dateForm">
-													{% csrf_token %}
-													<input type="date" class="form-control" name="date" placeholder="Select a date" id="mdate" data-dtp="dtp_aeNPT">
-												</form>
+												<input type="date" class="form-control" placeholder="2017-06-04"
+													id="mdate" data-dtp="dtp_aeNPT">
 											</div>
-											
 										</div>
 										<div class="tab-content">
 											<div id="navpills2-1" class="tab-pane active">
@@ -933,7 +930,7 @@
 																		<h4
 																			style="font-size:14px !important;color:#828690;!important;">
 																			Calorie</h4>
-																		<h3>{{food_all.total_cals}}</h3>
+																		<h3>{{food.total_cals}}</h3>
 																		<hr>
 
 																	</div>
@@ -949,7 +946,7 @@
 																		<h4
 																			style="font-size:14px !important;color:#828690;!important;">
 																			Glycemic Load</h4>
-																		<h3>{{food_all.total_gl}}</h3>
+																		<h3>{{food.total_gl}}</h3>
 																		<hr>
 																	</div>
 
@@ -966,7 +963,7 @@
 																		<h4
 																			style="font-size:14px !important;color:#828690;!important;">
 																			Carbs</h4>
-																		<h3>{{food_all.total_carbs}}</h3>
+																		<h3>{{food.total_carbs}}</h3>
 																		<hr>
 																	</div>
 
@@ -980,7 +977,7 @@
 																		<h4
 																			style="font-size:14px !important;color:#828690;!important;">
 																			Protein</h4>
-																		<h3>{{food_all.total_gross_protein}}</h3>
+																		<h3>{{food.total_gross_protein}}</h3>
 																		<hr>
 																	</div>
 
@@ -995,7 +992,7 @@
 																		<h4
 																			style="font-size:14px !important;color:#828690;!important;">
 																			Fats</h4>
-																		<h3>{{food_all.total_total_fat}}</h3>
+																		<h3>{{food.total_total_fat}}</h3>
 																		<hr>
 																	</div>
 
@@ -1008,7 +1005,7 @@
 																		<h4
 																			style="font-size:14px !important;color:#828690;!important;">
 																			Oil</h4>
-																		<h3>{{food_all.total_oil}}</h3>
+																		<h3>{{food.total_oil}}</h3>
 																		<hr>
 																	</div>
 
@@ -1031,7 +1028,7 @@
 
 												<div class="row">
 
-													{% for item in food_all.items %}
+													{% for item in food.items %}
 													<div class="col-md-6">
 														<div
 															class="media border-bottom mb-3 pb-3 d-lg-flex d-block menu-list">
@@ -1039,7 +1036,7 @@
 																<h6 class="fs-16 font-w600"><a
 																		href="coustomer-detail.html"
 																		class="text-black">{{item.food}}</a></h6>
-																<p class="fs-14">Ingredients:- {{item.ingredients}}</p>
+																<p class="fs-14">Ingredients:- {{item.ingredients}}.</p>
 																<div class="row d-flex flex-wrap align-items-center">
 																	<div class="col-lg-6">
 																		<ul
@@ -1067,8 +1064,6 @@
 												</div>
 											</div>
 
-
-
 											<div id="navpills2-2" class="tab-pane">
 												<div class="row mb-4">
 													<div class="card col-md-6" style="padding-bottom:30px;">
@@ -1080,13 +1075,18 @@
 														<div class="row mb-2 mt-4">
 															<div class="col-md-6 col-lg-6">
 																<div class="row">
+																	{% for val in food.items%}
+																	{% if val.meal_type == "breakfast"%}
+																	{% comment %} {% for item in food.items %}
+																	{% if item.meal_type == 'Breakfast' %} {% endcomment %}
+																	
 																	<div class="col-md-6 col-lg-6 "
 																		style="margin-top:10px;">
 
 																		<h4
 																			style="font-size:14px !important;color:#828690;!important;">
 																			Calorie</h4>
-																		<h3>{{food_breakfast.total_cals}}</h3>
+																		<h3>{{val.cals}}</h3>
 																		<hr>
 
 																	</div>
@@ -1102,7 +1102,7 @@
 																		<h4
 																			style="font-size:14px !important;color:#828690;!important;">
 																			Glycemic Load</h4>
-																		<h3>{{food_breakfast.total_gl}}</h3>
+																		<h3>{{food.gl}}</h3>
 																		<hr>
 																	</div>
 
@@ -1119,7 +1119,7 @@
 																		<h4
 																			style="font-size:14px !important;color:#828690;!important;">
 																			Carbs</h4>
-																		<h3>{{food_breakfast.total_carbs}}</h3>
+																		<h3>{{food.cabs}}</h3>
 																		<hr>
 																	</div>
 
@@ -1133,7 +1133,7 @@
 																		<h4
 																			style="font-size:14px !important;color:#828690;!important;">
 																			Protein</h4>
-																		<h3>{{food_breakfast.total_gross_protein}}</h3>
+																		<h3>{{food.gross_protein}}</h3>
 																		<hr>
 																	</div>
 
@@ -1148,7 +1148,7 @@
 																		<h4
 																			style="font-size:14px !important;color:#828690;!important;">
 																			Fats</h4>
-																		<h3>{{food_breakfast.total_total_fat}}</h3>
+																		<h3>{{food.total_fat}}</h3>
 																		<hr>
 																	</div>
 
@@ -1161,7 +1161,7 @@
 																		<h4
 																			style="font-size:14px !important;color:#828690;!important;">
 																			Oil</h4>
-																		<h3>{{food_breakfast.total_oil}}</h3>
+																		<h3>{{food.oil}}</h3>
 																		<hr>
 																	</div>
 
@@ -1183,14 +1183,16 @@
 																		<div class=""></div>
 																	</div>
 																</div>
-																<canvas id="pie_chart_break" width="300" height="300" ></canvas> 
+																<canvas id="pie_charts"></canvas>
 															</div>
 														</div>
 													</div>
-
+													{% endif %}
+													{%endfor%}
+													
 												</div>
 												<div class="row">
-													{% for item in food_breakfast.items %}
+													{% for item in food.items %}
 													<div class="col-md-6">
 														<div
 															class="media border-bottom mb-3 pb-3 d-lg-flex d-block menu-list">
@@ -1205,22 +1207,49 @@
 																			class="d-flex flex-wrap mb-sm-0 mb-2 align-items-center">
 																			<li class="mb-2 mr-4 text-nowrap"><i
 																					class="las la-prescription-bottle scale5 mr-2"></i><span
-																					class="text-nowrap fs-14 text-black font-w500">{{item.total_cals}}
+																					class="text-nowrap fs-14 text-black font-w500">{{food.total_cals}}
 																				</span></li>
 																		</ul>
 																	</div>
 																	<div class="col-lg-6 d-flex justify-content-end">
-																		<a href="{% url 'customers_detail_more' item.id %}"><button
+																		<a href="{% url 'customers_detail_more' %}"><button
 																				type="button"
 																				class="btn light btn-primary">View
 																				More</button></a>
 																	</div>
 																</div>
 															</div>
-															
+															{%endfor%}
 														</div>
 													</div>
-													{% endfor %}
+													{% comment %} <div class="col-md-6">
+														<div
+															class="media border-bottom mb-3 pb-3 d-lg-flex d-block menu-list">
+															<div class="media-body col-lg-12 pl-0">
+																<h6 class="fs-16 font-w600"><a
+																		href="coustomer-detail.html"
+																		class="text-black">{{item.food}}</a></h6>
+																<p class="fs-14">Ingredients:- {{item.ingredients}}</p>
+																<div class="row d-flex flex-wrap align-items-center">
+																	<div class="col-lg-6">
+																		<ul
+																			class="d-flex flex-wrap mb-sm-0 mb-2 align-items-center">
+																			<li class="mb-2 mr-4 text-nowrap"><i
+																					class="las la-prescription-bottle scale5 mr-2"></i><span
+																					class="text-nowrap fs-14 text-black font-w500">{{food.total_cals}}
+																				</span></li>
+																		</ul>
+																	</div>
+																	<div class="col-lg-6 d-flex justify-content-end">
+																		<a href="{% url 'customers_detail_more' %}"><button
+																				type="button"
+																				class="btn light btn-primary">View
+																				More</button></a>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div> {% endcomment %}
 												</div>
 
 											</div>
@@ -1235,19 +1264,45 @@
 														<div class="row mb-2 mt-4">
 															<div class="col-md-6 col-lg-6">
 																<div class="row">
+																	{% for val in food.items%}
+																	{% if val.meal_type == "lunch"%}
 																	<div class="col-md-6 col-lg-6 "
-																		style="margin-top:10px;">
+																		style="margin-t<div class="col-md-6">
+																			<div
+																				class="media border-bottom mb-3 pb-3 d-lg-flex d-block menu-list">
+																				<div class="media-body col-lg-12 pl-0">
+																					<h6 class="fs-16 font-w600"><a
+																							href="coustomer-detail.html"
+																							class="text-black">{{item.food}}</a></h6>
+																					<p class="fs-14">Ingredients:- {{item.ingredients}}</p>
+																					<div class="row d-flex flex-wrap align-items-center">
+																						<div class="col-lg-6">
+																							<ul
+																								class="d-flex flex-wrap mb-sm-0 mb-2 align-items-center">
+																								<li class="mb-2 mr-4 text-nowrap"><i
+																										class="las la-prescription-bottle scale5 mr-2"></i><span
+																										class="text-nowrap fs-14 text-black font-w500">{{food.total_cals}}
+																									</span></li>
+																							</ul>
+																						</div>
+																						<div class="col-lg-6 d-flex justify-content-end">
+																							<a href="{% url 'customers_detail_more' %}"><button
+																									type="button"
+																									class="btn light btn-primary">View
+																									More</button></a>
+																						</div>
+																					</div>
+																				</div>
+																			</div>
+																		</div>op:10px;">
 
 																		<h4
 																			style="font-size:14px !important;color:#828690;!important;">
 																			Calorie</h4>
-																		<h3>{{food_lunch.total_cals}}</h3>
+																		<h3>{{food.total_cals}}</h3>
 																		<hr>
-
 																	</div>
-
 																</div>
-
 															</div>
 
 															<div class="col-md-6 col-lg-6">
@@ -1257,7 +1312,7 @@
 																		<h4
 																			style="font-size:14px !important;color:#828690;!important;">
 																			Glycemic Load</h4>
-																		<h3>{{food_lunch.total_gl}}</h3>
+																		<h3>{{food.total_gl}}</h3>
 																		<hr>
 																	</div>
 
@@ -1274,7 +1329,7 @@
 																		<h4
 																			style="font-size:14px !important;color:#828690;!important;">
 																			Carbs</h4>
-																		<h3>{{food_lunch.total_carbs}}</h3>
+																		<h3>{{food.total_carbs}}</h3>
 																		<hr>
 																	</div>
 
@@ -1288,7 +1343,7 @@
 																		<h4
 																			style="font-size:14px !important;color:#828690;!important;">
 																			Protein</h4>
-																		<h3>{{food_lunch.total_gross_protein}}</h3>
+																		<h3>{{food.total_gross_protein}}</h3>
 																		<hr>
 																	</div>
 
@@ -1303,7 +1358,7 @@
 																		<h4
 																			style="font-size:14px !important;color:#828690;!important;">
 																			Fats</h4>
-																		<h3>{{food_lunch.total_total_fat}}</h3>
+																		<h3>{{food.total_total_fat}}</h3>
 																		<hr>
 																	</div>
 
@@ -1316,7 +1371,7 @@
 																		<h4
 																			style="font-size:14px !important;color:#828690;!important;">
 																			Oil</h4>
-																		<h3>{{food_lunch.total_oil}}</h3>
+																		<h3>{{food.total_oil}}</h3>
 																		<hr>
 																	</div>
 
@@ -1338,14 +1393,13 @@
 																		<div class=""></div>
 																	</div>
 																</div>
-																<canvas id="pie_lunch" width="300" height="300"></canvas>
+																<canvas id="pie_lunch"></canvas>
 															</div>
 														</div>
 													</div>
 
 												</div>
 												<div class="row">
-													{% for item in food_lunch.items %}
 													<div class="col-md-6">
 														<div
 															class="media border-bottom mb-3 pb-3 d-lg-flex d-block menu-list">
@@ -1360,12 +1414,12 @@
 																			class="d-flex flex-wrap mb-sm-0 mb-2 align-items-center">
 																			<li class="mb-2 mr-4 text-nowrap"><i
 																					class="las la-prescription-bottle scale5 mr-2"></i><span
-																					class="text-nowrap fs-14 text-black font-w500">{{item.total_cals}}
+																					class="text-nowrap fs-14 text-black font-w500">{{food.total_cals}}
 																				</span></li>
 																		</ul>
 																	</div>
 																	<div class="col-lg-6 d-flex justify-content-end">
-																		<a href="{% url 'customers_detail_more' item.id %}"><button
+																		<a href="{% url 'customers_detail_more' %}"><button
 																				type="button"
 																				class="btn light btn-primary">View
 																				More</button></a>
@@ -1373,10 +1427,37 @@
 																</div>
 															</div>
 														</div>
-														
 													</div>
-													{% endfor %}
-												</div> 
+													<div class="col-md-6">
+														<div
+															class="media border-bottom mb-3 pb-3 d-lg-flex d-block menu-list">
+															<div class="media-body col-lg-12 pl-0">
+																<h6 class="fs-16 font-w600"><a
+																		href="coustomer-detail.html"
+																		class="text-black">{{item.food}}</a></h6>
+																<p class="fs-14">Ingredients:- {{item.ingredients}}</p>
+																<div class="row d-flex flex-wrap align-items-center">
+																	<div class="col-lg-6">
+																		<ul
+																			class="d-flex flex-wrap mb-sm-0 mb-2 align-items-center">
+																			<li class="mb-2 mr-4 text-nowrap"><i
+																					class="las la-prescription-bottle scale5 mr-2"></i><span
+																					class="text-nowrap fs-14 text-black font-w500">{{food.total_cals}}
+																				</span></li>
+																		</ul>
+																	</div>
+																	<div class="col-lg-6 d-flex justify-content-end">
+																		<a href="{% url 'customers_detail_more' %}"><button
+																				type="button"
+																				class="btn light btn-primary">View
+																				More</button></a>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+
 											</div>
 											<div id="navpills2-4" class="tab-pane">
 												<div class="row mb-4">
@@ -1395,7 +1476,7 @@
 																		<h4
 																			style="font-size:14px !important;color:#828690;!important;">
 																			Calorie</h4>
-																		<h3>{{food_evening_snacks.total_oil}}</h3>
+																		<h3>{{food.total_cals}}</h3>
 																		<hr>
 
 																	</div>
@@ -1411,7 +1492,7 @@
 																		<h4
 																			style="font-size:14px !important;color:#828690;!important;">
 																			Glycemic Load</h4>
-																		<h3>{{food_evening_snacks.total_gl}}</h3>
+																		<h3>{{food.total_gl}}</h3>
 																		<hr>
 																	</div>
 
@@ -1428,7 +1509,7 @@
 																		<h4
 																			style="font-size:14px !important;color:#828690;!important;">
 																			Carbs</h4>
-																		<h3>{{food_evening_snacks.total_carbs}}</h3>
+																		<h3>{{food.total_carbs}}</h3>
 																		<hr>
 																	</div>
 
@@ -1442,7 +1523,7 @@
 																		<h4
 																			style="font-size:14px !important;color:#828690;!important;">
 																			Protein</h4>
-																		<h3>{{food_evening_snacks.total_gross_protein}}</h3>
+																		<h3>{{food.total_gross_protein}}</h3>
 																		<hr>
 																	</div>
 
@@ -1457,7 +1538,7 @@
 																		<h4
 																			style="font-size:14px !important;color:#828690;!important;">
 																			Fats</h4>
-																		<h3>{{food_evening_snacks.total_total_fat}}</h3>
+																		<h3>{{food.total_total_fat}}</h3>
 																		<hr>
 																	</div>
 
@@ -1470,7 +1551,7 @@
 																		<h4
 																			style="font-size:14px !important;color:#828690;!important;">
 																			Oil</h4>
-																		<h3>{{food_evening_snacks.total_oil}}</h3>
+																		<h3>{{food.total_oil}}</h3>
 																		<hr>
 																	</div>
 
@@ -1493,14 +1574,13 @@
 																		<div class=""></div>
 																	</div>
 																</div>
-																<canvas id="pie_snaks" width="300" height="300"></canvas>
+																<canvas id="pie_snaks"></canvas>
 															</div>
 														</div>
 													</div>
 
 												</div>
 												<div class="row">
-													{% for item in food_evening_snacks.items %}
 													<div class="col-md-6">
 														<div
 															class="media border-bottom mb-3 pb-3 d-lg-flex d-block menu-list">
@@ -1515,12 +1595,12 @@
 																			class="d-flex flex-wrap mb-sm-0 mb-2 align-items-center">
 																			<li class="mb-2 mr-4 text-nowrap"><i
 																					class="las la-prescription-bottle scale5 mr-2"></i><span
-																					class="text-nowrap fs-14 text-black font-w500">{{item.total_cals}}
+																					class="text-nowrap fs-14 text-black font-w500">{{food.total_cals}}
 																				</span></li>
 																		</ul>
 																	</div>
 																	<div class="col-lg-6 d-flex justify-content-end">
-																		<a href="{% url 'customers_detail_more' item.id %}"><button
+																		<a href="{% url 'customers_detail_more' %}"><button
 																				type="button"
 																				class="btn light btn-primary">View
 																				More</button></a>
@@ -1528,10 +1608,37 @@
 																</div>
 															</div>
 														</div>
-														
 													</div>
-													{% endfor %}
+													<div class="col-md-6">
+														<div
+															class="media border-bottom mb-3 pb-3 d-lg-flex d-block menu-list">
+															<div class="media-body col-lg-12 pl-0">
+																<h6 class="fs-16 font-w600"><a
+																		href="coustomer-detail.html"
+																		class="text-black">{{item.food}}</a></h6>
+																<p class="fs-14">Ingredients:- {{item.ingredients}}</p>
+																<div class="row d-flex flex-wrap align-items-center">
+																	<div class="col-lg-6">
+																		<ul
+																			class="d-flex flex-wrap mb-sm-0 mb-2 align-items-center">
+																			<li class="mb-2 mr-4 text-nowrap"><i
+																					class="las la-prescription-bottle scale5 mr-2"></i><span
+																					class="text-nowrap fs-14 text-black font-w500">{{food.total_cals}}
+																				</span></li>
+																		</ul>
+																	</div>
+																	<div class="col-lg-6 d-flex justify-content-end">
+																		<a href="{% url 'customers_detail_more' %}"><button
+																				type="button"
+																				class="btn light btn-primary">View
+																				More</button></a>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
 												</div>
+
 											</div>
 											<div id="navpills2-5" class="tab-pane">
 												<div class="row mb-4">
@@ -1550,7 +1657,7 @@
 																		<h4
 																			style="font-size:14px !important;color:#828690;!important;">
 																			Calorie</h4>
-																		<h3>{{food_dinner.total_cals}}</h3>
+																		<h3>{{food.total_cals}}</h3>
 																		<hr>
 
 																	</div>
@@ -1566,7 +1673,7 @@
 																		<h4
 																			style="font-size:14px !important;color:#828690;!important;">
 																			Glycemic Load</h4>
-																		<h3>{{food_dinner.total_gl}}</h3>
+																		<h3>{{food.total_gl}}</h3>
 																		<hr>
 																	</div>
 
@@ -1583,7 +1690,7 @@
 																		<h4
 																			style="font-size:14px !important;color:#828690;!important;">
 																			Carbs</h4>
-																		<h3>{{food_dinner.total_carbs}}</h3>
+																		<h3>{{food.total_carbs}}</h3>
 																		<hr>
 																	</div>
 
@@ -1597,7 +1704,7 @@
 																		<h4
 																			style="font-size:14px !important;color:#828690;!important;">
 																			Protein</h4>
-																		<h3>{{food_dinner.total_cals}}</h3>
+																		<h3>{{food.total_gross_protein}}</h3>
 																		<hr>
 																	</div>
 
@@ -1612,7 +1719,7 @@
 																		<h4
 																			style="font-size:14px !important;color:#828690;!important;">
 																			Fats</h4>
-																		<h3>{{food_dinner.total_total_fat}}</h3>
+																		<h3>{{food.total_total_fat}}</h3>
 																		<hr>
 																	</div>
 
@@ -1625,7 +1732,7 @@
 																		<h4
 																			style="font-size:14px !important;color:#828690;!important;">
 																			Oil</h4>
-																		<h3>{{food_dinner.total_oil}}</h3>
+																		<h3>{{food.total_oil}}</h3>
 																		<hr>
 																	</div>
 
@@ -1647,14 +1754,13 @@
 																		<div class=""></div>
 																	</div>
 																</div>
-																<canvas id="pie_dinner" width="300" height="300"></canvas>
+																<canvas id="pie_dinner"></canvas>
 															</div>
 														</div>
 													</div>
 
 												</div>
 												<div class="row">
-													{% for item in food_dinner.items %}
 													<div class="col-md-6">
 														<div
 															class="media border-bottom mb-3 pb-3 d-lg-flex d-block menu-list">
@@ -1662,19 +1768,19 @@
 																<h6 class="fs-16 font-w600"><a
 																		href="coustomer-detail.html"
 																		class="text-black">{{item.food}}</a></h6>
-																<p class="fs-14">Ingredients:- {{item.ingredients}}</p>
+																<p class="fs-14">{{item.ingredients}}</p>
 																<div class="row d-flex flex-wrap align-items-center">
 																	<div class="col-lg-6">
 																		<ul
 																			class="d-flex flex-wrap mb-sm-0 mb-2 align-items-center">
 																			<li class="mb-2 mr-4 text-nowrap"><i
 																					class="las la-prescription-bottle scale5 mr-2"></i><span
-																					class="text-nowrap fs-14 text-black font-w500">{{item.total_cals}}
+																					class="text-nowrap fs-14 text-black font-w500">{{food.total_cals}}
 																				</span></li>
 																		</ul>
 																	</div>
 																	<div class="col-lg-6 d-flex justify-content-end">
-																		<a href="{% url 'customers_detail_more' item.id %}"><button
+																		<a href="{% url 'customers_detail_more' %}"><button
 																				type="button"
 																				class="btn light btn-primary">View
 																				More</button></a>
@@ -1683,7 +1789,34 @@
 															</div>
 														</div>
 													</div>
-													{% endfor %}
+													<div class="col-md-6">
+														<div
+															class="media border-bottom mb-3 pb-3 d-lg-flex d-block menu-list">
+															<div class="media-body col-lg-12 pl-0">
+																<h6 class="fs-16 font-w600"><a
+																		href="coustomer-detail.html"
+																		class="text-black">{{item.food}}</a></h6>
+																<p class="fs-14">{{item.ingredients}}</p>
+																<div class="row d-flex flex-wrap align-items-center">
+																	<div class="col-lg-6">
+																		<ul
+																			class="d-flex flex-wrap mb-sm-0 mb-2 align-items-center">
+																			<li class="mb-2 mr-4 text-nowrap"><i
+																					class="las la-prescription-bottle scale5 mr-2"></i><span
+																					class="text-nowrap fs-14 text-black font-w500">{{food.total_cals}}
+																				</span></li>
+																		</ul>
+																	</div>
+																	<div class="col-lg-6 d-flex justify-content-end">
+																		<a href="{% url 'customers_detail_more' %}"><button
+																				type="button"
+																				class="btn light btn-primary">View
+																				More</button></a>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
 												</div>
 
 											</div>
@@ -1751,29 +1884,8 @@
 	<script src="{% static 'vendor/morris/raphael-min.js' %}"></script>
 	<script src="{% static 'vendor/morris/morris.min.js' %}"></script>
 	<script src="{% static 'js/plugins-init/morris-init.js' %}"></script>
-
 	<script>
-		var storedDate = localStorage.getItem('selectedDate');
-		if (storedDate) {
-			document.getElementById("mdate").value = storedDate;
-		} 
-	
-		// Add an event listener to the date input
-		document.getElementById("mdate").addEventListener("change", function () {
-			var selectedDate = this.value;
-	
-			// Store the selected date in localStorage
-			localStorage.setItem('selectedDate', selectedDate);
-	
-			// Submit the form
-			document.getElementById("dateForm").submit();
-			event.preventDefault();
-		});
-	</script>
-	
-
-	<script>
-		$(document).ready(function () { 
+		$(document).ready(function () {
 			$('.progressWrapper progress').each(function () {
 				var prgsVal = $(this).data('value');
 				var maxN = $(this).attr('max');
@@ -1783,130 +1895,6 @@
 				$(this).val(prgsVal);
 			});
 		});
-	</script>
-	<script>
-		// Get the canvas element
-        var canvas = document.getElementById("pie_chart_break");
-        var ctx = canvas.getContext("2d");
-
-        // Data for the pie chart (values and colors)
-        var data = [50, 30, 20, 10];
-        var colors = ["darkblue", "aqua", "#999999", "blue"];
-
-        // Calculate the total value of the data
-        var total = data.reduce(function (acc, value) {
-            return acc + value;
-        }, 0);
-
-        // Define the starting angle for the first slice
-        var startAngle = 0;
-
-        // Draw the pie chart
-        for (var i = 0; i < data.length; i++) {
-            var sliceAngle = (Math.PI * 2 * data[i]) / total;
-
-            ctx.beginPath();
-            ctx.moveTo(canvas.width / 2, canvas.height / 2);
-            ctx.arc(canvas.width / 2, canvas.height / 2, canvas.width / 2, startAngle, startAngle + sliceAngle);
-            ctx.fillStyle = colors[i];
-            ctx.fill();
-
-            // Update the starting angle for the next slice
-            startAngle += sliceAngle;
-        }
-	</script>
-	<script>
-		// Get the canvas element
-        var canvas = document.getElementById("pie_lunch");
-        var ctx = canvas.getContext("2d");
-
-        // Data for the pie chart (values and colors)
-        var data = [50, 30, 20, 10];
-        var colors = ["darkblue", "aqua", "#999999", "blue"];
-
-        // Calculate the total value of the data
-        var total = data.reduce(function (acc, value) {
-            return acc + value;
-        }, 0);
-
-        // Define the starting angle for the first slice
-        var startAngle = 0;
-
-        // Draw the pie chart
-        for (var i = 0; i < data.length; i++) {
-            var sliceAngle = (Math.PI * 2 * data[i]) / total;
-
-            ctx.beginPath();
-            ctx.moveTo(canvas.width / 2, canvas.height / 2);
-            ctx.arc(canvas.width / 2, canvas.height / 2, canvas.width / 2, startAngle, startAngle + sliceAngle);
-            ctx.fillStyle = colors[i];
-            ctx.fill();
-
-            // Update the starting angle for the next slice
-            startAngle += sliceAngle;
-        }
-	</script>
-	<script>
-		// Get the canvas element
-        var canvas = document.getElementById("pie_snaks");
-        var ctx = canvas.getContext("2d");
-
-        // Data for the pie chart (values and colors)
-        var data = [50, 30, 20, 10];
-        var colors = ["darkblue", "aqua", "#999999", "blue"];
-
-        // Calculate the total value of the data
-        var total = data.reduce(function (acc, value) {
-            return acc + value;
-        }, 0);
-
-        // Define the starting angle for the first slice
-        var startAngle = 0;
-
-        // Draw the pie chart
-        for (var i = 0; i < data.length; i++) {
-            var sliceAngle = (Math.PI * 2 * data[i]) / total;
-
-            ctx.beginPath();
-            ctx.moveTo(canvas.width / 2, canvas.height / 2);
-            ctx.arc(canvas.width / 2, canvas.height / 2, canvas.width / 2, startAngle, startAngle + sliceAngle);
-            ctx.fillStyle = colors[i];
-            ctx.fill();
-
-            // Update the starting angle for the next slice
-            startAngle += sliceAngle;
-        }
-	</script>
-	<script>
-		// Get the canvas element
-        var canvas = document.getElementById("pie_dinner");
-        var ctx = canvas.getContext("2d");
-
-        // Data for the pie chart (values and colors)
-        var data = [50, 30, 20, 10];
-        var colors = ["darkblue", "aqua", "#999999", "blue"];
-
-        // Calculate the total value of the data
-        var total = data.reduce(function (acc, value) {
-            return acc + value;
-        }, 0);
-
-        // Define the starting angle for the first slice
-        var startAngle = 0;
-
-        // Draw the pie chart
-        for (var i = 0; i < data.length; i++) {
-            var sliceAngle = (Math.PI * 2 * data[i]) / total;
-
-            ctx.beginPath();
-            ctx.moveTo(canvas.width / 2, canvas.height / 2);
-            ctx.arc(canvas.width / 2, canvas.height / 2, canvas.width / 2, startAngle, startAngle + sliceAngle);
-            ctx.fillStyle = colors[i];
-            ctx.fill();
-
-            // Update the starting angle for the next slice
-            startAngle += sliceAngle;
-        }
 	</script>
 
 </body>

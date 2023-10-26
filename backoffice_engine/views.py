@@ -487,27 +487,32 @@ def customers_detail(request, user_id):
     except:
         data = None
 
-    user_food = None
-    if data:
-        user_food = get_customer_data(str(date.today()), data)
+    date_is = str(date.today())
 
     if request.method == "POST":
  
         date_is = request.POST["date"]
-        meal_type = request.POST["meal_type"]
-        if not date_is:
-            date_is = str(date.today())
 
-        if meal_type != None:
-            user_food = get_customer_data(date_is, data, meal_type)
-        else:
-            user_food = get_customer_data(date_is, data, meal_type)
+    food_all = None
+    if data:
+        food_all = get_customer_data(date_is, data)        
+        food_breakfast = get_customer_data(date_is, data, 'breakfast')
+        food_lunch = get_customer_data(date_is, data, 'lunch')
+        food_dinner = get_customer_data(date_is, data, 'dinner')
+        food_evening_snacks = get_customer_data(date_is, data, 'evening_snacks')
 
+
+        
     return render(request, "view-customer-detail.html", {
         "user": user,
         "data": data,
-        'food':user_food
+        'food_all':food_all,
+        'food_breakfast':food_breakfast,
+        'food_lunch':food_lunch,
+        'food_evening_snacks':food_evening_snacks,
+        'food_dinner':food_dinner,
     })
+    
 @custom_login_required
 def view_more(request, item_id):
     user = AdminUser.objects.get(id = request.session["user"])
@@ -771,10 +776,7 @@ def add_dish_calculator(request):
             quantity_help = request.POST.get("qty-help")
             meal_type = request.POST["meal-type"]
             food_type = request.POST["food-type"]
-            
             ingridient_name = request.POST.getlist("ingridient-name")
-            print(ingridient_name,'--')
-            
             ingridient_qty_type = request.POST.getlist("ingridient-qty-type")
             ingridient_qty = request.POST.getlist("ingridient-qty")
             protein = request.POST.getlist("protein")
