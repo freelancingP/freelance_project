@@ -203,10 +203,10 @@ class UploadImageView(GenericAPIView):
             print(uploaded_image)
             if uploaded_image:
                 uploaded_image = data["image"]
-                aws_access_key_id = 'AKIAU62W7KNUZ4DKGRU3'
-                aws_secret_access_key = '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'
+                aws_access_key_id = 'AKIASZI2BTK7PJPIYRUN'
+                aws_secret_access_key = '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'
                 aws_region = 'us-east-2'
-                bucket_name = 'appstacklabs'
+                bucket_name = 'fitlife'
                 s3 = boto3.client('s3', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key, region_name=aws_region)
                 object_key = f"images/{uploaded_image}"  # Adjust the path in the bucket as needed
                 image_data = uploaded_image.read()
