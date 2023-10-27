@@ -666,6 +666,13 @@ def recipe_details(request, recipe_id):
 def add_ingredient(request):
     user = AdminUser.objects.get(id = request.session["user"])
     if request.method == "POST":
+        item_id = request.POST.get("item")
+        if not item_id:
+            default_item = AddRecipe.objects.get(id=1)
+            item = default_item
+        else:
+            item = AddRecipe.objects.get(id=item_id)
+        
         ingridient_name = request.POST["ingridient_name"]
         quantity_type = request.POST["ingridient_type"]
         ingridient_quantity = request.POST["ingridient_quantity"]
@@ -678,6 +685,7 @@ def add_ingredient(request):
         fiber = request.POST["fiber"]
         
         data = AddIngridient(
+            item = item,
             ingridient_name=ingridient_name,
             quantity_type=quantity_type,
             ingridient_quantity=ingridient_quantity,
