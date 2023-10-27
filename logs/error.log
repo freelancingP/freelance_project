@@ -8021,3 +8021,71 @@ Traceback (most recent call last):
   File "/Users/root1/Documents/work/Appstack/env/lib/python3.11/site-packages/django/db/models/query.py", line 637, in get
     raise self.model.DoesNotExist(
 customer_engine.models.DailyRecipe.DoesNotExist: DailyRecipe matching query does not exist.
+ERROR 2023-10-27 08:12:09,842 log Internal Server Error: /customers/detail/3/
+Traceback (most recent call last):
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/utils/datastructures.py", line 84, in __getitem__
+    list_ = super().__getitem__(key)
+KeyError: 'meal_type'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/dhirendra/Documents/Task/freelance_project_main/customer_engine/decorators.py", line 28, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/dhirendra/Documents/Task/freelance_project_main/backoffice_engine/views.py", line 497, in customers_detail
+    meal_type = request.POST["meal_type"]
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/utils/datastructures.py", line 86, in __getitem__
+    raise MultiValueDictKeyError(key)
+django.utils.datastructures.MultiValueDictKeyError: 'meal_type'
+ERROR 2023-10-27 08:22:53,695 log Internal Server Error: /customers/detail-more/17/
+Traceback (most recent call last):
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/template/base.py", line 505, in parse
+    compile_func = self.tags[command]
+KeyError: 'endblock'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/dhirendra/Documents/Task/freelance_project_main/customer_engine/decorators.py", line 28, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/dhirendra/Documents/Task/freelance_project_main/backoffice_engine/views.py", line 519, in view_more
+    return render(request,"view-more.html",{
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/template/loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/template/loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/template/backends/django.py", line 33, in get_template
+    return Template(self.engine.get_template(template_name), self)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/template/engine.py", line 175, in get_template
+    template, origin = self.find_template(template_name)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/template/engine.py", line 157, in find_template
+    template = loader.get_template(name, skip=skip)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/template/loaders/cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/template/loaders/base.py", line 28, in get_template
+    return Template(
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/template/base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/template/base.py", line 200, in compile_nodelist
+    return parser.parse()
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/template/base.py", line 513, in parse
+    raise self.error(token, e)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/template/base.py", line 511, in parse
+    compiled_result = compile_func(self, token)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/template/loader_tags.py", line 293, in do_extends
+    nodelist = parser.parse()
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/template/base.py", line 507, in parse
+    self.invalid_block_tag(token, command, parse_until)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/template/base.py", line 568, in invalid_block_tag
+    raise self.error(
+django.template.exceptions.TemplateSyntaxError: Invalid block tag on line 339: 'endblock'. Did you forget to register or load this tag?

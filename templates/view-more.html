@@ -38,16 +38,8 @@
 										<h4>{{item.food}}</h4>
 										<div class="comment-review star-rating justify-content-end d-flex">
 										</div>
-										<p>Ingridients:&nbsp;&nbsp;
-											<span class="badge badge-success light mt-1">chicken 250g</span>
-											<span class="badge badge-success light mt-1">salt 2Spoons</span>
-											<span class="badge badge-success light mt-1">egg 2</span>
-											<span class="badge badge-success light mt-1">garlic powder 1Spoon</span>
-											<span class="badge badge-success light mt-1"> mixed herbs 2Spoons</span>
-											<span class="badge badge-success light mt-1">refined oil 100ml</span>
-											<span class="badge badge-success light mt-1">curd 3Spoons</span>
+										<p>Ingridients:{{item.ingredients}}&nbsp;&nbsp;
 										</p>
-
 
 									</div>
 
@@ -73,179 +65,179 @@
 						<div class="row">
 							<div class="col-md-3 col-lg-3">
 								<h6 class="mt-2">Oil(Ml)
-									<span class="pull-right">0.12</span>
+									<span class="pull-right">{{item.oil}}</span>
 								</h6>
-								<div class="progress ">
+								{% comment %} <div class="progress ">
 									<div class="progress-bar bg-danger progress-animated"
 										style="width: 45%; height:6px;" role="progressbar">
 										<span class="sr-only">60% Complete</span>
 									</div>
-								</div>
+								</div> {% endcomment %}
 							</div>
 							<div class="col-md-3 col-lg-3">
 								<h6 class="mt-2">GL
-									<span class="pull-right">0.1</span>
+									<span class="pull-right">{{item.gl}}</span>
 								</h6>
-								<div class="progress">
+								{% comment %} <div class="progress">
 									<div class="progress-bar bg-info progress-animated" style="width: 20%; height:6px;"
 										role="progressbar">
 										<span class="sr-only">60% Complete</span>
 									</div>
-								</div>
+								</div> {% endcomment %}
 							</div>
 							<div class="col-md-3 col-lg-3">
 								<h6 class="mt-2">TDF(grms)
-									<span class="pull-right">0.23</span>
+									<span class="pull-right">{{item.tdf}}</span>
 								</h6>
-								<div class="progress">
+								{% comment %} <div class="progress">
 									<div class="progress-bar bg-success progress-animated"
 										style="width: 55%; height:6px;" role="progressbar">
 										<span class="sr-only">60% Complete</span>
 									</div>
-								</div>
+								</div> {% endcomment %}
 							</div>
 							<div class="col-md-3 col-lg-3">
 								<h6 class="mt-2">Sodium
-									<span class="pull-right">0.12</span>
+									<span class="pull-right">{{item.sodium}}</span>
 								</h6>
-								<div class="progress">
+								{% comment %} <div class="progress">
 									<div class="progress-bar bg-primary progress-animated"
 										style="width: 70%; height:6px;" role="progressbar">
 										<span class="sr-only">110% Complete</span>
 									</div>
-								</div>
+								</div> {% endcomment %}
 							</div>
 							<div class="col-md-3 col-lg-3">
 								<h6 class="mt-2">Total Fat
-									<span class="pull-right">12</span>
+									<span class="pull-right">{{item.total_fat}}</span>
 								</h6>
-								<div class="progress">
+								{% comment %} <div class="progress">
 									<div class="progress-bar bg-warning progress-animated"
 										style="width:85%; height:6px;" role="progressbar">
 										<span class="sr-only">45% Complete</span>
 									</div>
-								</div>
+								</div> {% endcomment %}
 							</div>
 							<div class="col-md-3 col-lg-3">
 								<h6 class="mt-2">Calcium
-									<span class="pull-right">12</span>
+									<span class="pull-right">{{item.calcium}}</span>
 								</h6>
-								<div class="progress ">
+								{% comment %} <div class="progress ">
 									<div class="progress-bar bg-danger progress-animated"
 										style="width: 95%; height:6px;" role="progressbar">
 										<span class="sr-only">0.5</span>
 									</div>
-								</div>
+								</div> {% endcomment %}
 							</div>
 							<div class="col-md-3 col-lg-3">
 								<h6 class="mt-2">Free Sugar
-									<span class="pull-right">0.9</span>
+									<span class="pull-right">{{item.free_sugar}}</span>
 								</h6>
-								<div class="progress">
+								{% comment %} <div class="progress">
 									<div class="progress-bar bg-info progress-animated" style="width: 30%; height:6px;"
 										role="progressbar">
 										<span class="sr-only">0.9</span>
 									</div>
-								</div>
+								</div> {% endcomment %}
 							</div>
 							<div class="col-md-3 col-lg-3">
 								<h6 class="mt-2">Lysine(mgrms)
-									<span class="pull-right">0.12</span>
+									<span class="pull-right">{{item.lysine}}</span>
 								</h6>
-								<div class="progress">
+								{% comment %} <div class="progress">
 									<div class="progress-bar bg-success progress-animated"
 										style="width: 45%; height:6px;" role="progressbar">
 										<span class="sr-only">34</span>
 									</div>
-								</div>
+								</div> {% endcomment %}
 							</div>
 							<div class="col-md-3 col-lg-3">
 								<h6 class="mt-2">Useble Cals
-									<span class="pull-right">o.23</span>
+									<span class="pull-right">{{item.cals}}</span>
 								</h6>
-								<div class="progress">
+								{% comment %} <div class="progress">
 									<div class="progress-bar bg-primary progress-animated"
 										style="width: 70%; height:6px;" role="progressbar">
 										<span class="sr-only">23</span>
 									</div>
-								</div>
+								</div> {% endcomment %}
 							</div>
 							<div class="col-md-3 col-lg-3">
 								<h6 class="mt-2">Phosphorus
-									<span class="pull-right">0.243</span>
+									<span class="pull-right">{{item.phosphorus}}</span>
 								</h6>
-								<div class="progress">
+								{% comment %} <div class="progress">
 									<div class="progress-bar bg-warning progress-animated"
 										style="width:55%; height:6px;" role="progressbar">
 										<span class="sr-only">o.13</span>
 									</div>
-								</div>
+								</div> {% endcomment %}
 							</div>
 							<div class="col-md-3 col-lg-3">
 								<h6 class="mt-2">AAF adj Prot(grms)
-									<span class="pull-right">85%</span>
+									<span class="pull-right">{{item.aaf_adj_prot}}</span>
 								</h6>
-								<div class="progress ">
+								{% comment %} <div class="progress ">
 									<div class="progress-bar bg-danger progress-animated"
 										style="width: 25%; height:6px;" role="progressbar">
 										<span class="sr-only">60% Complete</span>
 									</div>
-								</div>
+								</div> {% endcomment %}
 							</div>
 							<div class="col-md-3 col-lg-3">
 								<h6 class="mt-2">CarbsNet of TDF(grms)
-									<span class="pull-right">23</span>
+									<span class="pull-right">{{item.carbs}}</span>
 								</h6>
-								<div class="progress">
+								{% comment %} <div class="progress">
 									<div class="progress-bar bg-info progress-animated" style="width: 50%; height:6px;"
 										role="progressbar">
 										<span class="sr-only">60% Complete</span>
 									</div>
-								</div>
+								</div> {% endcomment %}
 							</div>
 							<div class="col-md-3 col-lg-3">
 								<h6 class="mt-2">Potassium(mgrms)
-									<span class="pull-right">34</span>
+									<span class="pull-right">{{item.potassium}}</span>
 								</h6>
-								<div class="progress">
+								{% comment %} <div class="progress">
 									<div class="progress-bar bg-success progress-animated"
 										style="width: 25%; height:6px;" role="progressbar">
 										<span class="sr-only">60% Complete</span>
 									</div>
-								</div>
+								</div> {% endcomment %}
 							</div>
 							<div class="col-md-3 col-lg-3">
 								<h6 class="mt-2">Magnecium
-									<span class="pull-right">4.4</span>
+									<span class="pull-right">{{item.magnesium}}</span>
 								</h6>
-								<div class="progress">
+								{% comment %} <div class="progress">
 									<div class="progress-bar bg-primary progress-animated"
 										style="width:50%; height:6px;" role="progressbar">
 										<span class="sr-only">110% Complete</span>
 									</div>
-								</div>
+								</div> {% endcomment %}
 							</div>
 							<div class="col-md-3 col-lg-3">
 								<h6 class="mt-2">Total EAA(mgrms)
-									<span class="pull-right">1.22</span>
+									<span class="pull-right">{{item.total_eaa}}</span>
 								</h6>
-								<div class="progress">
+								{% comment %} <div class="progress">
 									<div class="progress-bar bg-warning progress-animated"
 										style="width:85%; height:6px;" role="progressbar">
 										<span class="sr-only">45% Complete</span>
 									</div>
-								</div>
+								</div> {% endcomment %}
 							</div>
 							<div class="col-md-3 col-lg-3">
 								<h6 class="mt-2">Gross Prot-ein(grms)
-									<span class="pull-right">12.2</span>
+									<span class="pull-right">{{item.gross_protein}}</span>
 								</h6>
-								<div class="progress ">
+								{% comment %} <div class="progress ">
 									<div class="progress-bar bg-danger progress-animated"
 										style="width: 95%; height:6px;" role="progressbar">
 										<span class="sr-only">95% Compleate</span>
 									</div>
-								</div>
+								</div> {% endcomment %}
 							</div>
 						</div>
 					</div>
