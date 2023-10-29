@@ -533,7 +533,9 @@ class AllDishesViewSet(viewsets.ModelViewSet):
 
     def get(self, request): 
         try:
-            queryset = self.filter_queryset(self.get_queryset())
+
+            customer = request.user
+            queryset = self.filter_queryset(self.get_queryset(),  veg_nonveg_egg=customer.veg_nonveg)
             
             page = self.paginate_queryset(queryset)
 
@@ -588,9 +590,8 @@ class DailyCaloryView(APIView):
 
     def post(self, request, format=None):
         try:
-            customer = request.user
             meal_type = request.data.get('meal_type')
-            data_queryset = DailySnacks.objects.filter(meal_type=meal_type, veg_nonveg_egg=customer.veg_nonveg)
+            data_queryset = DailySnacks.objects.filter(meal_type=meal_type)
 
             if data_queryset.exists():
                 data_list = list(data_queryset)
