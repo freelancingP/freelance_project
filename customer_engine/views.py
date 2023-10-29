@@ -583,11 +583,14 @@ class AllDishesViewSet(viewsets.ModelViewSet):
             
         
 class DailyCaloryView(APIView):
+    authentication_classes=[JWTAuthentication]
+    permission_classes=[IsAuthenticated]
 
     def post(self, request, format=None):
         try:
+            customer = request.user
             meal_type = request.data.get('meal_type')
-            data_queryset = DailySnacks.objects.filter(meal_type=meal_type)
+            data_queryset = DailySnacks.objects.filter(meal_type=meal_type, veg_nonveg_egg=customer.veg_nonveg)
 
             if data_queryset.exists():
                 data_list = list(data_queryset)
@@ -995,10 +998,10 @@ class DailyCalorigramView(APIView):
 
     def get(self, request, date, *args, **kwargs):
         try:
-            customer = request.user.id
+            customer = request.user
             meal_type = request.query_params.get('meal_type')
             date_obj = datetime.strptime(date, "%Y-%m-%d").date() 
-            user_snacks_filter = {'customer': customer, 'updated_at__date': date_obj}
+            user_snacks_filter = {'customer': customer.id, 'updated_at__date': date_obj}
 
             all_data = []
             if meal_type:
@@ -1061,9 +1064,21 @@ class DailyCalorigramView(APIView):
                 {"label": "oil", "value": eaten_oil, "percentage": round(eaten_oil / (eaten_oil + remaining_oil) * 100) if eaten_oil + remaining_oil > 0 else 0, "color_code": "#E3B523", "unit": "oil"},
             ]
 
+            total_calory = 0
+
+            try:
+                if customer.gender == "Male":
+                    calory = 88.362+(float(customer.weight)*13.37)+(float(customer.height)*4.799)-(float(customer.age)*5.677)
+                    total_calory = round((calory * 0.702050619834711),2)
+                elif customer.gender == "Female":
+                    calory = 447.593+(float(customer.weight)*9.247)+(float(customer.height)*3.098)-(float(customer.age)*4.33)
+                    total_calory = round((calory * 0.702050619834711),2)
+            except:
+                pass
+
             data = {
                 'eaten_calories': eaten_calories,
-                'remaining_calories': remaining_calories,
+                'remaining_calories': total_calory,
                 'eaten_calories_breakdown': eaten_calories_breakdown,
                 'nutrition_value': nutrition_value
             }

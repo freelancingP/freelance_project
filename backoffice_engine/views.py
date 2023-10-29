@@ -405,7 +405,7 @@ def upload_csv(request):
         for row in reader:
             # check = DailySnacks.objects.filter(food=row.get("Food")).exists()
             if len(row['Food']) > 0:
-                
+
                 dish_data = {
                     'meal_type':meal_type,
                     'food': row['Food'],
@@ -436,12 +436,8 @@ def upload_csv(request):
             except Exception as e:
                 print(e,'----->')
 
-        # return HttpResponse("CSV file uploaded and processed successfully.")
         return redirect('recipe_management')
-        # except UnicodeDecodeError as e:
-        #     error_message = f"Error decoding file: {str(e)}"
-        #     return HttpResponse(error_message, status=400)
-
+   
     return render(request, "upload_csv.html")
     
     
@@ -449,9 +445,7 @@ def upload_csv(request):
 @custom_login_required
 def dish_calculator(request):
     user = AdminUser.objects.get(id = request.session["user"])
-    print(user,"-----------")
     all_dishes = AddIngridient.objects.all()
-    print(all_dishes,"********")
     return render(request,"dish-calculator-items.html",{
         "user":user,
         "dishes":all_dishes
