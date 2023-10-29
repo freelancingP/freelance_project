@@ -530,14 +530,17 @@ class AllDishesViewSet(viewsets.ModelViewSet):
     authentication_classes=[JWTAuthentication]
     permission_classes=[IsAuthenticated]
 
+    def get_queryset(self):
+        # Filter the queryset based on the user
+        customer = self.request.user
+        print(customer.veg_nonveg,'----------')
+        queryset = DailySnacks.objects.filter(veg_nonveg_egg=customer.veg_nonveg)
+        return queryset
 
     def get(self, request): 
         try:
 
-            customer = request.user
-            print(customer.veg_nonveg,'----------')
-
-            queryset = self.filter_queryset(self.get_queryset()).filter(veg_nonveg_egg=customer.veg_nonveg)
+            queryset = self.filter_queryset(self.get_queryset())
             page = self.paginate_queryset(queryset)
 
             if page is not None:
