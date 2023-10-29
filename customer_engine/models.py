@@ -73,9 +73,9 @@ class DailySnacks(models.Model):
     FOOD_CHOICES = (
         ('Vegetarian', 'Vegetarian'),
         ('Non Vegetarian', 'Non Vegetarian'),
-        ('Eggitarian', 'Eggitarian'),
-        ('Pescetarian', 'Pescetarian'),
-        ('Poultry', 'Poultry'),
+        ('Eggetarian', 'Eggetarian'),
+        ('Pescatarian', 'Pescatarian'),
+        ('Pollotarian', 'Pollotarian'),
         ('Vegan', 'Vegan'),
     )
 
