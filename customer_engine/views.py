@@ -535,8 +535,8 @@ class AllDishesViewSet(viewsets.ModelViewSet):
         try:
 
             customer = request.user
-            queryset = self.filter_queryset(self.get_queryset(),  veg_nonveg_egg=customer.veg_nonveg)
-            
+            queryset = self.filter_queryset(self.get_queryset()).filter(veg_nonveg_egg=customer.veg_nonveg)
+            print(customer.veg_nonveg)
             page = self.paginate_queryset(queryset)
 
             if page is not None:
