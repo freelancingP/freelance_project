@@ -405,7 +405,7 @@ def upload_csv(request):
         for row in reader:
             # check = DailySnacks.objects.filter(food=row.get("Food")).exists()
             if len(row['Food']) > 0:
-
+                print(row)
                 dish_data = {
                     'meal_type':meal_type,
                     'food': row['Food'],
@@ -417,7 +417,7 @@ def upload_csv(request):
                     'gl': 0 if len(row['GL']) == 0 else row['GL'],
                     'cals': 0 if len(row['CalsNet of  TDF']) == 0 else row['CalsNet of  TDF'],
                     'aaf_adj_prot': 0 if len(row['AAF adj Prot']) == 0 else row['AAF adj Prot'],
-                    'carbs': 0 if len(row['Carbs          (Net of TDF)']) == 0 else row['Carbs          (Net of TDF)'],
+                    'carbs': 0 if len(row['Carbs  (Net of TDF)']) == 0 else row['Carbs  (Net of TDF)'],
                     'total_fat': 0 if len(row['Total Fat']) == 0 else row['Total Fat'],
                     'tdf': 0 if len(row['TDF']) == 0 else row['TDF'],
                     'sodium': 0 if len(row['Sodium']) == 0 else row['Sodium'],
@@ -425,6 +425,7 @@ def upload_csv(request):
                     'calcium': 0 if len(row['Calcium']) == 0 else row['Calcium'],
                     'total_eaa': 0 if len(row['Total EAA']) == 0 else row['Total EAA'],
                     'lysine': 0 if len(row['Lysine']) == 0 else row['Lysine'],
+                    'kcal': 0 if len(row['Kcal']) == 0 else row['Kcal'],
                     'aa_factor':0,
                     'glucose':0
                 }
