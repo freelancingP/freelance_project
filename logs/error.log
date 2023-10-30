@@ -8311,6 +8311,53 @@ Traceback (most recent call last):
   File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/fields/__init__.py", line 2055, in get_prep_value
     raise e.__class__(
 TypeError: Field 'id' expected a number but got <AdminUser: test1>.
+<<<<<<< HEAD
+ERROR 2023-10-27 16:15:52,604 log Internal Server Error: /api/upload/image/
+Traceback (most recent call last):
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/views/decorators/csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/rest_framework/views.py", line 511, in dispatch
+    self.response = self.finalize_response(request, response, *args, **kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/rest_framework/views.py", line 423, in finalize_response
+    assert isinstance(response, HttpResponseBase), (
+AssertionError: Expected a `Response`, `HttpResponse` or `HttpStreamingResponse` to be returned from the view, but received a `<class 'NoneType'>`
+ERROR 2023-10-27 16:19:57,973 log Internal Server Error: /api/upload/image/
+Traceback (most recent call last):
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/views/decorators/csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/rest_framework/views.py", line 511, in dispatch
+    self.response = self.finalize_response(request, response, *args, **kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/rest_framework/views.py", line 423, in finalize_response
+    assert isinstance(response, HttpResponseBase), (
+AssertionError: Expected a `Response`, `HttpResponse` or `HttpStreamingResponse` to be returned from the view, but received a `<class 'NoneType'>`
+ERROR 2023-10-27 16:20:05,456 log Internal Server Error: /api/upload/image/
+Traceback (most recent call last):
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/views/decorators/csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/rest_framework/views.py", line 511, in dispatch
+    self.response = self.finalize_response(request, response, *args, **kwargs)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/rest_framework/views.py", line 423, in finalize_response
+    assert isinstance(response, HttpResponseBase), (
+AssertionError: Expected a `Response`, `HttpResponse` or `HttpStreamingResponse` to be returned from the view, but received a `<class 'NoneType'>`
+=======
 ERROR 2023-10-29 10:30:05,659 log Internal Server Error: /upload-csv/
 Traceback (most recent call last):
   File "/Users/root1/Documents/work/Appstack/env/lib/python3.11/site-packages/django/core/handlers/exception.py", line 55, in inner
@@ -8341,3 +8388,86 @@ Traceback (most recent call last):
     'carbs': 0 if len(row['Carbs          (Net of TDF)']) == 0 else row['Carbs          (Net of TDF)'],
                       ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 KeyError: 'Carbs          (Net of TDF)'
+>>>>>>> f722893f58ba71e77d5a2d1a0b26dc4aa8d74a64
+ERROR 2023-10-30 05:40:19,806 log Internal Server Error: /recipe/management/
+Traceback (most recent call last):
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/backends/utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/backends/sqlite3/base.py", line 328, in execute
+    return super().execute(query, params)
+sqlite3.OperationalError: no such column: customer_engine_dailysnacks.kcal
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/dhirendra/Documents/Task/freelance_project_main/customer_engine/decorators.py", line 28, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/dhirendra/Documents/Task/freelance_project_main/backoffice_engine/views.py", line 305, in recipe_management
+    return render(request, "recipe-management.html", {
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/template/loader.py", line 62, in render_to_string
+    return template.render(context, request)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/template/backends/django.py", line 61, in render
+    return self.template.render(context)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/template/base.py", line 175, in render
+    return self._render(context)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/template/base.py", line 167, in _render
+    return self.nodelist.render(context)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/template/base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/template/base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/template/base.py", line 966, in render_annotated
+    return self.render(context)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/template/defaulttags.py", line 194, in render
+    len_values = len(values)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/query.py", line 380, in __len__
+    self._fetch_all()
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/query.py", line 1881, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/models/sql/compiler.py", line 1562, in execute_sql
+    cursor.execute(sql, params)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/backends/utils.py", line 102, in execute
+    return super().execute(sql, params)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/backends/utils.py", line 67, in execute
+    return self._execute_with_wrappers(
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/backends/utils.py", line 80, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/backends/utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/backends/utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/db/backends/sqlite3/base.py", line 328, in execute
+    return super().execute(query, params)
+django.db.utils.OperationalError: no such column: customer_engine_dailysnacks.kcal
+ERROR 2023-10-30 06:26:50,624 log Internal Server Error: /upload-csv/
+Traceback (most recent call last):
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/dhirendra/Documents/Task/freelance_project_main/customer_engine/decorators.py", line 28, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/dhirendra/Documents/Task/freelance_project_main/backoffice_engine/views.py", line 420, in upload_csv
+    'carbs': 0 if len(row['Carbs  (Net of TDF)']) == 0 else row['Carbs  (Net of TDF)'],
+KeyError: 'Carbs  (Net of TDF)'
+ERROR 2023-10-30 06:41:10,647 log Internal Server Error: /upload-csv/
+Traceback (most recent call last):
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/dhirendra/Documents/Task/freelance_project_main/customer_engine/decorators.py", line 28, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/dhirendra/Documents/Task/freelance_project_main/backoffice_engine/views.py", line 420, in upload_csv
+    'carbs': 0 if len(row['Carbs  (Net of TDF)']) == 0 else row['Carbs  (Net of TDF)'],
+KeyError: 'Carbs  (Net of TDF)'

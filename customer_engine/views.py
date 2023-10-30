@@ -199,7 +199,7 @@ class UploadImageView(GenericAPIView):
         print(data)
 
         try:
-            uploaded_image = request.data.get("image")
+            uploaded_image = request.data.get("image")  
             print(uploaded_image)
             if uploaded_image:
                 uploaded_image = data["image"]
