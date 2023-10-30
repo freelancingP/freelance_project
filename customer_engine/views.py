@@ -788,10 +788,10 @@ class CustomerDailyCaloriesView(APIView):
                             "id": instance.id,
                             "food": instance.food,
                             "ingredients": instance.ingredients,
-                            "cals": instance.cals,
+                            "cals": instance.kcal,
                         })
-                if instance.cals:
-                    calories_used += instance.cals
+                if instance.kcal:
+                    calories_used += instance.kcal
 
                 if instance.carbs:
                     total_carbs += instance.carbs
@@ -1040,7 +1040,7 @@ class DailyCalorigramView(APIView):
             for item in data_is:
                 if item['id'] in dish_ids_list:
                     meal_type = item['meal_type'].lower()
-                    eaten_calories_breakdown[meal_type] += item['kcal']
+                    eaten_calories_breakdown[meal_type] += item['cals']
 
                     if item['gl'] is not None:
                         eaten_gl += item['gl']
@@ -1050,9 +1050,9 @@ class DailyCalorigramView(APIView):
                     eaten_total_fat += item['total_fat']
                     eaten_oil += item['oil']
 
-                    eaten_calories += item['kcal']
+                    eaten_calories += item['cals']
                 else:
-                    remaining_calories += item['kcal']
+                    remaining_calories += item['cals']
                     remaining_gl += item['gl']
                     remaining_carbs += item['carbs']
                     remaining_pral += item['pral']
