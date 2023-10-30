@@ -533,7 +533,6 @@ class AllDishesViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         # Filter the queryset based on the user
         customer = self.request.user
-        print(customer.veg_nonveg,'----------')
         queryset = DailySnacks.objects.filter(veg_nonveg_egg=customer.veg_nonveg)
         return queryset
 
@@ -1041,7 +1040,7 @@ class DailyCalorigramView(APIView):
             for item in data_is:
                 if item['id'] in dish_ids_list:
                     meal_type = item['meal_type'].lower()
-                    eaten_calories_breakdown[meal_type] += item['cals']
+                    eaten_calories_breakdown[meal_type] += item['kcal']
 
                     if item['gl'] is not None:
                         eaten_gl += item['gl']
@@ -1051,9 +1050,9 @@ class DailyCalorigramView(APIView):
                     eaten_total_fat += item['total_fat']
                     eaten_oil += item['oil']
 
-                    eaten_calories += item['cals']
+                    eaten_calories += item['kcal']
                 else:
-                    remaining_calories += item['cals']
+                    remaining_calories += item['kcal']
                     remaining_gl += item['gl']
                     remaining_carbs += item['carbs']
                     remaining_pral += item['pral']
