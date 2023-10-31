@@ -411,49 +411,50 @@ def upload_csv(request):
                 existing_record = DailySnacks.objects.filter(meal_type=meal_type,food=row['Food']).first()
                 if existing_record:
                     # Update the existing record with new data if necessary
-                    existing_record.quantity = row['Quantity']
-                    existing_record.ingredients = row['Ingredients ']
-                    existing_record.veg_nonveg_egg = row['Veg/Non Veg/Egg']
-                    existing_record.pral = 0 if len(row['PRAL']) == 0 else row['PRAL']
-                    existing_record.oil = 0 if len(row['Oil']) == 0 else row['Oil']
-                    existing_record.gl = 0 if len(row['GL']) == 0 else row['GL']
-                    existing_record.cals = 0 if len(row['CalsNet of  TDF']) == 0 else row['CalsNet of  TDF']
-                    existing_record.aaf_adj_prot = 0 if len(row['AAF adj Prot']) == 0 else row['AAF adj Prot']
-                    existing_record.carbs = 0 if len(row['Carbs  (Net of TDF)']) == 0 else row['Carbs  (Net of TDF)']
-                    existing_record.total_fat = 0 if len(row['Total Fat']) == 0 else row['Total Fat']
-                    existing_record.tdf = 0 if len(row['TDF']) == 0 else row['TDF']
-                    existing_record.sodium = 0 if len(row['Sodium']) == 0 else row['Sodium']
-                    existing_record.potassium = 0 if len(row['Pota-ssium']) == 0 else row['Pota-ssium']
-                    existing_record.calcium = 0 if len(row['Calcium']) == 0 else row['Calcium']
-                    existing_record.total_eaa = 0 if len(row['Total EAA']) == 0 else row['Total EAA']
-                    existing_record.lysine = 0 if len(row['Lysine']) == 0 else row['Lysine']
-                    existing_record.kcal = 0 if len(row['Kcal']) == 0 else row['Kcal']
+                    existing_record.quantity = row.get('Quantity', '')
+                    existing_record.ingredients = row.get('Ingredients ', '')
+                    existing_record.veg_nonveg_egg = row.get('Veg/Non Veg/Egg', '')
+                    existing_record.pral = 0 if not row.get('PRAL') or len(row['PRAL']) == 0 else row['PRAL']
+                    existing_record.oil = 0 if not row.get('Oil') or len(row['Oil']) == 0 else row['Oil']
+                    existing_record.gl = 0 if not row.get('GL') or len(row['GL']) == 0 else row['GL']
+                    existing_record.cals = 0 if not row.get('CalsNet of  TDF') or len(row['CalsNet of  TDF']) == 0 else row['CalsNet of  TDF']
+                    existing_record.aaf_adj_prot = 0 if not row.get('AAF adj Prot') or len(row['AAF adj Prot']) == 0 else row['AAF adj Prot']
+                    existing_record.carbs = 0 if not row.get('Carbs  (Net of TDF)') or len(row['Carbs  (Net of TDF)']) == 0 else row['Carbs  (Net of TDF)']
+                    existing_record.total_fat = 0 if not row.get('Total Fat') or len(row['Total Fat']) == 0 else row['Total Fat']
+                    existing_record.tdf = 0 if not row.get('TDF') or len(row['TDF']) == 0 else row['TDF']
+                    existing_record.sodium = 0 if not row.get('Sodium') or len(row['Sodium']) == 0 else row['Sodium']
+                    existing_record.potassium = 0 if not row.get('Pota-ssium') or len(row['Pota-ssium']) == 0 else row['Pota-ssium']
+                    existing_record.calcium = 0 if not row.get('Calcium') or len(row['Calcium']) == 0 else row['Calcium']
+                    existing_record.total_eaa = 0 if not row.get('Total EAA') or len(row['Total EAA']) == 0 else row['Total EAA']
+                    existing_record.lysine = 0 if not row.get('Lysine') or len(row['Lysine']) == 0 else row['Lysine']
+                    existing_record.kcal = 0 if not row.get('Kcal') or len(row['Kcal']) == 0 else row['Kcal']
                     existing_record.aa_factor = 0
                     existing_record.glucose = 0
                     existing_record.save()
-                else:    
+                else:
+                    # Create a new record if no existing record is found
                     dish_data = {
-                        'meal_type':meal_type,
-                        'food': row['Food'],
-                        'quantity': row['Quantity'],
-                        'ingredients': row['Ingredients '],
-                        'veg_nonveg_egg': row['Veg/Non Veg/Egg'],
-                        'pral' : 0 if len(row['PRAL']) == 0 else row['PRAL'],
-                        'oil': 0 if len(row['Oil']) == 0 else row['Oil'],
-                        'gl': 0 if len(row['GL']) == 0 else row['GL'],
-                        'cals': 0 if len(row['CalsNet of  TDF']) == 0 else row['CalsNet of  TDF'],
-                        'aaf_adj_prot': 0 if len(row['AAF adj Prot']) == 0 else row['AAF adj Prot'],
-                        'carbs': 0 if len(row['Carbs  (Net of TDF)']) == 0 else row['Carbs  (Net of TDF)'],
-                        'total_fat': 0 if len(row['Total Fat']) == 0 else row['Total Fat'],
-                        'tdf': 0 if len(row['TDF']) == 0 else row['TDF'],
-                        'sodium': 0 if len(row['Sodium']) == 0 else row['Sodium'],
-                        'potassium': 0 if len(row['Pota-ssium']) == 0 else row['Pota-ssium'],
-                        'calcium': 0 if len(row['Calcium']) == 0 else row['Calcium'],
-                        'total_eaa': 0 if len(row['Total EAA']) == 0 else row['Total EAA'],
-                        'lysine': 0 if len(row['Lysine']) == 0 else row['Lysine'],
-                        'kcal': 0 if len(row['Kcal']) == 0 else row['Kcal'],
-                        'aa_factor':0,
-                        'glucose':0
+                        'meal_type': meal_type,
+                        'food': row.get('Food', ''),
+                        'quantity': row.get('Quantity', ''),
+                        'ingredients': row.get('Ingredients ', ''),
+                        'veg_nonveg_egg': row.get('Veg/Non Veg/Egg', ''),
+                        'pral': 0 if not row.get('PRAL') or len(row['PRAL']) == 0 else row['PRAL'],
+                        'oil': 0 if not row.get('Oil') or len(row['Oil']) == 0 else row['Oil'],
+                        'gl': 0 if not row.get('GL') or len(row['GL']) == 0 else row['GL'],
+                        'cals': 0 if not row.get('CalsNet of  TDF') or len(row['CalsNet of  TDF']) == 0 else row['CalsNet of  TDF'],
+                        'aaf_adj_prot': 0 if not row.get('AAF adj Prot') or len(row['AAF adj Prot']) == 0 else row['AAF adj Prot'],
+                        'carbs': 0 if not row.get('Carbs  (Net of TDF)') or len(row['Carbs  (Net of TDF)']) == 0 else row['Carbs  (Net of TDF)'],
+                        'total_fat': 0 if not row.get('Total Fat') or len(row['Total Fat']) == 0 else row['Total Fat'],
+                        'tdf': 0 if not row.get('TDF') or len(row['TDF']) == 0 else row['TDF'],
+                        'sodium': 0 if not row.get('Sodium') or len(row['Sodium']) == 0 else row['Sodium'],
+                        'potassium': 0 if not row.get('Pota-ssium') or len(row['Pota-ssium']) == 0 else row['Pota-ssium'],
+                        'calcium': 0 if not row.get('Calcium') or len(row['Calcium']) == 0 else row['Calcium'],
+                        'total_eaa': 0 if not row.get('Total EAA') or len(row['Total EAA']) == 0 else row['Total EAA'],
+                        'lysine': 0 if not row.get('Lysine') or len(row['Lysine']) == 0 else row['Lysine'],
+                        'kcal': 0 if not row.get('Kcal') or len(row['Kcal']) == 0 else row['Kcal'],
+                        'aa_factor': 0,
+                        'glucose': 0
                     }
                     data.append(dish_data)
 

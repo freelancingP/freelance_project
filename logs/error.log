@@ -8471,3 +8471,47 @@ Traceback (most recent call last):
   File "/home/dhirendra/Documents/Task/freelance_project_main/backoffice_engine/views.py", line 420, in upload_csv
     'carbs': 0 if len(row['Carbs  (Net of TDF)']) == 0 else row['Carbs  (Net of TDF)'],
 KeyError: 'Carbs  (Net of TDF)'
+ERROR 2023-10-31 08:05:22,253 log Internal Server Error: /upload-csv/
+Traceback (most recent call last):
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/dhirendra/Documents/Task/freelance_project_main/customer_engine/decorators.py", line 28, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/dhirendra/Documents/Task/freelance_project_main/backoffice_engine/views.py", line 446, in upload_csv
+    'carbs': 0 if len(row['Carbs  (Net of TDF)']) == 0 else row['Carbs  (Net of TDF)'],
+KeyError: 'Carbs  (Net of TDF)'
+ERROR 2023-10-31 08:06:23,064 log Internal Server Error: /upload-csv/
+Traceback (most recent call last):
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/dhirendra/Documents/Task/freelance_project_main/customer_engine/decorators.py", line 28, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/dhirendra/Documents/Task/freelance_project_main/backoffice_engine/views.py", line 446, in upload_csv
+    'carbs': 0 if len(row['Carbs  (Net of TDF)']) == 0 else row['Carbs  (Net of TDF)'],
+KeyError: 'Carbs  (Net of TDF)'
+ERROR 2023-10-31 08:14:48,816 log Internal Server Error: /upload-csv/
+Traceback (most recent call last):
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/dhirendra/Documents/Task/freelance_project_main/customer_engine/decorators.py", line 28, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/dhirendra/Documents/Task/freelance_project_main/backoffice_engine/views.py", line 446, in upload_csv
+    'carbs': 0 if len(row['Carbs  (Net of TDF)']) == 0 else row['Carbs  (Net of TDF)'],
+KeyError: 'Carbs  (Net of TDF)'
+ERROR 2023-10-31 08:14:57,234 log Internal Server Error: /upload-csv/
+Traceback (most recent call last):
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/dhirendra/Documents/Task/env/lib/python3.8/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/dhirendra/Documents/Task/freelance_project_main/customer_engine/decorators.py", line 28, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/dhirendra/Documents/Task/freelance_project_main/backoffice_engine/views.py", line 446, in upload_csv
+    'carbs': 0 if len(row['Carbs  (Net of TDF)']) == 0 else row['Carbs  (Net of TDF)'],
+KeyError: 'Carbs  (Net of TDF)'
