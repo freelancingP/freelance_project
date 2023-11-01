@@ -531,9 +531,9 @@ class AllDishesViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         # Filter the queryset based on the user
         customer = self.request.user
-        logger.exception("An error occurred: val is %s", customer.veg_nonveg)
+        logger.info("Selected: val is %s", customer.veg_nonveg)
 
-        queryset = DailySnacks.objects.filter(veg_nonveg_egg=customer.veg_nonveg)
+        queryset = DailySnacks.objects.filter(veg_nonveg_egg__contains=customer.veg_nonveg)
         return queryset
 
     # def get(self, request): 
