@@ -533,7 +533,7 @@ class AllDishesViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         # Filter the queryset based on the user
         customer = self.request.user
-        queryset = DailySnacks.objects.filter(veg_nonveg_egg=customer.veg_nonveg)
+        queryset = DailySnacks.objects.filter(veg_nonveg_egg='Eggetarian')
         return queryset
 
     def get(self, request): 
@@ -746,20 +746,19 @@ def utils_get_bmi(customer):
     total_calory = 0
 
     try:
-        
         bmi_cal = float(customer.weight) / (float(customer.height) * float(customer.height) / 10000)
         fat_cal = (bmi_cal + 3) / 100
         ffm_cal = 1 - fat_cal
         if customer.gender == "Male":
             calory = 88.362+(float(customer.weight)*13.37)+(float(customer.height)*4.799)-(float(customer.age)*5.677)
-            total_calory = round((calory * ffm_cal), 1)
+            total_calory = round((calory * ffm_cal), 0)
         elif customer.gender == "Female":
             calory = 447.593+(float(customer.weight)*9.247)+(float(customer.height)*3.098)-(float(customer.age)*4.33)
-            total_calory = round((calory * ffm_cal), 1)
+            total_calory = round((calory * ffm_cal), 0)
     except:
         pass
 
-    return total_calory   
+    return total_calory
 
 class CustomerDailyCaloriesView(APIView):
     authentication_classes=[JWTAuthentication]
