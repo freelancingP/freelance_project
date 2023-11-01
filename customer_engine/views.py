@@ -404,7 +404,6 @@ class LoginAPIView(APIView):
             )
             return response
         except Exception as e:
-            logger = logging.getLogger(__name__)
             logger.exception("An error occurred: %s", str(e))
 
             status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -502,7 +501,6 @@ class OTPVerifyAPI(APIView):
                 return response
 
         except Exception as e:
-            logger = logging.getLogger(__name__)
             logger.exception("An error occurred: %s", str(e))
 
             status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -533,6 +531,8 @@ class AllDishesViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         # Filter the queryset based on the user
         customer = self.request.user
+        logger.exception("An error occurred: val is %s", customer.veg_nonveg)
+
         queryset = DailySnacks.objects.filter(veg_nonveg_egg=customer.veg_nonveg)
         return queryset
 
@@ -645,7 +645,6 @@ class DailyCaloryView(APIView):
                 return response
 
         except Exception as e:
-            logger = logging.getLogger(__name__)  
             logger.exception("An error occurred: %s", str(e))
 
             status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -725,7 +724,6 @@ class AddCaloryViews(APIView):
                 return response
 
         except Exception as e:
-            logger = logging.getLogger(__name__)
             logger.exception("An error occurred: %s", str(e))
 
             status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -843,7 +841,6 @@ class CustomerDailyCaloriesView(APIView):
             return data
         
         except Exception as e:
-                logger = logging.getLogger(__name__)  # Get a logger instance for this module
                 logger.exception("An error occurred: %s", str(e))
 
                 status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -898,7 +895,6 @@ class CalorigramView(APIView):
             return response
 
         except DailySnacks.DoesNotExist:
-            logger = logging.getLogger(__name__) 
             logger.error("Daily snacks with ID %s not found", id)
 
             status_code = status.HTTP_404_NOT_FOUND
@@ -914,7 +910,6 @@ class CalorigramView(APIView):
             return response
 
         except Exception as e:
-            logger = logging.getLogger(__name__) 
             logger.exception("An error occurred while processing the request: %s", str(e))
 
             status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -948,7 +943,6 @@ class CreateRecipe(APIView):
                     if ingredient_serializer.is_valid():
                         ingredient_serializer.save()
                     else:
-                        logger = logging.getLogger(__name__) 
                         logger.error("Error while saving ingredient: %s", ingredient_serializer.errors)
 
                         status_code = status.HTTP_400_BAD_REQUEST
@@ -988,7 +982,6 @@ class CreateRecipe(APIView):
             return response
 
         except Exception as e:
-            logger = logging.getLogger(__name__) 
             logger.exception("An error occurred while processing the request: %s", str(e))
 
             status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -1098,7 +1091,6 @@ class DailyCalorigramView(APIView):
             return response
 
         except ValueError as ve:
-            logger = logging.getLogger(__name__)  # Get a logger instance for this module
             logger.exception("ValueError occurred while processing the request: %s", str(ve))
 
             status_code = status.HTTP_400_BAD_REQUEST
@@ -1114,7 +1106,6 @@ class DailyCalorigramView(APIView):
             return response
 
         except Exception as e:
-            logger = logging.getLogger(__name__)
             logger.exception("An error occurred while processing the request: %s", str(e))
 
             status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -1179,7 +1170,6 @@ class GetIngridientView(APIView):
                 return response
 
         except Exception as e:
-            logger = logging.getLogger(__name__)  # Get a logger instance for this module
             logger.exception("An error occurred while processing the request: %s", str(e))
 
             status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
