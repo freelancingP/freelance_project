@@ -529,16 +529,14 @@ class AllDishesViewSet(viewsets.ModelViewSet):
     permission_classes=[IsAuthenticated]
 
     def get_queryset(self):
-        # Filter the queryset based on the user
+        # Get the user's preference
         customer = self.request.user
-        selected_is = None
-        if customer.veg_nonveg in ["Eggetarian"]:
-            selected_is = "Eggetarian"
-        else:
-            selected_is = customer.veg_nonveg
+        selected_is = "Eggetarian"
 
-        logger.exception("Val is %s", customer.veg_nonveg)
+        # Log the selected preference
+        logger.exception("Value is %s", selected_is)
 
+        # Filter the queryset based on the selected preference
         queryset = DailySnacks.objects.filter(veg_nonveg_egg__contains=selected_is)
         return queryset
 
