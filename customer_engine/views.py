@@ -533,7 +533,7 @@ class AllDishesViewSet(viewsets.ModelViewSet):
         customer = self.request.user
         logger.exception("Val is %s", customer.veg_nonveg)
 
-        queryset = DailySnacks.objects.filter(veg_nonveg_egg__contains=customer.veg_nonveg)
+        queryset = DailySnacks.objects.filter(veg_nonveg_egg__contains='Eggetarian')
         return queryset
 
     # def get(self, request): 
