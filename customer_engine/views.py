@@ -533,7 +533,7 @@ class AllDishesViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         # Filter the queryset based on the user
         customer = self.request.user
-        queryset = DailySnacks.objects.filter(veg_nonveg_egg='Eggetarian')
+        queryset = DailySnacks.objects.filter(veg_nonveg_egg=customer.veg_nonveg)
         return queryset
 
     def get(self, request): 
