@@ -531,7 +531,7 @@ class AllDishesViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         # Get the user's preference
         customer = self.request.user
-        selected_is = "Eggetarian" if customer.veg_nonveg == "Eggetarian" else customer.veg_nonveg
+        selected_is = "Eggetarian" if str(customer.veg_nonveg).strip() == "Eggetarian" else str(customer.veg_nonveg).strip()
 
         # Log the selected preference
         logger.exception("Value is %s", (customer.veg_nonveg == "Eggetarian"))
