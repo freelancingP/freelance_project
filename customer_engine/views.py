@@ -536,55 +536,55 @@ class AllDishesViewSet(viewsets.ModelViewSet):
         queryset = DailySnacks.objects.filter(veg_nonveg_egg=customer.veg_nonveg)
         return queryset
 
-    def get(self, request): 
-        try:
+    # def get(self, request): 
+    #     try:
 
-            queryset = self.filter_queryset(self.get_queryset())
-            page = self.paginate_queryset(queryset)
+    #         queryset = self.filter_queryset(self.get_queryset())
+    #         page = self.paginate_queryset(queryset)
 
-            if page is not None:
-                serializer = self.get_serializer(page, many=True)
-                status_code = status.HTTP_200_OK
-                message = "successful"
-                data = {"dishes": serializer.data}
-                response = JsonResponse(
-                    status=status_code,
-                    msg=message,
-                    data=data,
-                    success=True,
-                    error={},
-                    count=len(data),
-                )
-                return response
-            else:
-                status_code = status.HTTP_400_BAD_REQUEST
-                data = ""
-                response = JsonResponse(
-                    status=status_code,
-                    msg="Error",
-                    data=data,
-                    success=False,
-                    error="Invalid token",
-                    count=len(data),
-                )
-                return response
+    #         if page is not None:
+    #             serializer = self.get_serializer(page, many=True)
+    #             status_code = status.HTTP_200_OK
+    #             message = "successful"
+    #             data = {"dishes": serializer.data}
+    #             response = JsonResponse(
+    #                 status=status_code,
+    #                 msg=message,
+    #                 data=data,
+    #                 success=True,
+    #                 error={},
+    #                 count=len(data),
+    #             )
+    #             return response
+    #         else:
+    #             status_code = status.HTTP_400_BAD_REQUEST
+    #             data = ""
+    #             response = JsonResponse(
+    #                 status=status_code,
+    #                 msg="Error",
+    #                 data=data,
+    #                 success=False,
+    #                 error="Invalid token",
+    #                 count=len(data),
+    #             )
+    #             return response
 
-        except Exception as e:
-            logger = logging.getLogger(__name__)
-            logger.exception("An error occurred: %s", str(e))
+    #     except Exception as e:
+    #         logger = logging.getLogger(__name__)
+    #         logger.exception("An error occurred: %s", str(e))
 
-            status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
-            message = "Internal Server Error"
-            data = ""
-            response = JsonResponse(
-                status=status_code,
-                msg=message,
-                data=data,
-                success=False,
-                error=str(e),
-                count=len(data),
-            )
-            return response
+    #         status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+    #         message = "Internal Server Error"
+    #         data = ""
+    #         response = JsonResponse(
+    #             status=status_code,
+    #             msg=message,
+    #             data=data,
+    #             success=False,
+    #             error=str(e),
+    #             count=len(data),
+    #         )
+    #         return response
             
         
 class DailyCaloryView(APIView):
