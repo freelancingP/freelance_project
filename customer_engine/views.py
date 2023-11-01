@@ -740,7 +740,26 @@ class AddCaloryViews(APIView):
                 count=len(data),
             )
             return response
-            
+
+def utils_get_bmi(customer):
+
+    total_calory = 0
+
+    try:
+        
+        bmi_cal = float(customer.weight) / (float(customer.height) * float(customer.height) / 10000)
+        fat_cal = (bmi_cal + 3) / 100
+        ffm_cal = 1 - fat_cal
+        if customer.gender == "Male":
+            calory = 88.362+(float(customer.weight)*13.37)+(float(customer.height)*4.799)-(float(customer.age)*5.677)
+            total_calory = round((calory * ffm_cal), 1)
+        elif customer.gender == "Female":
+            calory = 447.593+(float(customer.weight)*9.247)+(float(customer.height)*3.098)-(float(customer.age)*4.33)
+            total_calory = round((calory * ffm_cal), 1)
+    except:
+        pass
+
+    return total_calory   
 
 class CustomerDailyCaloriesView(APIView):
     authentication_classes=[JWTAuthentication]
@@ -750,17 +769,7 @@ class CustomerDailyCaloriesView(APIView):
         try:
 
             customer = request.user
-            total_calory = 0
-
-            try:
-                if customer.gender == "Male":
-                    calory = 88.362+(float(customer.weight)*13.37)+(float(customer.height)*4.799)-(float(customer.age)*5.677)
-                    total_calory = round((calory * 0.702050619834711),2)
-                elif customer.gender == "Female":
-                    calory = 447.593+(float(customer.weight)*9.247)+(float(customer.height)*3.098)-(float(customer.age)*4.33)
-                    total_calory = round((calory * 0.702050619834711),2)
-            except:
-                pass
+            total_calory = utils_get_bmi(customer)
             
             date_obj = datetime.strptime(date, "%Y-%m-%d").date()  
 
@@ -1068,17 +1077,7 @@ class DailyCalorigramView(APIView):
                 {"label": "oil", "value": eaten_oil, "percentage": round(eaten_oil / (eaten_oil + remaining_oil) * 100) if eaten_oil + remaining_oil > 0 else 0, "color_code": "#E3B523", "unit": "oil"},
             ]
 
-            total_calory = 0
-
-            try:
-                if customer.gender == "Male":
-                    calory = 88.362+(float(customer.weight)*13.37)+(float(customer.height)*4.799)-(float(customer.age)*5.677)
-                    total_calory = round((calory * 0.702050619834711),2)
-                elif customer.gender == "Female":
-                    calory = 447.593+(float(customer.weight)*9.247)+(float(customer.height)*3.098)-(float(customer.age)*4.33)
-                    total_calory = round((calory * 0.702050619834711),2)
-            except:
-                pass
+            total_calory = utils_get_bmi(customer)
 
             data = {
                 'eaten_calories': eaten_calories,
@@ -1396,17 +1395,7 @@ class UserProfileDetails(APIView):
 
         serializer = CustomerSerializer(instance=user_profile)
      
-        total_calory = 0
-
-        try:
-            if user_profile.gender == "Male":
-                calory = 88.362+(float(user_profile.weight)*13.37)+(float(user_profile.height)*4.799)-(float(user_profile.age)*5.677)
-                total_calory = round((calory * 0.702050619834711),2)
-            elif customer.gender == "Female":
-                calory = 447.593+(float(user_profile.weight)*9.247)+(float(user_profile.height)*3.098)-(float(user_profile.age)*4.33)
-                total_calory = round((calory * 0.702050619834711),2)
-        except:
-            pass
+        total_calory = utils_get_bmi(customer)
 
         data = serializer.data
         data['calories'] = total_calory 
