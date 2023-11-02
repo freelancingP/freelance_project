@@ -744,6 +744,18 @@ def utils_get_bmi(customer):
     total_calory = 0
 
     try:
+
+        try:
+            if customer.height_unit == 'feet':
+
+                customer.height = customer.height * 30.48
+
+            if customer.weight_unit != 'kg':
+                
+                customer.weight = customer.weight * 0.453592
+        except:
+            pass
+
         bmi_cal = float(customer.weight) / (float(customer.height) * float(customer.height) / 10000)
         fat_cal = (bmi_cal + 3) / 100
         ffm_cal = 1 - fat_cal
