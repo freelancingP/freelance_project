@@ -794,10 +794,10 @@ class CustomerDailyCaloriesView(APIView):
                             "id": instance.id,
                             "food": instance.food,
                             "ingredients": instance.ingredients,
-                            "cals": instance.kcal,
+                            "cals": instance.cal,
                         })
-                if instance.kcal:
-                    calories_used += instance.kcal
+                if instance.cal:
+                    calories_used += instance.cal
 
                 if instance.carbs:
                     total_carbs += instance.carbs
