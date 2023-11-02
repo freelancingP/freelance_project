@@ -404,7 +404,6 @@ class LoginAPIView(APIView):
             )
             return response
         except Exception as e:
-            logger = logging.getLogger(__name__)
             logger.exception("An error occurred: %s", str(e))
 
             status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -502,7 +501,6 @@ class OTPVerifyAPI(APIView):
                 return response
 
         except Exception as e:
-            logger = logging.getLogger(__name__)
             logger.exception("An error occurred: %s", str(e))
 
             status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -531,60 +529,62 @@ class AllDishesViewSet(viewsets.ModelViewSet):
     permission_classes=[IsAuthenticated]
 
     def get_queryset(self):
-        # Filter the queryset based on the user
+        # Get the user's preference
         customer = self.request.user
-        queryset = DailySnacks.objects.filter(veg_nonveg_egg=customer.veg_nonveg)
+
+        # Filter the queryset based on the selected preference
+        queryset = DailySnacks.objects.filter(veg_nonveg_egg__contains=str(customer.veg_nonveg).strip())
         return queryset
 
-    def get(self, request): 
-        try:
+    # def get(self, request): 
+    #     try:
 
-            queryset = self.filter_queryset(self.get_queryset())
-            page = self.paginate_queryset(queryset)
+    #         queryset = self.filter_queryset(self.get_queryset())
+    #         page = self.paginate_queryset(queryset)
 
-            if page is not None:
-                serializer = self.get_serializer(page, many=True)
-                status_code = status.HTTP_200_OK
-                message = "successful"
-                data = {"dishes": serializer.data}
-                response = JsonResponse(
-                    status=status_code,
-                    msg=message,
-                    data=data,
-                    success=True,
-                    error={},
-                    count=len(data),
-                )
-                return response
-            else:
-                status_code = status.HTTP_400_BAD_REQUEST
-                data = ""
-                response = JsonResponse(
-                    status=status_code,
-                    msg="Error",
-                    data=data,
-                    success=False,
-                    error="Invalid token",
-                    count=len(data),
-                )
-                return response
+    #         if page is not None:
+    #             serializer = self.get_serializer(page, many=True)
+    #             status_code = status.HTTP_200_OK
+    #             message = "successful"
+    #             data = {"dishes": serializer.data}
+    #             response = JsonResponse(
+    #                 status=status_code,
+    #                 msg=message,
+    #                 data=data,
+    #                 success=True,
+    #                 error={},
+    #                 count=len(data),
+    #             )
+    #             return response
+    #         else:
+    #             status_code = status.HTTP_400_BAD_REQUEST
+    #             data = ""
+    #             response = JsonResponse(
+    #                 status=status_code,
+    #                 msg="Error",
+    #                 data=data,
+    #                 success=False,
+    #                 error="Invalid token",
+    #                 count=len(data),
+    #             )
+    #             return response
 
-        except Exception as e:
-            logger = logging.getLogger(__name__)
-            logger.exception("An error occurred: %s", str(e))
+    #     except Exception as e:
+    #         logger = logging.getLogger(__name__)
+    #         logger.exception("An error occurred: %s", str(e))
 
-            status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
-            message = "Internal Server Error"
-            data = ""
-            response = JsonResponse(
-                status=status_code,
-                msg=message,
-                data=data,
-                success=False,
-                error=str(e),
-                count=len(data),
-            )
-            return response
+    #         status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+    #         message = "Internal Server Error"
+    #         data = ""
+    #         response = JsonResponse(
+    #             status=status_code,
+    #             msg=message,
+    #             data=data,
+    #             success=False,
+    #             error=str(e),
+    #             count=len(data),
+    #         )
+    #         return response
             
         
 class DailyCaloryView(APIView):
@@ -645,7 +645,6 @@ class DailyCaloryView(APIView):
                 return response
 
         except Exception as e:
-            logger = logging.getLogger(__name__)  
             logger.exception("An error occurred: %s", str(e))
 
             status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -725,7 +724,6 @@ class AddCaloryViews(APIView):
                 return response
 
         except Exception as e:
-            logger = logging.getLogger(__name__)
             logger.exception("An error occurred: %s", str(e))
 
             status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -740,7 +738,25 @@ class AddCaloryViews(APIView):
                 count=len(data),
             )
             return response
-            
+
+def utils_get_bmi(customer):
+
+    total_calory = 0
+
+    try:
+        bmi_cal = float(customer.weight) / (float(customer.height) * float(customer.height) / 10000)
+        fat_cal = (bmi_cal + 3) / 100
+        ffm_cal = 1 - fat_cal
+        if customer.gender == "Male":
+            calory = 88.362+(float(customer.weight)*13.37)+(float(customer.height)*4.799)-(float(customer.age)*5.677)
+            total_calory = round((calory * ffm_cal), 0)
+        elif customer.gender == "Female":
+            calory = 447.593+(float(customer.weight)*9.247)+(float(customer.height)*3.098)-(float(customer.age)*4.33)
+            total_calory = round((calory * ffm_cal), 0)
+    except:
+        pass
+
+    return total_calory
 
 class CustomerDailyCaloriesView(APIView):
     authentication_classes=[JWTAuthentication]
@@ -750,17 +766,7 @@ class CustomerDailyCaloriesView(APIView):
         try:
 
             customer = request.user
-            total_calory = 0
-
-            try:
-                if customer.gender == "Male":
-                    calory = 88.362+(float(customer.weight)*13.37)+(float(customer.height)*4.799)-(float(customer.age)*5.677)
-                    total_calory = round((calory * 0.702050619834711),2)
-                elif customer.gender == "Female":
-                    calory = 447.593+(float(customer.weight)*9.247)+(float(customer.height)*3.098)-(float(customer.age)*4.33)
-                    total_calory = round((calory * 0.702050619834711),2)
-            except:
-                pass
+            total_calory = utils_get_bmi(customer)
             
             date_obj = datetime.strptime(date, "%Y-%m-%d").date()  
 
@@ -835,7 +841,6 @@ class CustomerDailyCaloriesView(APIView):
             return data
         
         except Exception as e:
-                logger = logging.getLogger(__name__)  # Get a logger instance for this module
                 logger.exception("An error occurred: %s", str(e))
 
                 status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -890,7 +895,6 @@ class CalorigramView(APIView):
             return response
 
         except DailySnacks.DoesNotExist:
-            logger = logging.getLogger(__name__) 
             logger.error("Daily snacks with ID %s not found", id)
 
             status_code = status.HTTP_404_NOT_FOUND
@@ -906,7 +910,6 @@ class CalorigramView(APIView):
             return response
 
         except Exception as e:
-            logger = logging.getLogger(__name__) 
             logger.exception("An error occurred while processing the request: %s", str(e))
 
             status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -940,7 +943,6 @@ class CreateRecipe(APIView):
                     if ingredient_serializer.is_valid():
                         ingredient_serializer.save()
                     else:
-                        logger = logging.getLogger(__name__) 
                         logger.error("Error while saving ingredient: %s", ingredient_serializer.errors)
 
                         status_code = status.HTTP_400_BAD_REQUEST
@@ -980,7 +982,6 @@ class CreateRecipe(APIView):
             return response
 
         except Exception as e:
-            logger = logging.getLogger(__name__) 
             logger.exception("An error occurred while processing the request: %s", str(e))
 
             status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -1068,17 +1069,7 @@ class DailyCalorigramView(APIView):
                 {"label": "oil", "value": eaten_oil, "percentage": round(eaten_oil / (eaten_oil + remaining_oil) * 100) if eaten_oil + remaining_oil > 0 else 0, "color_code": "#E3B523", "unit": "oil"},
             ]
 
-            total_calory = 0
-
-            try:
-                if customer.gender == "Male":
-                    calory = 88.362+(float(customer.weight)*13.37)+(float(customer.height)*4.799)-(float(customer.age)*5.677)
-                    total_calory = round((calory * 0.702050619834711),2)
-                elif customer.gender == "Female":
-                    calory = 447.593+(float(customer.weight)*9.247)+(float(customer.height)*3.098)-(float(customer.age)*4.33)
-                    total_calory = round((calory * 0.702050619834711),2)
-            except:
-                pass
+            total_calory = utils_get_bmi(customer)
 
             data = {
                 'eaten_calories': eaten_calories,
@@ -1100,7 +1091,6 @@ class DailyCalorigramView(APIView):
             return response
 
         except ValueError as ve:
-            logger = logging.getLogger(__name__)  # Get a logger instance for this module
             logger.exception("ValueError occurred while processing the request: %s", str(ve))
 
             status_code = status.HTTP_400_BAD_REQUEST
@@ -1116,7 +1106,6 @@ class DailyCalorigramView(APIView):
             return response
 
         except Exception as e:
-            logger = logging.getLogger(__name__)
             logger.exception("An error occurred while processing the request: %s", str(e))
 
             status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -1181,7 +1170,6 @@ class GetIngridientView(APIView):
                 return response
 
         except Exception as e:
-            logger = logging.getLogger(__name__)  # Get a logger instance for this module
             logger.exception("An error occurred while processing the request: %s", str(e))
 
             status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -1396,17 +1384,7 @@ class UserProfileDetails(APIView):
 
         serializer = CustomerSerializer(instance=user_profile)
      
-        total_calory = 0
-
-        try:
-            if user_profile.gender == "Male":
-                calory = 88.362+(float(user_profile.weight)*13.37)+(float(user_profile.height)*4.799)-(float(user_profile.age)*5.677)
-                total_calory = round((calory * 0.702050619834711),2)
-            elif customer.gender == "Female":
-                calory = 447.593+(float(user_profile.weight)*9.247)+(float(user_profile.height)*3.098)-(float(user_profile.age)*4.33)
-                total_calory = round((calory * 0.702050619834711),2)
-        except:
-            pass
+        total_calory = utils_get_bmi(customer)
 
         data = serializer.data
         data['calories'] = total_calory 
