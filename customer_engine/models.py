@@ -88,7 +88,7 @@ class DailySnacks(models.Model):
 
     meal_type = models.CharField(max_length=15, choices=TYPE_CHOICES, null=False, blank=False)
     food = models.CharField(max_length=200,null=True,blank=True)
-    quantity = models.CharField(max_length=10, null=True)
+    quantity = models.CharField(max_length=50, null=True)
     ingredients = models.CharField(max_length=255, null=True, blank=True)
     veg_nonveg_egg = models.CharField(max_length=30, choices=FOOD_CHOICES, null=False, blank=False)
     pral = models.FloatField(null=True, default=0.0)
