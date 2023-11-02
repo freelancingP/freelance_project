@@ -82,7 +82,8 @@ class DailySnacks(models.Model):
     DISH_CHOICES = (
         ('ANI', 'ANI'),
         ('Restaurent', 'Restaurent'),
-        ('Fit4life', 'Fit4life')
+        ('Fit4life', 'Fit4life'),
+        ('OWN', 'OWN')
     )
 
     meal_type = models.CharField(max_length=15, choices=TYPE_CHOICES, null=False, blank=False)
