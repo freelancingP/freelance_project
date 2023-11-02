@@ -79,6 +79,12 @@ class DailySnacks(models.Model):
         ('Vegan', 'Vegan'),
     )
 
+    DISH_CHOICES = (
+        ('ANI', 'ANI'),
+        ('Restaurent', 'Restaurent'),
+        ('Fit4life', 'Fit4life')
+    )
+
     meal_type = models.CharField(max_length=15, choices=TYPE_CHOICES, null=False, blank=False)
     food = models.CharField(max_length=200,null=True,blank=True)
     quantity = models.CharField(max_length=10, null=True)
@@ -88,7 +94,6 @@ class DailySnacks(models.Model):
     oil = models.FloatField(null=True, default=0.0)
     gl = models.FloatField(null=True, default=0.0)
     cals = models.FloatField(null=True, default=0.0)
-    kcal = models.FloatField(null=True, default=0.0)
     aaf_adj_prot = models.FloatField(null=True, default=0.0)
     carbs = models.FloatField(null=True, default=0.0)
     total_fat = models.FloatField(null=True, default=0.0)
@@ -104,6 +109,7 @@ class DailySnacks(models.Model):
     free_sugar = models.FloatField(null=True, default=0.0)
     aa_factor = models.FloatField(null=True, default=0.0)
     glucose = models.FloatField(null=True, default=0.0)
+    dish = models.CharField(max_length=30, choices=DISH_CHOICES, null=False, blank=False)
    
 
 

@@ -523,7 +523,7 @@ class AllDishesViewSet(viewsets.ModelViewSet):
     serializer_class = DailySnacksSerializer
     pagination_class = PageNumberPagination
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
-    filterset_fields = ['meal_type','food']
+    filterset_fields = ['meal_type','food', 'dish']
     search_fields = ['meal_type','food']   
     authentication_classes=[JWTAuthentication]
     permission_classes=[IsAuthenticated]
