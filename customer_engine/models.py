@@ -83,7 +83,7 @@ class DailySnacks(models.Model):
         ('ANI', 'ANI'),
         ('Restaurent', 'Restaurent'),
         ('Fit4life', 'Fit4life'),
-        ('OWN', 'OWN')
+        ('OWN', 'OWN'),
     )
 
     meal_type = models.CharField(max_length=15, choices=TYPE_CHOICES, null=False, blank=False)
@@ -111,8 +111,6 @@ class DailySnacks(models.Model):
     aa_factor = models.FloatField(null=True, default=0.0)
     glucose = models.FloatField(null=True, default=0.0)
     dish = models.CharField(max_length=30, choices=DISH_CHOICES, null=False, blank=False)
-   
-
 
     def __str__(self):
         return str(self.food)
