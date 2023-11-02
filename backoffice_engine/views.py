@@ -405,15 +405,11 @@ def upload_csv(request):
         data = []
 
         for row in reader:
-            # check = DailySnacks.objects.filter(food=row.get("Food")).exists()
-            # if len(row['Food']) > 0:
-                # Check if a record with the same 'food' and 'meal_type' already exists
 
             output = list(row.values())
             existing_record = DailySnacks.objects.filter(meal_type=meal_type,food=output[0]).first()
             if not existing_record:
                 
-                # Create a new record if no existing record is found
                 dish_data = {
                     'meal_type': meal_type,
                     'food': output[0],
