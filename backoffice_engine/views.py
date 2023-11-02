@@ -427,7 +427,7 @@ def upload_csv(request):
                     existing_record.calcium = 0 if not row.get('Calcium') or len(row['Calcium']) == 0 else row['Calcium']
                     existing_record.total_eaa = 0 if not row.get('Total EAA') or len(row['Total EAA']) == 0 else row['Total EAA']
                     existing_record.lysine = 0 if not row.get('Lysine') or len(row['Lysine']) == 0 else row['Lysine']
-                    existing_record.kcal = 0 if not row.get('Kcal') or len(row['Kcal']) == 0 else row['Kcal']
+                    existing_record.dish = 0 if not row.get('dish') or len(row['dish']) == 0 else row['dish']
                     existing_record.aa_factor = 0
                     existing_record.glucose = 0
                     existing_record.save()
