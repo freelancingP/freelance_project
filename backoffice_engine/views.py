@@ -307,7 +307,7 @@ def recipe_management(request):
     print(request.method)
 
     if request.method == "POST":
-        print(request.method)
+        print(request.method, dish_category)
         dish_category = request.POST.get('dishCategory', 'ALL')
         if dish_category == 'ALL':
             data = DailySnacks.objects.all()
