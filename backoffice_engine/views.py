@@ -304,12 +304,18 @@ def recipe_management(request):
     user = AdminUser.objects.get(id=request.session["user"])
     
     data = None
+    print(request.method)
+
     if request.method == "POST":
+        print(request.method)
         dish_category = request.POST.get('dishCategory', 'ALL')
         if dish_category == 'ALL':
             data = DailySnacks.objects.all()
+            print('all')
+
         else:
             data = DailySnacks.objects.filter(dish=dish_category)
+            print('else')
 
     else:
         data = DailySnacks.objects.all()
