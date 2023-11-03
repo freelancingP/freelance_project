@@ -842,6 +842,7 @@ class CustomerDailyCaloriesView(APIView):
 
             status_code = status.HTTP_200_OK
             message = "successful"
+
             data = JsonResponse(
                     status=status_code,
                     msg=message,
@@ -850,6 +851,8 @@ class CustomerDailyCaloriesView(APIView):
                     error={},
                     count=len(data),
                 )
+            print(data,'---')
+            
             return data
         
         except Exception as e:
