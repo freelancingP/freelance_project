@@ -12,6 +12,7 @@
 	<link rel="stylesheet" type="text/css" href="{% static 'vendor/star-rating/star-rating-svg.css' %}">
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&amp;family=Roboto:wght@100;300;400;500;700;900&amp;display=swap" rel="stylesheet">
+	<link href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
 	<style>
 		/* Styles for the button */
 button#popupButton {
@@ -367,7 +368,7 @@ th {
                                         <div class="row">
                                             <div class="col-md-16 table-container"> 
 												<h4>Breakfast</h4>
-												<table>
+												<table  id="example" class="display" style="width:100%">
 													<tr>
 														<th>Food</th>
 														<th>Quantity</th>
@@ -725,7 +726,12 @@ th {
     {% comment %} <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script> {% endcomment %}
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script>
+            new DataTable('#example');
 
+    </script>
 </body>
 
 
