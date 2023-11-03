@@ -88,6 +88,10 @@ body, h1, h2, h3, p, div, ul, ol, li, dl, dt, dd, th, td, form, fieldset, input,
     margin: 0;
     padding: 0;
 }
+.form-group {
+    display: flex;
+    align-items: center;
+}
 
 /* Apply general styles to your table */
 table {
@@ -311,6 +315,8 @@ th {
                                 <div class="row d-flex justify-content-end">
                                     <div class="col-md-4 d-flex align-items-center" >
                                         <form id="categoryForm" method="post">
+                                            {% csrf_token %}
+
                                             <div class="form-group">
                                             <select id="dishCategory" class="form-control">
                                             <option value="ALL" selected>All Dishes</option>
