@@ -302,7 +302,14 @@ def customers(request):
 def recipe_management(request):
 
     user = AdminUser.objects.get(id=request.session["user"])
-    data = DailySnacks.objects.all()
+    
+    data = None
+    if request.method == "POST":
+        dish_category = request.POST["dishCategory"]
+        data = DailySnacks.objects.filter(dish=dish_category)
+
+    else:
+        data = DailySnacks.objects.all()
 
     return render(request, "recipe-management.html", {
         "user": user,

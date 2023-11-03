@@ -309,13 +309,18 @@ th {
                             <div class="card-header">
                                 <h4 class="card-title">Recipe Management</h4>
                                 <div class="row d-flex justify-content-end">
-                                    <!-- <div class="col-md-4 d-flex align-items-center" >
-                                        <select id="dishCategory" class="form-control">
-                                            <option value="1category1">DC FIT 4 LIFE</option>
-                                            <option value="1category2">NIA Dishes</option>
-                                            <option value="1category3">Restaurants</option>
+                                    <div class="col-md-4 d-flex align-items-center" >
+                                        <form id="categoryForm" method="post">
+                                            <select id="dishCategory" class="form-control">
+                                            <option value="ALL" selected>All Dishes</option>
+                                            <option value="OWN">OWN Dishes</option>
+                                            <option value="Fit4life">Fit4life Dishes</option>
+                                            <option value="ANI">ANI Dishes</option>
+                                            <option value="Restaurant">Restaurant Dishes</option>
                                         </select>
-                                    </div> -->
+                                        <button type="button" id="submitBtn">Filter</button>
+                                    </form>
+                                    </div>
                                     <div class="col-md-4 " > 
                                         <button  id="popupButton" style="float: right;">Open Popup</button>
                                     </div>
