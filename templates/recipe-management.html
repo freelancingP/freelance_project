@@ -446,7 +446,8 @@ th {
                                         <div class="row">
                                             <div class="col-md-12 table-container"> 
 												<h4>Lunch</h4>
-												<table>
+												<table  id="example1" class="display" style="width:100%">
+													<thead>
 													<tr>
 														<th>Food</th>
 														<th>Quantity</th>
@@ -475,6 +476,8 @@ th {
 														<th>AA Factor</th>
 														<th>GI (Glucose)</th>
 													</tr>
+                                                </thead>
+                                                <tbody>
 													{% for d in data %}
                                                     {% if d.meal_type == 'lunch' %}
 													<tr>
@@ -507,6 +510,7 @@ th {
 													</tr>
                                                     {% endif %}
                                                     {% endfor %}
+                                                </tbody>
                                                 
                                                 </table>
                                             </div>
@@ -518,7 +522,8 @@ th {
                                            
 												<div class="col-md-12 table-container"> 
 													<h4>Evening snaks</h4>
-													<table>
+													<table  id="example2" class="display" style="width:100%">
+                                                        <thead>
 														<tr>
                                                             <th>Food</th>
                                                             <th>Quantity</th>
@@ -547,6 +552,9 @@ th {
                                                             <th>AA Factor</th>
                                                             <th>GI (Glucose)</th>
                                                         </tr>
+                                                    </thead>
+                                                <tbody>
+
 														{% for d in data %}
                                                         {% if d.meal_type == 'evening_snacks' %}
 
@@ -581,6 +589,8 @@ th {
                                                     {% endif %}
 
                                                     {% endfor %}
+                                                </tbody>
+
                                                     </table>
 												</div>
                                         </div>
@@ -589,7 +599,8 @@ th {
                                         <div class="row">
                                             <div class="col-md-12 table-container"> 
 												<h4>Dinner</h4>
-												<table>
+												<table  id="example3" class="display" style="width:100%">
+                                                    <thead>
 													<tr>
                                                         
 														<th>Food</th>
@@ -619,6 +630,9 @@ th {
 														<th>AA Factor</th>
 														<th>GI (Glucose)</th>
 													</tr>
+                                                </thead>
+                                            <tbody>
+
 													{% for d in data %}
                                                     {% if d.meal_type == 'dinner' %}
 
@@ -653,6 +667,8 @@ th {
                                                     {% endif %}
 
                                                     {% endfor %}
+                                                </tbody>
+
                                                 </table>
                                             </div>
 											
@@ -734,6 +750,9 @@ th {
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script>
             new DataTable('#example');
+            new DataTable('#example1');
+            new DataTable('#example2');
+            new DataTable('#example3');
 
     </script>
 </body>
