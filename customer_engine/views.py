@@ -868,7 +868,9 @@ class CustomerDailyCaloriesView(APIView):
                     "error": str(e),
                     "count": 0,
                 }
-                return JsonResponse(response_data, status=status_code)
+                print(data,'-error--')
+
+                return JsonResponse(**response_data)
         
 
 class CalorigramView(APIView):
