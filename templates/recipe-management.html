@@ -369,23 +369,73 @@ th {
                                             <div class="col-md-16 table-container"> 
 												<h4>Breakfast</h4>
 												<table  id="example" class="display" style="width:100%">
-													<tr>
+													<thead>
+                                                    <tr>
 														<th>Food</th>
 														<th>Quantity</th>
-														
+														<th>Ingredients</th>
+														<th>Veg/Non-Veg/Egg</th>
+														<th>PRAL</th>
+														<th>Oil</th>
+														<th>GL</th>
+                                                        <th>Dish</th>
+														<th>Cals</th>
+														<th>Net of TDF</th>
+														<th>AAF</th>
+														<th>adj Prot</th>
+														<th>Carbs (Net of TDF)</th>
+														<th>Total Fat</th>
+														<th>TDF</th>
+														<th>Sodium</th>
+														<th>Potassium</th>
+														<th>Phosphorus</th>
+														<th>Calcium</th>
+														<th>Magnesium</th>
+														<th>Total EAA</th>
+														<th>Lysine</th>
+														<th>Gross Protein</th>
+														<th>Free Sugars</th>
+														<th>AA Factor</th>
+														<th>GI (Glucose)</th>
 													</tr>
+                                                </thead>
+                                                <tbody>
+
                                                     {% for d in data %}
                                                     {% if d.meal_type == 'breakfast' %}
 
 													<tr>
 														<td>{{d.food}}</td>
 														<td>{{d.quantity}}</td>
-														
+														<td>{{d.ingredients}}</td>
+														<td>{{d.veg_nonveg_egg}}</td>
+														<td>{{d.pral}}</td>
+														<td>{{d.oil}}</td>
+														<td>{{d.gl}}</td>
+                                                        <td>{{d.dish}}</td>
+														<td>{{d.cals}}</td>
+														<td>{{d.tdf}}</td>
+                                                        <td>{{d.aaf_adj_prot}}</td>
+                                                        <td>{{d.aaf_adj_prot}}</td>
+                                                        <td>{{d.carbs}}</td>
+                                                        <td>{{d.total_fat}}</td>
+                                                        <td>{{d.tdf}}</td>
+														<td>{{d.sodium}}</td>
+														<td>{{d.potassium}}</td>
+														<td>{{d.phasphorous}}</td>
+														<td>{{d.calcium}}</td>
+														<td>{{d.magnecium}}</td>
+														<td>{{d.total_eaa}}</td>
+														<td>{{d.lysine}}</td>
+														<td>{{d.gross_protine}}</td>
+														<td>{{d.free_suger}}</td>
+														<td>{{d.aa_factor}}</td>
+														<td>{{d.glucose}}</td>
 													</tr>
                                                     {% endif %}
 
                                                     {% endfor %}
-													<!-- Add more rows with dummy data as needed -->
+                                                </tbody>
 												</table>
                                             </div>
 											
