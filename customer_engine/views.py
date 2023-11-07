@@ -786,6 +786,7 @@ class CustomerDailyCaloriesView(APIView):
     
             daily_snacks = DailySnacks.objects.filter(id__in=dish_ids_list)
 
+            total_cals = 0
             total_proteins = 0
             total_carbs = 0
             total_fats = 0
@@ -809,6 +810,9 @@ class CustomerDailyCaloriesView(APIView):
                             "ingredients": instance.ingredients,
                             "cals": instance.cals,
                         })
+                if instance.cals:
+                    total_cals += instance.cals
+
                 if instance.pral:
                     total_proteins += instance.pral
 
@@ -846,7 +850,7 @@ class CustomerDailyCaloriesView(APIView):
             }
 
             data['calorie_breakdown'] = calorie_breakdown
-            data['calories_used'] = (total_proteins+total_carbs+total_fats+total_gl)
+            data['calories_used'] = total_cals
             data['total_calory'] = total_calory
 
             status_code = status.HTTP_200_OK
