@@ -533,7 +533,7 @@ class AllDishesViewSet(viewsets.ModelViewSet):
         customer = self.request.user
 
         # Filter the queryset based on the selected preference
-        queryset = DailySnacks.objects.filter(veg_nonveg_egg__contains=str(customer.veg_nonveg).strip())
+        queryset = DailySnacks.objects.filter(veg_nonveg_egg=str(customer.veg_nonveg).strip())
         return queryset
 
     # def get(self, request): 
