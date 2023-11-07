@@ -846,7 +846,7 @@ class CustomerDailyCaloriesView(APIView):
             }
 
             data['calorie_breakdown'] = calorie_breakdown
-            data['calories_used'] = total_proteins
+            data['calories_used'] = (total_proteins+total_carbs+total_fats+total_gl)
             data['total_calory'] = total_calory
 
             status_code = status.HTTP_200_OK
