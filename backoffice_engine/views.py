@@ -420,7 +420,7 @@ def upload_csv(request):
         decoded_data = uploaded_file.read().decode(encoding)
         reader = csv.DictReader(decoded_data.splitlines())
         data = []
-
+        status = False
         for row in reader:
 
             output = list(row.values())
@@ -459,12 +459,15 @@ def upload_csv(request):
         for dish_data in data:
             try:
                 DailySnacks.objects.create(**dish_data)
+                status = True
             except Exception as e:
                 print(e,'----->')
 
         return redirect('recipe_management')
    
-    return render(request, "upload_csv.html")
+    return render(request, "upload_csv.html",{
+        "upload-status":status,
+    })
     
     
 

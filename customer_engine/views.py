@@ -786,9 +786,10 @@ class CustomerDailyCaloriesView(APIView):
     
             daily_snacks = DailySnacks.objects.filter(id__in=dish_ids_list)
 
-            calories_used = 0
+            total_proteins = 0
             total_carbs = 0
-            total_calcium = 0
+            total_fats = 0
+            total_gl = 0
 
             data = {
                 'calories_used':0,
@@ -808,19 +809,22 @@ class CustomerDailyCaloriesView(APIView):
                             "ingredients": instance.ingredients,
                             "cals": instance.cals,
                         })
-                if instance.cals:
-                    calories_used += instance.cals
+                if instance.pral:
+                    total_proteins += instance.pral
 
                 if instance.carbs:
                     total_carbs += instance.carbs
 
+                if instance.total_fat:
+                    total_fats += instance.total_fat
+ 
                 if instance.calcium:
-                    total_calcium += instance.calcium
-
+                    total_gl += instance.gl
+ 
             # update data
             calorie_breakdown = {
-                "calories": {
-                        'value':calories_used,
+                "proteins": {
+                        'value':total_proteins,
                         'color':'#2CA3FA',
                         'percentage': 1                
                     },
@@ -829,15 +833,20 @@ class CustomerDailyCaloriesView(APIView):
                         'color':'#FF7326',
                         'percentage': 2
                     },
-                "calcium": {
-                        'value':total_calcium,
+                "fats": {
+                        'value':total_fats,
                         'color':'#81BE00',
                         'percentage': 3
-                    }
+                    },
+                "gl": {
+                    'value':total_gl,
+                    'color':'#81BE00',
+                    'percentage': 3
+                }
             }
 
             data['calorie_breakdown'] = calorie_breakdown
-            data['calories_used'] = calories_used
+            data['calories_used'] = total_proteins
             data['total_calory'] = total_calory
 
             status_code = status.HTTP_200_OK
