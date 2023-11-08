@@ -249,11 +249,11 @@
 							<div class="card-header d-sm-flex d-block pb-0 border-0">
 								<div class="mr-auto pr-3 mb-sm-0 mb-3">
 									<h4 class="text-black fs-20">Customer Graph</h4>
-									<p class="fs-13 mb-0 text-black">Lorem ipsum dolor sit amet, consectetur</p>
+									<p class="fs-13 mb-0 text-black"></p>
 								</div>
 							</div>
 							<div class="card-body pt-0 pb-0">
-								<div id="chartBar"></div>
+								<canvas id="chartBar"></canvas>
 							</div>
 						</div>
 					</div>
@@ -354,6 +354,72 @@
 			}, 1000); 
 		});
 	</script>
+
+	
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- JavaScript code for the dynamic chart -->
+    <script>
+        // Fetch the dynamic data from the Django context
+        const totalCustomer = {{ total_customer|default:0 }};
+        const dayLabels = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+
+        // Function to generate dynamic data based on the total customer count
+        function calculateDynamicData(totalCustomer) {
+            const baseValue = 10;  // Adjust this value as needed
+            const data = dayLabels.map((day, index) => {
+                // You can adjust the data calculation logic here
+                return baseValue + index * totalCustomer;
+            });
+            return data;
+        }
+
+        // Initialize the chart with empty data
+        const initialData = new Array(dayLabels.length).fill(0);
+
+        const ctx = document.getElementById("chartBar").getContext("2d");
+
+        // Create the chart with empty data
+        const chart = new Chart(ctx, {
+            type: "bar",
+            data: {
+                labels: dayLabels,
+                datasets: [{
+                    label: "Customer Data",
+                    data: initialData,
+                    backgroundColor: "rgba(75, 192, 192, 0.2)",
+                    borderColor: "rgba(75, 192, 192, 1)",
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: "Days"
+                        }
+                    },
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Function to update the chart with new data
+        function updateChart(newData) {
+            chart.data.datasets[0].data = newData;
+            chart.update();
+        }
+
+        // Update the chart with dynamic data
+        const dynamicData = calculateDynamicData(totalCustomer);
+        updateChart(dynamicData);
+    </script>
+	
+	
+	
 </body>
 </body>
 </html>
