@@ -314,14 +314,6 @@ th {
                                 <h4 class="card-title">Recipe Management</h4>
                                 <div class="row d-flex justify-content-end">
                                     <div class="col-md-4 d-flex align-items-center" >
-<<<<<<< HEAD
-                                        <select id="dishCategory" class="form-control">
-                                            <option value="1category1">All Dishes</option>
-                                            <option value="1category1">Own Dishes</option>
-                                            <option value="1category1">FIT4LIFE Dishes</option>
-                                            <option value="1category2">General Dishes</option>
-                                            <option value="1category3">Restaurants Dishes</option>
-=======
                                         <form id="categoryForm" method="post">
                                             {% csrf_token %}
 
@@ -330,9 +322,8 @@ th {
                                             <option value="ALL">All Dishes</option>
                                             <option value="OWN">OWN Dishes</option>
                                             <option value="Fit4life">Fit4life Dishes</option>
-                                            <option value="ANI">ANI Dishes</option>
+                                            <option value="ANI">General Dishes</option>
                                             <option value="Restaurant">Restaurant Dishes</option>
->>>>>>> f74064b85e89f580e2631b2521b026c73383ff1b
                                         </select>
                                         <button type="submit" id="submitBtn">Filter</button>
                                     </div>
