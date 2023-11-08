@@ -302,7 +302,24 @@ def customers(request):
 def recipe_management(request):
 
     user = AdminUser.objects.get(id=request.session["user"])
-    data = DailySnacks.objects.all()
+    
+    data = None
+    print(request.method)
+
+    if request.method == "POST":
+        dish_category = request.POST.get('dishCategory', 'ALL')
+        print(request.method, dish_category)
+
+        if dish_category == 'ALL':
+            data = DailySnacks.objects.all()
+            print('all')
+
+        else:
+            data = DailySnacks.objects.filter(dish=dish_category)
+            print('else')
+
+    else:
+        data = DailySnacks.objects.all()
 
     return render(request, "recipe-management.html", {
         "user": user,
@@ -403,70 +420,54 @@ def upload_csv(request):
         decoded_data = uploaded_file.read().decode(encoding)
         reader = csv.DictReader(decoded_data.splitlines())
         data = []
-
+        status = False
         for row in reader:
-            # check = DailySnacks.objects.filter(food=row.get("Food")).exists()
-            if len(row['Food']) > 0:
-                # Check if a record with the same 'food' and 'meal_type' already exists
-                existing_record = DailySnacks.objects.filter(meal_type=meal_type,food=row['Food']).first()
-                if existing_record:
-                    # Update the existing record with new data if necessary
-                    existing_record.quantity = row.get('Quantity', '')
-                    existing_record.ingredients = row.get('Ingredients ', '')
-                    existing_record.veg_nonveg_egg = row.get('Veg/Non Veg/Egg', '')
-                    existing_record.pral = 0 if not row.get('PRAL') or len(row['PRAL']) == 0 else row['PRAL']
-                    existing_record.oil = 0 if not row.get('Oil') or len(row['Oil']) == 0 else row['Oil']
-                    existing_record.gl = 0 if not row.get('GL') or len(row['GL']) == 0 else row['GL']
-                    existing_record.cals = 0 if not row.get('CalsNet of  TDF') or len(row['CalsNet of  TDF']) == 0 else row['CalsNet of  TDF']
-                    existing_record.aaf_adj_prot = 0 if not row.get('AAF adj Prot') or len(row['AAF adj Prot']) == 0 else row['AAF adj Prot']
-                    existing_record.carbs = 0 if not row.get('Carbs  (Net of TDF)') or len(row['Carbs  (Net of TDF)']) == 0 else row['Carbs  (Net of TDF)']
-                    existing_record.total_fat = 0 if not row.get('Total Fat') or len(row['Total Fat']) == 0 else row['Total Fat']
-                    existing_record.tdf = 0 if not row.get('TDF') or len(row['TDF']) == 0 else row['TDF']
-                    existing_record.sodium = 0 if not row.get('Sodium') or len(row['Sodium']) == 0 else row['Sodium']
-                    existing_record.potassium = 0 if not row.get('Pota-ssium') or len(row['Pota-ssium']) == 0 else row['Pota-ssium']
-                    existing_record.calcium = 0 if not row.get('Calcium') or len(row['Calcium']) == 0 else row['Calcium']
-                    existing_record.total_eaa = 0 if not row.get('Total EAA') or len(row['Total EAA']) == 0 else row['Total EAA']
-                    existing_record.lysine = 0 if not row.get('Lysine') or len(row['Lysine']) == 0 else row['Lysine']
-                    existing_record.kcal = 0 if not row.get('Kcal') or len(row['Kcal']) == 0 else row['Kcal']
-                    existing_record.aa_factor = 0
-                    existing_record.glucose = 0
-                    existing_record.save()
-                else:
-                    # Create a new record if no existing record is found
-                    dish_data = {
-                        'meal_type': meal_type,
-                        'food': row.get('Food', ''),
-                        'quantity': row.get('Quantity', ''),
-                        'ingredients': row.get('Ingredients ', ''),
-                        'veg_nonveg_egg': row.get('Veg/Non Veg/Egg', ''),
-                        'pral': 0 if not row.get('PRAL') or len(row['PRAL']) == 0 else row['PRAL'],
-                        'oil': 0 if not row.get('Oil') or len(row['Oil']) == 0 else row['Oil'],
-                        'gl': 0 if not row.get('GL') or len(row['GL']) == 0 else row['GL'],
-                        'cals': 0 if not row.get('CalsNet of  TDF') or len(row['CalsNet of  TDF']) == 0 else row['CalsNet of  TDF'],
-                        'aaf_adj_prot': 0 if not row.get('AAF adj Prot') or len(row['AAF adj Prot']) == 0 else row['AAF adj Prot'],
-                        'carbs': 0 if not row.get('Carbs  (Net of TDF)') or len(row['Carbs  (Net of TDF)']) == 0 else row['Carbs  (Net of TDF)'],
-                        'total_fat': 0 if not row.get('Total Fat') or len(row['Total Fat']) == 0 else row['Total Fat'],
-                        'tdf': 0 if not row.get('TDF') or len(row['TDF']) == 0 else row['TDF'],
-                        'sodium': 0 if not row.get('Sodium') or len(row['Sodium']) == 0 else row['Sodium'],
-                        'potassium': 0 if not row.get('Pota-ssium') or len(row['Pota-ssium']) == 0 else row['Pota-ssium'],
-                        'calcium': 0 if not row.get('Calcium') or len(row['Calcium']) == 0 else row['Calcium'],
-                        'total_eaa': 0 if not row.get('Total EAA') or len(row['Total EAA']) == 0 else row['Total EAA'],
-                        'lysine': 0 if not row.get('Lysine') or len(row['Lysine']) == 0 else row['Lysine'],
-                        'kcal': 0 if not row.get('Kcal') or len(row['Kcal']) == 0 else row['Kcal'],
-                        'aa_factor': 0,
-                        'glucose': 0
-                    }
-                    data.append(dish_data)
+
+            output = list(row.values())
+            existing_record = DailySnacks.objects.filter(meal_type=meal_type,food=output[0]).first()
+            if not existing_record:
+                
+                dish_data = {
+                    'meal_type': meal_type,
+                    'food': output[0],
+                    'quantity': output[1],
+                    'ingredients': output[2],
+                    'veg_nonveg_egg': output[3],
+                    'pral': 0 if not output[4] or len(output[4]) == 0 else output[4],
+                    'oil': 0 if not output[5] or len(output[5]) == 0 else output[5],
+                    'gl': 0 if not output[6] or len(output[6]) == 0 else output[6],
+                    'cals': 0 if not output[7] or len(output[7]) == 0 else output[7],
+                    'aaf_adj_prot': 0 if not output[8] or len(output[8]) == 0 else output[8],
+                    'carbs': 0 if not output[9] or len(output[9]) == 0 else output[9],
+                    'total_fat': 0 if not output[10] or len(output[10]) == 0 else output[10],
+                    'tdf': 0 if not output[11] or len(output[11]) == 0 else output[11],
+                    'sodium': 0 if output[12] or len(output[12]) == 0 else output[12],
+                    'potassium': 0 if not output[13] or len(output[13]) == 0 else output[13],
+                    'phosphorus': 0 if not output[14] or len(output[14]) == 0 else output[14],
+                    'calcium': 0 if not output[15] or len(output[15]) == 0 else output[15],
+                    'magnesium': 0 if not output[16] or len(output[16]) == 0 else output[16],
+                    'total_eaa': 0 if not output[17] or len(output[17]) == 0 else output[17],
+                    'lysine': 0 if not output[18] or len(output[18]) == 0 else output[18],
+                    'gross_protein': 0 if not output[19] or len(output[19]) == 0 else output[19],
+                    'free_sugar': 0 if not output[20] or len(output[20]) == 0 else output[20],
+                    'dish': output[21],
+                    'aa_factor': 0,
+                    'glucose': 0
+                }
+                data.append(dish_data)
 
         for dish_data in data:
             try:
                 DailySnacks.objects.create(**dish_data)
+                status = True
             except Exception as e:
                 print(e,'----->')
 
         return redirect('recipe_management')
    
-    return render(request, "upload_csv.html")
+    return render(request, "upload_csv.html",{
+        "upload-status":status,
+    })
     
     
 

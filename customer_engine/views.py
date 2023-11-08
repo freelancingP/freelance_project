@@ -523,7 +523,7 @@ class AllDishesViewSet(viewsets.ModelViewSet):
     serializer_class = DailySnacksSerializer
     pagination_class = PageNumberPagination
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
-    filterset_fields = ['meal_type','food']
+    filterset_fields = ['meal_type','food', 'dish']
     search_fields = ['meal_type','food']   
     authentication_classes=[JWTAuthentication]
     permission_classes=[IsAuthenticated]
@@ -533,7 +533,7 @@ class AllDishesViewSet(viewsets.ModelViewSet):
         customer = self.request.user
 
         # Filter the queryset based on the selected preference
-        queryset = DailySnacks.objects.filter(veg_nonveg_egg__contains=str(customer.veg_nonveg).strip())
+        queryset = DailySnacks.objects.filter(veg_nonveg_egg=str(customer.veg_nonveg).strip())
         return queryset
 
     # def get(self, request): 
@@ -744,6 +744,18 @@ def utils_get_bmi(customer):
     total_calory = 0
 
     try:
+
+        try:
+            if customer.height_unit == 'feet':
+
+                customer.height = customer.height * 30.48
+
+            if customer.weight_unit != 'kg':
+                
+                customer.weight = customer.weight * 0.453592
+        except:
+            pass
+
         bmi_cal = float(customer.weight) / (float(customer.height) * float(customer.height) / 10000)
         fat_cal = (bmi_cal + 3) / 100
         ffm_cal = 1 - fat_cal
@@ -774,9 +786,11 @@ class CustomerDailyCaloriesView(APIView):
     
             daily_snacks = DailySnacks.objects.filter(id__in=dish_ids_list)
 
-            calories_used = 0
+            total_cals = 0
+            total_proteins = 0
             total_carbs = 0
-            total_calcium = 0
+            total_fats = 0
+            total_gl = 0
 
             data = {
                 'calories_used':0,
@@ -794,21 +808,27 @@ class CustomerDailyCaloriesView(APIView):
                             "id": instance.id,
                             "food": instance.food,
                             "ingredients": instance.ingredients,
-                            "cals": instance.kcal,
+                            "cals": instance.cals,
                         })
-                if instance.kcal:
-                    calories_used += instance.kcal
+                if instance.cals:
+                    total_cals += instance.cals
+
+                if instance.pral:
+                    total_proteins += instance.pral
 
                 if instance.carbs:
                     total_carbs += instance.carbs
 
+                if instance.total_fat:
+                    total_fats += instance.total_fat
+ 
                 if instance.calcium:
-                    total_calcium += instance.calcium
-
+                    total_gl += instance.gl
+ 
             # update data
             calorie_breakdown = {
-                "calories": {
-                        'value':calories_used,
+                "proteins": {
+                        'value':total_proteins,
                         'color':'#2CA3FA',
                         'percentage': 1                
                     },
@@ -817,19 +837,25 @@ class CustomerDailyCaloriesView(APIView):
                         'color':'#FF7326',
                         'percentage': 2
                     },
-                "calcium": {
-                        'value':total_calcium,
+                "fats": {
+                        'value':total_fats,
                         'color':'#81BE00',
                         'percentage': 3
-                    }
+                    },
+                "gl": {
+                    'value':total_gl,
+                    'color':'#81BE00',
+                    'percentage': 3
+                }
             }
 
             data['calorie_breakdown'] = calorie_breakdown
-            data['calories_used'] = calories_used
+            data['calories_used'] = total_cals
             data['total_calory'] = total_calory
 
             status_code = status.HTTP_200_OK
             message = "successful"
+
             data = JsonResponse(
                     status=status_code,
                     msg=message,
@@ -838,6 +864,8 @@ class CustomerDailyCaloriesView(APIView):
                     error={},
                     count=len(data),
                 )
+            print(data,'---')
+            
             return data
         
         except Exception as e:
@@ -853,7 +881,9 @@ class CustomerDailyCaloriesView(APIView):
                     "error": str(e),
                     "count": 0,
                 }
-                return JsonResponse(response_data, status=status_code)
+                print(data,'-error--')
+
+                return JsonResponse(**response_data)
         
 
 class CalorigramView(APIView):

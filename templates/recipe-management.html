@@ -12,6 +12,7 @@
 	<link rel="stylesheet" type="text/css" href="{% static 'vendor/star-rating/star-rating-svg.css' %}">
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&amp;family=Roboto:wght@100;300;400;500;700;900&amp;display=swap" rel="stylesheet">
+	<link href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
 	<style>
 		/* Styles for the button */
 button#popupButton {
@@ -86,6 +87,10 @@ button#closePopup:hover {
 body, h1, h2, h3, p, div, ul, ol, li, dl, dt, dd, th, td, form, fieldset, input, textarea, button, img {
     margin: 0;
     padding: 0;
+}
+.form-group {
+    display: flex;
+    align-items: center;
 }
 
 /* Apply general styles to your table */
@@ -309,13 +314,29 @@ th {
                                 <h4 class="card-title">Recipe Management</h4>
                                 <div class="row d-flex justify-content-end">
                                     <div class="col-md-4 d-flex align-items-center" >
+<<<<<<< HEAD
                                         <select id="dishCategory" class="form-control">
                                             <option value="1category1">All Dishes</option>
                                             <option value="1category1">Own Dishes</option>
                                             <option value="1category1">FIT4LIFE Dishes</option>
                                             <option value="1category2">General Dishes</option>
                                             <option value="1category3">Restaurants Dishes</option>
+=======
+                                        <form id="categoryForm" method="post">
+                                            {% csrf_token %}
+
+                                            <div class="form-group">
+                                            <select id="dishCategory" name="dishCategory" class="form-control">
+                                            <option value="ALL">All Dishes</option>
+                                            <option value="OWN">OWN Dishes</option>
+                                            <option value="Fit4life">Fit4life Dishes</option>
+                                            <option value="ANI">ANI Dishes</option>
+                                            <option value="Restaurant">Restaurant Dishes</option>
+>>>>>>> f74064b85e89f580e2631b2521b026c73383ff1b
                                         </select>
+                                        <button type="submit" id="submitBtn">Filter</button>
+                                    </div>
+                                    </form>
                                     </div>
                                     <div class="col-md-4 " > 
                                         <button  id="popupButton" style="float: right;">Open Popup</button>
@@ -369,8 +390,9 @@ th {
                                         <div class="row">
                                             <div class="col-md-16 table-container"> 
 												<h4>Breakfast</h4>
-												<table>
-													<tr>
+												<table  id="example" class="display" style="width:100%">
+													<thead>
+                                                    <tr>
 														<th>Food</th>
 														<th>Quantity</th>
 														<th>Ingredients</th>
@@ -378,7 +400,7 @@ th {
 														<th>PRAL</th>
 														<th>Oil</th>
 														<th>GL</th>
-                                                        <th>Kcal</th>
+                                                        <th>Dish</th>
 														<th>Cals</th>
 														<th>Net of TDF</th>
 														<th>AAF</th>
@@ -398,6 +420,9 @@ th {
 														<th>AA Factor</th>
 														<th>GI (Glucose)</th>
 													</tr>
+                                                </thead>
+                                                <tbody>
+
                                                     {% for d in data %}
                                                     {% if d.meal_type == 'breakfast' %}
 
@@ -409,7 +434,7 @@ th {
 														<td>{{d.pral}}</td>
 														<td>{{d.oil}}</td>
 														<td>{{d.gl}}</td>
-                                                        <td>{{d.kcal}}</td>
+                                                        <td>{{d.dish}}</td>
 														<td>{{d.cals}}</td>
 														<td>{{d.tdf}}</td>
                                                         <td>{{d.aaf_adj_prot}}</td>
@@ -432,7 +457,7 @@ th {
                                                     {% endif %}
 
                                                     {% endfor %}
-													<!-- Add more rows with dummy data as needed -->
+                                                </tbody>
 												</table>
                                             </div>
 											
@@ -443,7 +468,8 @@ th {
                                         <div class="row">
                                             <div class="col-md-12 table-container"> 
 												<h4>Lunch</h4>
-												<table>
+												<table  id="example1" class="display" style="width:100%">
+													<thead>
 													<tr>
 														<th>Food</th>
 														<th>Quantity</th>
@@ -452,7 +478,7 @@ th {
 														<th>PRAL</th>
 														<th>Oil</th>
 														<th>GL</th>
-                                                        <th>Kcal</th>
+                                                        <th>Dish</th>
 														<th>Cals</th>
 														<th>Net of TDF</th>
 														<th>AAF</th>
@@ -472,6 +498,8 @@ th {
 														<th>AA Factor</th>
 														<th>GI (Glucose)</th>
 													</tr>
+                                                </thead>
+                                                <tbody>
 													{% for d in data %}
                                                     {% if d.meal_type == 'lunch' %}
 													<tr>
@@ -482,7 +510,7 @@ th {
 														<td>{{d.pral}}</td>
 														<td>{{d.oil}}</td>
 														<td>{{d.gl}}</td>
-                                                        <td>{{d.kcal}}</td>
+                                                        <td>{{d.dish}}</td>
 														<td>{{d.cals}}</td>
 														<td>{{d.tdf}}</td>
                                                         <td>{{d.aaf_adj_prot}}</td>
@@ -504,6 +532,7 @@ th {
 													</tr>
                                                     {% endif %}
                                                     {% endfor %}
+                                                </tbody>
                                                 
                                                 </table>
                                             </div>
@@ -515,7 +544,8 @@ th {
                                            
 												<div class="col-md-12 table-container"> 
 													<h4>Evening snaks</h4>
-													<table>
+													<table  id="example2" class="display" style="width:100%">
+                                                        <thead>
 														<tr>
                                                             <th>Food</th>
                                                             <th>Quantity</th>
@@ -524,7 +554,7 @@ th {
                                                             <th>PRAL</th>
                                                             <th>Oil</th>
                                                             <th>GL</th>
-                                                            <th>Kcal</th>
+                                                            <th>Dish</th>
                                                             <th>Cals</th>
                                                             <th>Net of TDF</th>
                                                             <th>AAF</th>
@@ -544,6 +574,9 @@ th {
                                                             <th>AA Factor</th>
                                                             <th>GI (Glucose)</th>
                                                         </tr>
+                                                    </thead>
+                                                <tbody>
+
 														{% for d in data %}
                                                         {% if d.meal_type == 'evening_snacks' %}
 
@@ -555,7 +588,7 @@ th {
 														<td>{{d.pral}}</td>
 														<td>{{d.oil}}</td>
 														<td>{{d.gl}}</td>
-                                                        <td>{{d.kcal}}</td>
+                                                        <td>{{d.dish}}</td>
 														<td>{{d.cals}}</td>
 														<td>{{d.tdf}}</td>
                                                         <td>{{d.aaf_adj_prot}}</td>
@@ -578,6 +611,8 @@ th {
                                                     {% endif %}
 
                                                     {% endfor %}
+                                                </tbody>
+
                                                     </table>
 												</div>
                                         </div>
@@ -586,7 +621,8 @@ th {
                                         <div class="row">
                                             <div class="col-md-12 table-container"> 
 												<h4>Dinner</h4>
-												<table>
+												<table  id="example3" class="display" style="width:100%">
+                                                    <thead>
 													<tr>
                                                         
 														<th>Food</th>
@@ -596,7 +632,7 @@ th {
 														<th>PRAL</th>
 														<th>Oil</th>
 														<th>GL</th>
-                                                        <th>Kcal</th>
+                                                        <th>Dish</th>
 														<th>Cals</th>
 														<th>Net of TDF</th>
 														<th>AAF</th>
@@ -616,6 +652,9 @@ th {
 														<th>AA Factor</th>
 														<th>GI (Glucose)</th>
 													</tr>
+                                                </thead>
+                                            <tbody>
+
 													{% for d in data %}
                                                     {% if d.meal_type == 'dinner' %}
 
@@ -627,7 +666,7 @@ th {
 														<td>{{d.pral}}</td>
 														<td>{{d.oil}}</td>
 														<td>{{d.gl}}</td>
-                                                        <td>{{d.kcal}}</td>
+                                                        <td>{{d.dish}}</td>
 														<td>{{d.cals}}</td>
 														<td>{{d.tdf}}</td>
                                                         <td>{{d.aaf_adj_prot}}</td>
@@ -650,6 +689,8 @@ th {
                                                     {% endif %}
 
                                                     {% endfor %}
+                                                </tbody>
+
                                                 </table>
                                             </div>
 											
@@ -727,7 +768,15 @@ th {
     {% comment %} <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script> {% endcomment %}
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script>
+            new DataTable('#example');
+            new DataTable('#example1');
+            new DataTable('#example2');
+            new DataTable('#example3');
 
+    </script>
 </body>
 
 
