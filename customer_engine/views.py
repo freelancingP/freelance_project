@@ -523,7 +523,7 @@ class AllDishesViewSet(viewsets.ModelViewSet):
     serializer_class = DailySnacksSerializer
     pagination_class = PageNumberPagination
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
-    filterset_fields = ['meal_type','food', 'dish']
+    filterset_fields = ['meal_type','food']
     search_fields = ['meal_type','food']   
     authentication_classes=[JWTAuthentication]
     permission_classes=[IsAuthenticated]
@@ -533,7 +533,7 @@ class AllDishesViewSet(viewsets.ModelViewSet):
         customer = self.request.user
 
         # Filter the queryset based on the selected preference
-        queryset = DailySnacks.objects.filter(veg_nonveg_egg=str(customer.veg_nonveg).strip())
+        queryset = DailySnacks.objects.filter(veg_nonveg_egg__contains=str(customer.veg_nonveg).strip())
         return queryset
 
     # def get(self, request): 
@@ -744,18 +744,6 @@ def utils_get_bmi(customer):
     total_calory = 0
 
     try:
-
-        try:
-            if customer.height_unit == 'feet':
-
-                customer.height = customer.height * 30.48
-
-            if customer.weight_unit != 'kg':
-                
-                customer.weight = customer.weight * 0.453592
-        except:
-            pass
-
         bmi_cal = float(customer.weight) / (float(customer.height) * float(customer.height) / 10000)
         fat_cal = (bmi_cal + 3) / 100
         ffm_cal = 1 - fat_cal
@@ -786,11 +774,9 @@ class CustomerDailyCaloriesView(APIView):
     
             daily_snacks = DailySnacks.objects.filter(id__in=dish_ids_list)
 
-            total_cals = 0
-            total_proteins = 0
+            calories_used = 0
             total_carbs = 0
-            total_fats = 0
-            total_gl = 0
+            total_calcium = 0
 
             data = {
                 'calories_used':0,
@@ -808,27 +794,21 @@ class CustomerDailyCaloriesView(APIView):
                             "id": instance.id,
                             "food": instance.food,
                             "ingredients": instance.ingredients,
-                            "cals": instance.cals,
+                            "cals": instance.kcal,
                         })
-                if instance.cals:
-                    total_cals += instance.cals
-
-                if instance.pral:
-                    total_proteins += instance.pral
+                if instance.kcal:
+                    calories_used += instance.kcal
 
                 if instance.carbs:
                     total_carbs += instance.carbs
 
-                if instance.total_fat:
-                    total_fats += instance.total_fat
- 
                 if instance.calcium:
-                    total_gl += instance.gl
- 
+                    total_calcium += instance.calcium
+
             # update data
             calorie_breakdown = {
-                "proteins": {
-                        'value':total_proteins,
+                "calories": {
+                        'value':calories_used,
                         'color':'#2CA3FA',
                         'percentage': 1                
                     },
@@ -837,25 +817,19 @@ class CustomerDailyCaloriesView(APIView):
                         'color':'#FF7326',
                         'percentage': 2
                     },
-                "fats": {
-                        'value':total_fats,
+                "calcium": {
+                        'value':total_calcium,
                         'color':'#81BE00',
                         'percentage': 3
-                    },
-                "gl": {
-                    'value':total_gl,
-                    'color':'#81BE00',
-                    'percentage': 3
-                }
+                    }
             }
 
             data['calorie_breakdown'] = calorie_breakdown
-            data['calories_used'] = total_cals
+            data['calories_used'] = calories_used
             data['total_calory'] = total_calory
 
             status_code = status.HTTP_200_OK
             message = "successful"
-
             data = JsonResponse(
                     status=status_code,
                     msg=message,
@@ -864,8 +838,6 @@ class CustomerDailyCaloriesView(APIView):
                     error={},
                     count=len(data),
                 )
-            print(data,'---')
-            
             return data
         
         except Exception as e:
@@ -881,9 +853,7 @@ class CustomerDailyCaloriesView(APIView):
                     "error": str(e),
                     "count": 0,
                 }
-                print(data,'-error--')
-
-                return JsonResponse(**response_data)
+                return JsonResponse(response_data, status=status_code)
         
 
 class CalorigramView(APIView):
@@ -1055,6 +1025,9 @@ class DailyCalorigramView(APIView):
 
             eaten_gl = 0
             remaining_gl = 1
+            
+            eaten_free_sugar = 0
+            remaining_sugar = 1
 
             eaten_carbs = 0
             remaining_carbs = 1 
@@ -1080,7 +1053,7 @@ class DailyCalorigramView(APIView):
                     eaten_pral += item['pral']
                     eaten_total_fat += item['total_fat']
                     eaten_oil += item['oil']
-
+                    eaten_free_sugar += item['free_sugar']
                     eaten_calories += item['cals']
                 else:
                     remaining_calories += item['cals']
@@ -1089,6 +1062,7 @@ class DailyCalorigramView(APIView):
                     remaining_pral += item['pral']
                     remaining_total_fat += item['total_fat']
                     remaining_oil += item['oil']
+                    remaining_sugar += item['free_sugar']
 
             nutrition_value = [
                 {"label": "calories", "value": eaten_calories, "percentage": round(eaten_calories / (eaten_calories + remaining_calories) * 100) if eaten_calories + remaining_calories > 0 else 0, "color_code": "#01BA91", "unit": "cals"},
@@ -1097,6 +1071,7 @@ class DailyCalorigramView(APIView):
                 {"label": "protein", "value": eaten_pral, "percentage": round(eaten_pral / (eaten_pral + remaining_pral) * 100) if eaten_pral + remaining_pral > 0 else 0, "color_code": "#98C71C", "unit": "pral"},
                 {"label": "fats", "value": eaten_total_fat, "percentage": round(eaten_total_fat / (eaten_total_fat + remaining_total_fat) * 100) if eaten_total_fat + remaining_total_fat > 0 else 0, "color_code": "#E35F11", "unit": "fats"},
                 {"label": "oil", "value": eaten_oil, "percentage": round(eaten_oil / (eaten_oil + remaining_oil) * 100) if eaten_oil + remaining_oil > 0 else 0, "color_code": "#E3B523", "unit": "oil"},
+                {"label": "sugar", "value": eaten_free_sugar, "percentage": round(eaten_free_sugar / (eaten_free_sugar + remaining_sugar) * 100) if eaten_free_sugar + remaining_sugar > 0 else 0, "color_code": "#E3B523", "unit": "sugar"},
             ]
 
             total_calory = utils_get_bmi(customer)
