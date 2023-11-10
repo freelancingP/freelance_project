@@ -69,7 +69,7 @@
 			},
 			xaxis: {
 				
-			  categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+			  categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat','Sun'],
 			  labels: {
 			   style: {
 				  colors: '#787878',
@@ -188,7 +188,7 @@
 			},
 			xaxis: {
 				
-			  categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+			  categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat','Sun'],
 			  labels: {
 			   style: {
 				  colors: '#787878',

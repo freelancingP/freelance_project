@@ -18,6 +18,7 @@ import boto3
 import csv
 # Create your views here.
 from customer_engine.models import *
+from customer_engine.views import *
 from datetime import date
 from .utils import get_customer_data
 
@@ -503,18 +504,21 @@ def recipe_calculator(request, id):
 
 @custom_login_required
 def customers_detail(request, user_id):
-
+    
     user = AdminUser.objects.get(id = request.session["user"])
+    total_cal = 0
     try:
         data = Customer.objects.get(id=user_id)
+        total_cal = utils_get_bmi(data)
     except:
         data = None
 
     date_is = str(date.today())
 
     if request.method == "POST":
- 
+        print("fkdfbdbfdbfkbd")
         date_is = request.POST["date"]
+        
 
     food_all = None
     if data:
@@ -534,7 +538,9 @@ def customers_detail(request, user_id):
         'food_lunch':food_lunch,
         'food_evening_snacks':food_evening_snacks,
         'food_dinner':food_dinner,
+        'total_cals': total_cal
     })
+    
 @custom_login_required
 def view_more(request, item_id):
     user = AdminUser.objects.get(id = request.session["user"])
