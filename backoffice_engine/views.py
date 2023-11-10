@@ -504,7 +504,7 @@ def recipe_calculator(request, id):
 
 @custom_login_required
 def customers_detail(request, user_id):
-
+    
     user = AdminUser.objects.get(id = request.session["user"])
     total_cal = 0
     try:
@@ -516,8 +516,9 @@ def customers_detail(request, user_id):
     date_is = str(date.today())
 
     if request.method == "POST":
- 
+        print("fkdfbdbfdbfkbd")
         date_is = request.POST["date"]
+        
 
     food_all = None
     if data:
@@ -539,6 +540,7 @@ def customers_detail(request, user_id):
         'food_dinner':food_dinner,
         'total_cals': total_cal
     })
+    
 @custom_login_required
 def view_more(request, item_id):
     user = AdminUser.objects.get(id = request.session["user"])

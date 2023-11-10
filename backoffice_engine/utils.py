@@ -56,7 +56,6 @@ def get_customer_data(date, customer, meal_type=None):
             total_glucose=Sum('glucose')
         )
     )    
-
     data['total_calory'] = total_calory
     
     food_data = []
@@ -121,5 +120,5 @@ def get_customer_data(date, customer, meal_type=None):
     # data['calorie_breakdown'] = calorie_breakdown
     # data['calories_used'] = calories_used
     # data['total_calory'] = total_calory
-
+    print(data,'-------abcde')
     return data
