@@ -609,7 +609,7 @@ class DailyCaloryView(APIView):
                     if item.carbs is not None:
                         total_carbs += item.carbs
                     if item.pral is not None:
-                        total_proteins += item.pral
+                        total_proteins += item.gross_protein
 
                 daily_totals = {
                     'calories': total_calories,
@@ -813,8 +813,8 @@ class CustomerDailyCaloriesView(APIView):
                 if instance.cals:
                     total_cals += instance.cals
 
-                if instance.pral:
-                    total_proteins += instance.pral
+                if instance.gross_protein:
+                    total_proteins += instance.gross_protein
 
                 if instance.carbs:
                     total_carbs += instance.carbs
@@ -900,7 +900,7 @@ class CalorigramView(APIView):
                 {"label": "calories", "value": data_is['cals'], "percentage": 5, "color_code": "#01BA91","unit":"cals"},
                 {"label": 'glycemic load', "value": data_is['gl'], "percentage": 6, "color_code": "#00AE4D","unit":"gl"},
                 {"label": "carbs", "value": data_is['carbs'], "percentage": 3, "color_code": "#29B6C7","unit":"carbs"},
-                {"label": "protein", "value": data_is['pral'], "percentage": 5, "color_code": "#98C71C","unit":"pral"},
+                {"label": "protein", "value": data_is['gross_protein'], "percentage": 5, "color_code": "#98C71C","unit":"gross_protein"},
                 {"label": "fats", "value": data_is['total_fat'], "percentage": 5, "color_code": "#E35F11","unit":"fats"},
                 {"label": "oil", "value": data_is['oil'], "percentage": 5, "color_code": "#E3B523","unit":"oil"},
             ]
@@ -1059,8 +1059,8 @@ class DailyCalorigramView(APIView):
             eaten_carbs = 0
             remaining_carbs = 1 
 
-            eaten_pral = 0
-            remaining_pral = 1
+            eaten_gross_protein = 0
+            remaining_gross_protein = 1
 
             eaten_total_fat = 0
             remaining_total_fat = 1
@@ -1077,7 +1077,7 @@ class DailyCalorigramView(APIView):
                         eaten_gl += item['gl']
 
                     eaten_carbs += item['carbs']
-                    eaten_pral += item['pral']
+                    eaten_gross_protein += item['gross_protein']
                     eaten_total_fat += item['total_fat']
                     eaten_oil += item['oil']
 
@@ -1086,7 +1086,7 @@ class DailyCalorigramView(APIView):
                     remaining_calories += item['cals']
                     remaining_gl += item['gl']
                     remaining_carbs += item['carbs']
-                    remaining_pral += item['pral']
+                    remaining_gross_protein += item['gross_protein']
                     remaining_total_fat += item['total_fat']
                     remaining_oil += item['oil']
 
@@ -1094,7 +1094,7 @@ class DailyCalorigramView(APIView):
                 {"label": "calories", "value": eaten_calories, "percentage": round(eaten_calories / (eaten_calories + remaining_calories) * 100) if eaten_calories + remaining_calories > 0 else 0, "color_code": "#01BA91", "unit": "cals"},
                 {"label": 'glycemic load', "value": eaten_gl, "percentage": round(eaten_gl / (eaten_gl + remaining_gl) * 100) if eaten_gl + remaining_gl > 0 else 0, "color_code": "#00AE4D", "unit": "gl"},
                 {"label": "carbs", "value": eaten_carbs, "percentage": round(eaten_carbs / (eaten_carbs + remaining_carbs) * 100) if eaten_carbs + remaining_carbs > 0 else 0, "color_code": "#29B6C7", "unit": "carbs"},
-                {"label": "protein", "value": eaten_pral, "percentage": round(eaten_pral / (eaten_pral + remaining_pral) * 100) if eaten_pral + remaining_pral > 0 else 0, "color_code": "#98C71C", "unit": "pral"},
+                {"label": "protein", "value": eaten_gross_protein, "percentage": round(eaten_gross_protein / (eaten_gross_protein + remaining_gross_protein) * 100) if eaten_gross_protein + remaining_gross_protein > 0 else 0, "color_code": "#98C71C", "unit": "pral"},
                 {"label": "fats", "value": eaten_total_fat, "percentage": round(eaten_total_fat / (eaten_total_fat + remaining_total_fat) * 100) if eaten_total_fat + remaining_total_fat > 0 else 0, "color_code": "#E35F11", "unit": "fats"},
                 {"label": "oil", "value": eaten_oil, "percentage": round(eaten_oil / (eaten_oil + remaining_oil) * 100) if eaten_oil + remaining_oil > 0 else 0, "color_code": "#E3B523", "unit": "oil"},
             ]
